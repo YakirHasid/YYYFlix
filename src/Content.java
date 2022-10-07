@@ -71,8 +71,8 @@ public class Content {
     }
 
     /**
-     * toString method of the object
-     * @return a string that represents the object
+     * toString method of the Content
+     * @return a string that represents the Content
      */
     @Override
     public String toString() {
