@@ -8,10 +8,12 @@ public class Movie extends Content {
         this.director = director;
     }
 
+    // director getter
     public String getDirector() {
         return director;
     }
 
+    // director setter
     public void setDirector(String director) {
         this.director = director;
     }
