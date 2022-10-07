@@ -19,6 +19,7 @@ public class Library {
         return user;
     }
 
+    // adds a content to the user's library
     public boolean addContent(Content content){
         if (contentList.contains(content)){
             return false;
@@ -29,6 +30,8 @@ public class Library {
         }
         return true;
     }
+
+    // deletes a content from the user's library
     public boolean deleteContent(Content content){
         if (!contentList.contains(content)){
             return false;
@@ -39,6 +42,8 @@ public class Library {
         }
         return true;
     }
+
+    // searches a content in the user's library, via the received content's id
     public Content searchContent(int ID){
         for (Content content:contentList
              ) {
@@ -50,6 +55,7 @@ public class Library {
         return null;
     }
 
+    // toString method of the object
     @Override
     public String toString() {
         return "Library{" +

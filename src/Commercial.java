@@ -15,6 +15,7 @@ public class Commercial extends Content{
         this.publisher = publisher;
     }
 
+    // toString method of the object
     @Override
     public String toString() {
         return "Commercial{" +
