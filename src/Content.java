@@ -33,13 +33,6 @@ public class Content {
         return ID;
     }
 
-    /**
-     * sets the ID
-     * @param ID
-     */
-    public void setID(int ID){
-        this.ID=ID;
-    }
     public String getFormat(){
         return format;
     }
