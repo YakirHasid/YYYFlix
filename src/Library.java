@@ -22,6 +22,11 @@ public class Library {
         return user;
     }
 
+    // content list getter
+    public ArrayList<Content> getContentList() {
+        return contentList;
+    }
+
     /**
      * adds a content to the user's library
      * @param content represents the content that is being requested to be added into the library
