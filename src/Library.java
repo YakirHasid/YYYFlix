@@ -14,7 +14,8 @@ public class Library {
         this.size = 0;
     }
 
-    public User getUserData(){
+    // get function for user field
+    public User getUser(){
         return user;
     }
 
