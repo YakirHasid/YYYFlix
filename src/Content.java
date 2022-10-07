@@ -7,7 +7,13 @@ public class Content {
     public String name;
     public float length;
 
-    // public constructor
+    /**
+     * public constructor
+     * @param format
+     * @param subtitlesFileName
+     * @param name
+     * @param length
+     */
     public Content(String format, String subtitlesFileName, String name, float length)
     {
         this.ID = ++COUNTER;
@@ -19,9 +25,18 @@ public class Content {
 
     // TODO: Add a logic function (MUST)
 
+    /**
+     * gets the ID of the content
+     * @return
+     */
     public int getID() {
         return ID;
     }
+
+    /**
+     * sets the ID
+     * @param ID
+     */
     public void setID(int ID){
         this.ID=ID;
     }

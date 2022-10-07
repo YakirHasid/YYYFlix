@@ -8,6 +8,7 @@ public class Commercial extends Content{
         this.publisher = publisher;
     }
 
+    
     public String getPublisher() {
         return publisher;
     }
