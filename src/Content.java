@@ -8,11 +8,11 @@ public class Content {
     public float length;
 
     /**
-     * public constructor
-     * @param format
-     * @param subtitlesFileName
-     * @param name
-     * @param length
+     * Content's public constructor
+     * @param format - represents the format of the content
+     * @param subtitlesFileName - represents the subtitles filename of the content
+     * @param name - represents the name of the content
+     * @param length - represents the length of the content
      */
     public Content(String format, String subtitlesFileName, String name, float length)
     {
@@ -25,39 +25,55 @@ public class Content {
 
     // TODO: Add a logic function (MUST)
 
-    /**
-     * gets the ID of the content
-     * @return
-     */
+    // ID getter
     public int getID() {
         return ID;
     }
 
+    // format getter
     public String getFormat(){
         return format;
     }
+
+    // format setter
     public void setFormat(String format){
         this.format=format;
     }
+
+    // subtitles filename getter
     public String getSubtitlesFileName(){
         return subtitlesFileName;
     }
+
+    // subtitles filename setter
     public void setSubtitles(String sub){
         subtitlesFileName=sub;
     }
+
+    // name getter
     public String getName(){
         return name;
     }
+
+    // name setter
     public void setName(String name){
         this.name=name;
     }
+
+    // length getter
     public float getLength() {
         return length;
     }
+
+    // length setter
     public void setLength(float length){
         this.length=length;
     }
 
+    /**
+     * toString method of the object
+     * @return a string that represents the object
+     */
     @Override
     public String toString() {
         return "Content{" +
