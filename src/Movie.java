@@ -1,4 +1,5 @@
 public class Movie extends Content {
+    // fields
     public String director;
 
     // public constructor that uses the super constructor first

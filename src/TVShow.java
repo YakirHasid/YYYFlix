@@ -1,4 +1,5 @@
 public class TVShow extends Content {
+    // fields
     public int season;
     public int episode;
 

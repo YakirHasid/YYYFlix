@@ -1,7 +1,9 @@
 public class Notification {
+    // fields
     private int messageID;
     private String messageText;
 
+    // public constructor
     public Notification(int messageID, String messageText)
     {
         this.messageID = messageID;

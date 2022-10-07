@@ -1,7 +1,9 @@
 public class NotifyUser {
+    // fields
     User user;
     Notification notification;
 
+    // public constructor
     public NotifyUser(User user, Notification notification)
     {
         this.user = user;

@@ -1,4 +1,5 @@
 public class Content {
+    // fields
     private int ID; // identifier
     private static int COUNTER = 0;
     public String format;
@@ -6,6 +7,7 @@ public class Content {
     public String name;
     public float length;
 
+    // public constructor
     public Content(String format, String subtitlesFileName, String name, float length)
     {
         this.ID = ++COUNTER;

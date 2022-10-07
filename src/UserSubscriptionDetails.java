@@ -2,7 +2,7 @@ import java.time.Instant;
 import java.util.Date;
 
 public class UserSubscriptionDetails {
-
+    // fields
     User user;
     Subscription subscription;
     private int transactionNumber; // identifier
@@ -10,6 +10,7 @@ public class UserSubscriptionDetails {
     Date startDate;
     Date endDate;
 
+    // public constructor
     public UserSubscriptionDetails(User user, Subscription subscribtion){
         this.user = user;
         this.subscription = subscribtion;

@@ -1,4 +1,5 @@
 public class Commercial extends Content{
+    // fields
     public String publisher;
 
     // public constructor that uses the super constructor first

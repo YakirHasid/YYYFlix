@@ -1,4 +1,5 @@
 public class User {
+    // fields
     private String username;
     private String password;
     public String name;

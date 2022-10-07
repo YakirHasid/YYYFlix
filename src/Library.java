@@ -1,10 +1,12 @@
 import java.util.ArrayList;
 
 public class Library {
+    // fields
     private User user;
     private ArrayList<Content> contentList;
     public int size;
 
+    // public constructor
     public Library(User user)
     {
         this.user = user;

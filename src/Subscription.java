@@ -1,9 +1,11 @@
 public class Subscription {
+    // fields
     private int ID; // identifier
     private static int COUNTER = 0;
     public float price;
     public float duration; // in months
 
+    // public constructor
     public Subscription(float price, float duration)
     {
         this.ID = ++COUNTER;
