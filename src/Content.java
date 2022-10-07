@@ -9,10 +9,10 @@ public class Content {
 
     /**
      * Content's public constructor
-     * @param format - represents the format of the content
-     * @param subtitlesFileName - represents the subtitles filename of the content
-     * @param name - represents the name of the content
-     * @param length - represents the length of the content
+     * @param format represents the format of the content
+     * @param subtitlesFileName represents the subtitles filename of the content
+     * @param name represents the name of the content
+     * @param length represents the length of the content
      */
     public Content(String format, String subtitlesFileName, String name, float length)
     {
