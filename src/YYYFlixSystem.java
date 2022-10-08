@@ -9,6 +9,42 @@ public class YYYFlixSystem {
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
 
     // TODO: Add constructor that on initialization creates all the needed files (empty)
+    public YYYFlixSystem() {
+        connectedUsersList = new ArrayList<>();
+
+        this.initDatabases();
+    }
+
+    public void initDatabases() {
+        initDatabaseFromPath(USERS_DATABASE_FILE_PATH);
+        initDatabaseFromPath(USERNAMES_HASHSET_DATABASE_FILE_PATH);
+
+    }
+
+    public void initDatabaseFromPath(String path) {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            File file = new File(path);
+            fi = new FileInputStream(file);
+            oi = new ObjectInputStream(fi);
+
+            if(!file.exists())
+                file.createNewFile();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fi.close();
+                oi.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
     /**
      * register a new user, ask for details in signup, default the user to free
      */
@@ -77,6 +113,7 @@ public class YYYFlixSystem {
         try {
             fi = new FileInputStream(new File(USERNAMES_HASHSET_DATABASE_FILE_PATH));
             oi = new ObjectInputStream(fi);
+
 
             // the set that contains all the usernames inside the database
             Set<String> hashSet = (HashSet<String>) oi.readObject();
