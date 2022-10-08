@@ -5,6 +5,8 @@ public class User {
     public String name;
     private String paymentMethod;
 
+    private static final int MIN_PASSWORD_LEN = 6;
+
     // public constructor
     public User(String username, String password, String name, String paymentMethod)
     {
@@ -12,6 +14,19 @@ public class User {
         this.password = password;
         this.name = name;
         this.paymentMethod = paymentMethod;
+    }
+
+    // TODO: Add a logic function (MUST)
+
+    /**
+     * checks for valid password
+      * @param password represents the password that needs to be checked
+     * @return true if the given password is valid, false if it is not valid
+     */
+    public static boolean isPasswordValid(String password)
+    {
+        // at least MIN characters for the password
+        return password.length()>=MIN_PASSWORD_LEN;
     }
 
     public String getUsername()
