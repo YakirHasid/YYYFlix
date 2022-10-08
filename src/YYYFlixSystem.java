@@ -78,6 +78,7 @@ public class YYYFlixSystem {
             fi = new FileInputStream(new File(USERNAMES_HASHSET_DATABASE_FILE_PATH));
             oi = new ObjectInputStream(fi);
 
+            // the set that contains all the usernames inside the database
             Set<String> hashSet = (HashSet<String>) oi.readObject();
             return !hashSet.contains(username);
 
