@@ -15,7 +15,9 @@ public class YYYFlixSystem {
         this.initDatabases();
     }
 
+    // TODO: Remove init of databases and let the read make sure they are ok?
     public void initDatabases() {
+
         initDatabaseFromPath(USERS_DATABASE_FILE_PATH);
         initDatabaseFromPath(USERNAMES_HASHSET_DATABASE_FILE_PATH);
 
@@ -39,9 +41,9 @@ public class YYYFlixSystem {
     public User register()
     {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Please enter your desired username: ");
 
         // get username from user
+        System.out.println("Please enter your desired username: ");
         String username = scan.nextLine();
         while(!this.isUsernameValid(username))
         {
@@ -50,9 +52,8 @@ public class YYYFlixSystem {
             username = scan.nextLine();
         }
 
-        System.out.println("Please enter your desired password: ");
-
         // get password from user
+        System.out.println("Please enter your desired password: ");
         String password = scan.nextLine();
         while(!User.isPasswordValid(password))
         {
@@ -61,9 +62,8 @@ public class YYYFlixSystem {
             password = scan.nextLine();
         }
 
-        System.out.println("Please enter your desired name: ");
-
         // get name from user
+        System.out.println("Please enter your desired name: ");
         String name = scan.nextLine();
 
         System.out.println("Please enter your desired payment method [PayPal/VISA]: ");
@@ -78,14 +78,73 @@ public class YYYFlixSystem {
         }
 
         User user = new User(username, password, name, paymentMethod);
-        if(!this.insertUserIntoDatabase(user))
+        if(!this.insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH))
         {
             System.out.println("Register Failed, Please try again.");
             return null;
         }
 
+        // read hash set from database
+        Set<String> set = this.readUsernamesHashSet();
+
+        // if hash set in database is invalid or not init
+        if(set == null)
+            set = new HashSet<String>();
+
+        // add username to the hashset
+        set.add(user.getUsername());
+
+        this.writeUsernameHashSet(set);
         System.out.println("Register Successfully completed.");
         return user;
+    }
+
+    public boolean writeUsernameHashSet(Set<String> set)
+    {
+        // delete previous hash set
+        File file = new File(USERNAMES_HASHSET_DATABASE_FILE_PATH);
+        file.delete();
+        
+        insertObjectIntoDatabase(set, USERNAMES_HASHSET_DATABASE_FILE_PATH);
+        return true;
+    }
+
+    public HashSet<String> readUsernamesHashSet()
+    {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            fi = new FileInputStream(new File(USERNAMES_HASHSET_DATABASE_FILE_PATH));
+            oi = new ObjectInputStream(fi);
+
+
+            // the set that contains all the usernames inside the database
+            return (HashSet<String>) oi.readObject();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                if(fi != null)
+                    fi.close();
+
+                if(oi != null)
+                    oi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        
+        return null;
     }
 
     /**
@@ -109,15 +168,21 @@ public class YYYFlixSystem {
 
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } catch (EOFException e) {
+            return true;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
         } finally {
             try {
-                fi.close();
-                oi.close();
+                if(fi != null)
+                    fi.close();
+
+                if(oi != null)
+                    oi.close();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -168,6 +233,47 @@ public class YYYFlixSystem {
     }
     */
 
+    /*
+    public boolean insertUsernameToHashSetDatabase(String username)
+    {
+        File fi = null;
+        ObjectInputStream oi = null;
+        try {
+            fi = new FileInputStream(new File(USERNAMES_HASHSET_DATABASE_FILE_PATH));
+            oi = new ObjectInputStream(fi);
+
+
+            // the set that contains all the usernames inside the database
+            Set<String> hashSet = (HashSet<String>) oi.readObject();
+            return !hashSet.contains(username);
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return true;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                if(fi != null)
+                    fi.close();
+
+                if(oi != null)
+                    oi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return false;
+    }
+    */
+
     public static String isPaymentMethodValid(String payment)
     {
         for (String paymentMethod :
@@ -182,15 +288,16 @@ public class YYYFlixSystem {
      *
      * @return true
      */
-    public boolean insertUserIntoDatabase(User user) {
+    // TODO: change this to insertObjectIntoDatabase so it will fit both User and HashSet
+    public boolean insertObjectIntoDatabase(Object object, String path) {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
-            fos = new FileOutputStream(USERS_DATABASE_FILE_PATH);
+            fos = new FileOutputStream(path);
             oos = new ObjectOutputStream(fos);
 
             // write object to file
-            oos.writeObject(user);
+            oos.writeObject(object);
 
             // TODO: add the username into the hash map database
 
