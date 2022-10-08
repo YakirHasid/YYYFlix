@@ -1,9 +1,9 @@
 public class Main {
     public static void main(String[] args)
     {
-        testUserLibrary();
-        testUserSub();
-
+        //testUserLibrary();
+        //testUserSub();
+        testUserRegister();
     }
 
     public static void testUserLibrary()
@@ -44,8 +44,14 @@ public class Main {
         Subscription sub3=new Subscription((float)80,(float)6);
 
         User uv= new User("uv","1234","yuval yacobi","visa");
-        User yakir= new User("yakir","1235","yakir hasid","credit card");
+        User yakir= new User("yakir","1235","yakir hasid","paypal");
         UserSubscriptionDetails uv_sub= new UserSubscriptionDetails(uv,sub1);
         UserSubscriptionDetails yakir_sub= new UserSubscriptionDetails(yakir,sub3);
+    }
+
+    public static void testUserRegister()
+    {
+        YYYFlixSystem SYS= new YYYFlixSystem();
+        SYS.register();
     }
 }
