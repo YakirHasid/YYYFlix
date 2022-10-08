@@ -89,27 +89,28 @@ public class YYYFlixSystem {
             System.out.println("Register Failed, Please try again.");
             return null;
         }
-
-        // TODO: Move all of the username hashset code to a seperate function?
-
-        // read usernames hash set from database
-        Set<String> set = this.readUsernamesHashSet();
-
-        // if hash set in database is invalid or not init
-        if(set == null)
-            set = new HashSet<String>();
-
-        // add the username of the new user into the hashset
-        set.add(user.getUsername());
-
-        // write the new usernames hash set into the database
-        this.writeUsernameHashSet(set);
-
-        // all of the register steps have been completed successfully
-        System.out.println("Register Successfully completed.");
+        
+        // add username to the hashset database
+        this.addUsernameToHashset(user.getName());
 
         // return the newly created user
         return user;
+    }
+
+    private void addUsernameToHashset(String username)
+    {
+                // read usernames hash set from database
+                Set<String> set = this.readUsernamesHashSet();
+
+                // if hash set in database is invalid or not init
+                if(set == null)
+                    set = new HashSet<String>();
+        
+                // add the username of the new user into the hashset
+                set.add(username);
+        
+                // write the new usernames hash set into the database
+                this.writeUsernameHashSet(set);
     }
 
     public boolean writeUsernameHashSet(Set<String> set)
