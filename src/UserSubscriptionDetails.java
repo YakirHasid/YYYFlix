@@ -11,9 +11,9 @@ public class UserSubscriptionDetails {
     Date endDate;
 
     // public constructor
-    public UserSubscriptionDetails(User user, Subscription subscribtion){
+    public UserSubscriptionDetails(User user, Subscription subscription){
         this.user = user;
-        this.subscription = subscribtion;
+        this.subscription = subscription;
         this.transactionNumber = ++COUNTER;
         startDate = Date.from(Instant.now());
         // TODO: FIX END DATE TO MATCH SUBSCRIPTION DURATION!!!
