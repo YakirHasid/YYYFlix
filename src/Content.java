@@ -7,6 +7,11 @@ public class Content {
     public String name;
     public float length;
 
+    // defines
+    private static final int SECONDS_IN_MINUTE = 60; // 60 seconds in 1 minute
+    private static final int MINUTES_IN_HOUR = 60; // 60 minutes in 1 hour
+
+
     /**
      * Content's public constructor
      * @param format represents the format of the content
@@ -20,10 +25,26 @@ public class Content {
         this.format = format;
         this.subtitlesFileName = subtitlesFileName;
         this.name = name;
-        this.length = length;
+        this.length = length; // seconds
     }
 
     // TODO: Add a logic function (MUST)
+
+    /**
+     * calculates the length of the content in minutes by dividing 60 the seconds, as the length field is in seconds
+     * @return the length of the content in minutes
+     */
+    public float calcMinutes() {
+        return this.length/SECONDS_IN_MINUTE;
+    }
+
+    /**
+     * calculates the length of the content in hours by dividing 60 the minutes
+     * @return the length of the content in minutes
+     */
+    public float calcHours() {
+        return this.calcMinutes()/MINUTES_IN_HOUR;
+    }
 
     // ID getter
     public int getID() {
