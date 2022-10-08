@@ -1,6 +1,6 @@
 public class Content {
     // fields
-    private int ID; // identifier
+    private final int ID; // identifier
     private static int COUNTER = 0;
     public String format;
     public String subtitlesFileName;
