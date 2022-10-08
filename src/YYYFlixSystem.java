@@ -333,4 +333,77 @@ public class YYYFlixSystem {
 
         return true;
     }
+
+    // login function
+    public boolean login(String username, String password)
+    {
+        // quick check if the username is even in the database, using the username hashset
+        if(!this.isUsernameValid(username)){
+            System.out.println("Username is not in the database.");
+            return false;
+        }
+            
+        // a user with the matching username is inside the database
+        // now we need to check for matching password
+
+        // read the user with the matching username
+        User user = readUser(username);
+
+        if(user.isPasswordCorrect(password))
+        {
+            System.out.println("Login successfull, welcome back " + user.getName() + "!");
+            this.connectedUsersList.add(user);
+            return true;
+        }
+
+        System.out.println("[ERROR]: Login Failed, password is wrong.");
+        return false;
+            
+    }
+
+    /**
+     * read user from the database that matches the username
+     * @param username
+     * @return
+     */
+    public User readUser(String username)
+    {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            fi = new FileInputStream(new File(USERNAMES_HASHSET_DATABASE_FILE_PATH));
+            oi = new ObjectInputStream(fi);
+
+
+            User user = (User) oi.readObject();
+            while(user!=null) {
+                if(user.getUsername() == username)
+                    return user;
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                if(fi != null)
+                    fi.close();
+
+                if(oi != null)
+                    oi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        
+        return null;
+    }
 }
