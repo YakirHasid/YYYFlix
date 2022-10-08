@@ -28,11 +28,15 @@ public class TVShow extends Content {
         return (season==1 && episode==1);
     }
 
+    /**
+     * toString method of the TVShow
+     * @return a string that represents the TVShow
+     */
     @Override
     public String toString() {
-        return "TVShow{" +
-                "season=" + season +
-                ", episode=" + episode +
-                "} " + super.toString();
+        return "TVShow Details: \n" +
+                "Season: " + this.season + "\n" +
+                "Episode: " + this.episode + "\n" +
+                super.toString();
     }
 }

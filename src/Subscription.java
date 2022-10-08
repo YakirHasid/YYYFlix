@@ -50,12 +50,12 @@ public class Subscription {
         this.duration=duration;
     }
 
+    /**
+     * toString method of the Subscription
+     * @return a string that represents the Subscription
+     */
     @Override
     public String toString() {
-        return "Subscription{" +
-                "ID=" + ID +
-                ", price=" + price +
-                ", duration=" + duration +
-                '}';
+        return "YYYFlix Subscription for " + this.duration + " months for " + this.price + " NIS (" + this.pricePerMonth() + " NIS per month)";
     }
 }

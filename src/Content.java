@@ -1,4 +1,4 @@
-public class Content {
+abstract public class Content {
     // fields
     private final int ID; // identifier
     private static int COUNTER = 0;
@@ -27,8 +27,6 @@ public class Content {
         this.name = name;
         this.length = length; // seconds
     }
-
-    // TODO: Add a logic function (MUST)
 
     /**
      * calculates the length of the content in minutes by dividing 60 the seconds, as the length field is in seconds
@@ -97,12 +95,10 @@ public class Content {
      */
     @Override
     public String toString() {
-        return "Content{" +
-                "ID=" + ID +
-                ", format='" + format + '\'' +
-                ", subtitlesFileName='" + subtitlesFileName + '\'' +
-                ", name='" + name + '\'' +
-                ", length=" + length +
-                '}';
+        return  "ID: " + this.ID + "\n" +
+                "Name: " + this.name + "\n" +
+                "Length: " + this.calcMinutes() + " Minutes \n" +
+                "Format: " + this.format + "\n" +
+                "Subtitles Filename: " + this.subtitlesFileName + "\n";
     }
 }

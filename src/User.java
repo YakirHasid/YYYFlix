@@ -29,20 +29,22 @@ public class User {
         return password.length()>=MIN_PASSWORD_LEN;
     }
 
+    private String maskPassword()
+    {
+        return "*".repeat(this.password.length());
+    }
+
     public String getUsername()
     {
         return this.username;
     }
     public boolean setUsername(String username) {
-        // TODO: Implement
+        // TODO: Implement (add validation for free username)
         return false;
     }
 
-    public String getPassword() {
-        return this.password;
-    }
     public boolean setPassword(String password) {
-        // TODO: Implement
+        // TODO: Implement (add validation for valid password)
         return false;
     }
 
@@ -63,13 +65,15 @@ public class User {
         return false;
     }
 
+    /**
+     * toString method of the User
+     * @return a string that represents the User
+     */
     @Override
     public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", paymentMethod='" + paymentMethod + '\'' +
-                '}';
+        return this.name + "'s Details:\n" +
+                "Username: " + this.username + "\n" +
+                "Password (Masked): " + this.maskPassword() + "\n" +
+                "Payment Method" + this.paymentMethod + "\n";
     }
 }

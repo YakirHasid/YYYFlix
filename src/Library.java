@@ -4,7 +4,6 @@ public class Library {
     // fields
     private User user;
     private ArrayList<Content> contentList;
-    public int size;
 
     /**
      * Content's public constructor
@@ -14,7 +13,6 @@ public class Library {
     {
         this.user = user;
         this.contentList = new ArrayList<Content>();
-        this.size = 0;
     }
 
     // user getter
@@ -27,6 +25,7 @@ public class Library {
         return contentList;
     }
 
+    // TODO : Maybe implement Thread here? two YYYFlix accounts running at the same time from different threads
     /**
      * adds a content to the user's library
      * @param content represents the content that is being requested to be added into the library
@@ -40,8 +39,6 @@ public class Library {
         // adds the content to the library
         contentList.add(content);
 
-        // increases the size of the library
-        this.size++;
         return true;
     }
 
@@ -58,8 +55,6 @@ public class Library {
         // removes the content to the library
         contentList.remove(content);
 
-        // decreases the size of the library
-        this.size--;
         return true;
     }
 
@@ -85,11 +80,19 @@ public class Library {
      */
     @Override
     public String toString() {
-        return "Library{" +
-                "user=" + user +
-                ", contentList=" + contentList +
-                ", size=" + size +
-                '}';
+        // title for display
+        String displayText =  this.user.getName() + "'s" + " Library:" + "\n" + "Content List:\n";
+
+        // foreach content, add to display
+        for (Content content :
+                this.contentList) {
+            displayText += content.getName() + "\n";
+        }
+
+        // total size of library
+        displayText += "Total Library Size = " + this.contentList.size();
+
+        return displayText;
     }
 }
 

@@ -31,8 +31,8 @@ public class Commercial extends Content{
      */
     @Override
     public String toString() {
-        return "Commercial{" +
-                "publisher='" + publisher + '\'' +
-                "} " + super.toString();
+        return "Commercial Details: \n" +
+                "Publisher: " + this.publisher + "\n" +
+                super.toString();
     }
 }

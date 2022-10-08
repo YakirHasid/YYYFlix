@@ -8,6 +8,13 @@ public class Notification {
     private static final int TEXT_DISPLAY_MAX_LEN = 100;
 
     // public constructor
+
+    /**
+     * Notification's public constructor
+     * @param messageID the id of the message
+     * @param messageTitle the title of the message
+     * @param messageText the text of the message
+     */
     public Notification(int messageID, String messageTitle, String messageText)
     {
         this.messageID = messageID;
@@ -16,8 +23,6 @@ public class Notification {
 
         validForDisplay = isTextValid(messageText);
     }
-
-    // TODO: Add a logic function (MUST)
 
     /**
      * checks that the message text is valid for display, is less than TEXT_DISPLAY_MAX_LEN
@@ -55,11 +60,10 @@ public class Notification {
 
     @Override
     public String toString() {
-        return "Notification{" +
-                "messageID=" + messageID +
-                ", messageTitle='" + messageTitle + '\'' +
-                ", messageText='" + messageText + '\'' +
-                ", validForDisplay=" + validForDisplay +
-                '}';
+        return  "Notification Details: " + "\n" +
+                "ID: " + this.messageID + "\n" +
+                "Title: " + this.messageTitle + "\n" +
+                "Text: " + this.messageText + "\n" +
+                "Is valid for display?: " + ((this.validForDisplay) ? "YES" : "NO") + "\n";
     }
 }

@@ -36,12 +36,11 @@ public class UserSubscriptionDetails {
 
     @Override
     public String toString() {
-        return "UserSubscriptionDetails{" +
-                "user=" + user +
-                ", subscription=" + subscription +
-                ", transactionNumber=" + transactionNumber +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                '}';
+        return this.user.getName() + "'s Subscription Details:" + "\n" +
+                this.subscription + "\n" +
+                "Paid/Free=" + ((this.subscription.getPrice()==0) ? "Free" : "Paid") + "\n" +
+                "Transaction Number= " + this.transactionNumber + "\n" +
+                "Start Date= " + this.startDate + "\n" +
+                "End Date= " + this.endDate + "\n";
     }
 }

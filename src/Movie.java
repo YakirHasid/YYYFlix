@@ -25,10 +25,14 @@ public class Movie extends Content {
         this.director = director;
     }
 
+    /**
+     * toString method of the Movie
+     * @return a string that represents the Movie
+     */
     @Override
     public String toString() {
-        return "Movie{" +
-                "director='" + director + '\'' +
-                "} " + super.toString();
+        return "Movie Details: \n" +
+                "Director: " + this.director + "\n" +
+                super.toString();
     }
 }
