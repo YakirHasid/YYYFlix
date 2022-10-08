@@ -22,26 +22,14 @@ public class YYYFlixSystem {
     }
 
     public void initDatabaseFromPath(String path) {
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
         try {
             File file = new File(path);
-            fi = new FileInputStream(file);
-            oi = new ObjectInputStream(fi);
 
             if(!file.exists())
                 file.createNewFile();
         }
         catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                fi.close();
-                oi.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
         }
     }
 
