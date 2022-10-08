@@ -8,14 +8,13 @@ public class YYYFlixSystem {
     private static final String USERS_DATABASE_FILE_PATH = "usersDatabase.dat";
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
 
-    // TODO: Add constructor that on initialization creates all the needed files (empty)
     public YYYFlixSystem() {
         connectedUsersList = new ArrayList<>();
 
         this.initDatabases();
     }
 
-    // TODO: Remove init of databases and let the read make sure they are ok?
+    
     public void initDatabases() {
 
         initDatabaseFromPath(USERS_DATABASE_FILE_PATH);
@@ -35,11 +34,13 @@ public class YYYFlixSystem {
         }
     }
 
+    // TODO: Update function help comment to match JAVADOCS
     /**
      * register a new user, ask for details in signup, default the user to free
      */
     public User register()
     {
+        // input scanner
         Scanner scan = new Scanner(System.in);
 
         // get username from user
@@ -66,10 +67,9 @@ public class YYYFlixSystem {
         System.out.println("Please enter your desired name: ");
         String name = scan.nextLine();
 
+        // get payment method from user
         System.out.println("Please enter your desired payment method [PayPal/VISA]: ");
-
         String paymentMethod = scan.nextLine();
-
         while(isPaymentMethodValid(paymentMethod) == null)
         {
             System.out.println("[ERROR]: Payment is invalid (please choose PayPal or VISA).");
@@ -77,25 +77,38 @@ public class YYYFlixSystem {
             paymentMethod = scan.nextLine();
         }
 
+        // finished input from user, close input scanner
+        scan.close();
+
+        // create user object from the given parameters
         User user = new User(username, password, name, paymentMethod);
+
+        // insert the user object into the database
         if(!this.insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH))
         {
             System.out.println("Register Failed, Please try again.");
             return null;
         }
 
-        // read hash set from database
+        // TODO: Move all of the username hashset code to a seperate function?
+
+        // read usernames hash set from database
         Set<String> set = this.readUsernamesHashSet();
 
         // if hash set in database is invalid or not init
         if(set == null)
             set = new HashSet<String>();
 
-        // add username to the hashset
+        // add the username of the new user into the hashset
         set.add(user.getUsername());
 
+        // write the new usernames hash set into the database
         this.writeUsernameHashSet(set);
+
+        // all of the register steps have been completed successfully
         System.out.println("Register Successfully completed.");
+
+        // return the newly created user
         return user;
     }
 
