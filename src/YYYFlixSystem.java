@@ -162,7 +162,6 @@ public class YYYFlixSystem {
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (EOFException e) {
             return null;
@@ -232,88 +231,6 @@ public class YYYFlixSystem {
 
         return false;
     }
-
-    // needs to be deleted
-    /*
-    public boolean isUsernameValid(String username) {
-        // TODO: Implement username check method from files
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            fi = new FileInputStream(new File(USERS_DATABASE_FILE_PATH));
-            oi = new ObjectInputStream(fi);
-
-            User user = (User) oi.readObject();
-            while (user != null) {
-                if (user.getUsername().equalsIgnoreCase(username))
-                    return false;
-
-                user = (User) oi.readObject();
-            }
-
-            return true;
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            try {
-                fi.close();
-                oi.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return false;
-    }
-    */
-
-    /*
-    public boolean insertUsernameToHashSetDatabase(String username)
-    {
-        File fi = null;
-        ObjectInputStream oi = null;
-        try {
-            fi = new FileInputStream(new File(USERNAMES_HASHSET_DATABASE_FILE_PATH));
-            oi = new ObjectInputStream(fi);
-
-
-            // the set that contains all the usernames inside the database
-            Set<String> hashSet = (HashSet<String>) oi.readObject();
-            return !hashSet.contains(username);
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return true;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                if(fi != null)
-                    fi.close();
-
-                if(oi != null)
-                    oi.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return false;
-    }
-    */
 
     /**
      * inserts an object into a database file
