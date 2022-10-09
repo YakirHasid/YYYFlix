@@ -34,9 +34,9 @@ public class YYYFlixSystem {
         }
     }
 
-    // TODO: Update function help comment to match JAVADOCS
     /**
      * register a new user, ask for details in signup, default the user to free
+     * @return
      */
     public User register()
     {
