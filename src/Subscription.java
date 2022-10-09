@@ -11,6 +11,8 @@ public class Subscription {
     public Subscription(float price, float duration)
     {
         this.ID = ++COUNTER;
+        this.price = price;
+        this.duration = duration;
     }
 
     // TODO: Add a logic function (MUST)
