@@ -4,7 +4,6 @@ import java.util.*;
 public class YYYFlixSystem {
     ArrayList<User> connectedUsersList;
 
-    private static final String[] VALID_PAYMENT_METHODS = {"PayPal", "VISA"};
     private static final String USERS_DATABASE_FILE_PATH = "usersDatabase.dat";
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
 
@@ -70,7 +69,7 @@ public class YYYFlixSystem {
         // get payment method from user
         System.out.println("Please enter your desired payment method [PayPal/VISA]: ");
         String paymentMethod = scan.nextLine();
-        while(isPaymentMethodValid(paymentMethod) == null)
+        while(User.isPaymentMethodValid(paymentMethod) == null)
         {
             System.out.println("[ERROR]: Payment is invalid (please choose PayPal or VISA).");
             System.out.println("Please enter your desired payment method [PayPal/VISA]: ");
@@ -291,16 +290,6 @@ public class YYYFlixSystem {
         return false;
     }
     */
-
-    public static String isPaymentMethodValid(String payment)
-    {
-        for (String paymentMethod :
-                VALID_PAYMENT_METHODS) {
-            if(payment.equalsIgnoreCase(paymentMethod))
-                return paymentMethod;
-        }
-        return null;
-    }
 
     /**
      * inserts an object into a database file
