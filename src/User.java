@@ -3,7 +3,7 @@ import java.util.Objects;
 
 public class User implements Serializable {
     // fields
-    private String username;
+    private final String username;
     private String password;
     public String name;
     private String paymentMethod;
