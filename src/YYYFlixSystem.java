@@ -323,8 +323,13 @@ public class YYYFlixSystem {
             return false;
         } finally {
             try {
-                fos.close();
-                oos.close();
+                // close file stream
+                if(fos != null)
+                    fos.close();
+
+                // close object stream
+                if(oos != null)
+                    oos.close();
 
             } catch (Exception e) {
                 e.printStackTrace();
