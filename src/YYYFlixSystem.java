@@ -115,10 +115,11 @@ public class YYYFlixSystem {
 
     public boolean writeUsernameHashSet(Set<String> set)
     {
-        // delete previous hash set
+        // delete the previous hashset database
         File file = new File(USERNAMES_HASHSET_DATABASE_FILE_PATH);
         file.delete();
-        
+
+        // insert the hashset into the hashset database
         insertObjectIntoDatabase(set, USERNAMES_HASHSET_DATABASE_FILE_PATH);
         return true;
     }
@@ -299,10 +300,11 @@ public class YYYFlixSystem {
     }
 
     /**
-     *
-     * @return true
+     * inserts an object into a database file
+     * @param object represents the object that is required to be inserted into the database file
+     * @param path represents the path of the database file
+     * @return
      */
-    // TODO: change this to insertObjectIntoDatabase so it will fit both User and HashSet
     public boolean insertObjectIntoDatabase(Object object, String path) {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
@@ -363,24 +365,29 @@ public class YYYFlixSystem {
 
     /**
      * read user from the database that matches the username
-     * @param username
-     * @return
+     * @param username the username of the searched for user in the database
+     * @return if a matching user is found, returns the user,if not, returns null
      */
     public User readUser(String username)
     {
         FileInputStream fi = null;
         ObjectInputStream oi = null;
         try {
+            // open file stream of username hashset database
             fi = new FileInputStream(new File(USERNAMES_HASHSET_DATABASE_FILE_PATH));
+
+            // open object stream using the file stream
             oi = new ObjectInputStream(fi);
 
-
+            // read User object from the object stream until a matching user is found
             User user = (User) oi.readObject();
             while(user!=null) {
                 if(user.getUsername() == username)
                     return user;
-            }
 
+                user = (User) oi.readObject();
+            }
+        // catch all the thrown exceptions, close all open streams in finally
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (ClassNotFoundException e) {
