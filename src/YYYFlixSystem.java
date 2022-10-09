@@ -106,8 +106,11 @@ public class YYYFlixSystem {
         }
         
         // add username to the hashset database
-        // TODO: usage of failed username addition into the database? currently assumes it worked
-        this.addUsernameToHashset(user.getName());
+        if(!this.addUsernameToHashset(user.getName()))
+        {
+            System.out.println("Register Failed, Please try again.");
+            return null;
+        }
 
         // return the newly created user
         return user;
