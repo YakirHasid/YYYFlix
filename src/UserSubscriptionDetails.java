@@ -1,5 +1,4 @@
-import java.time.Instant;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class UserSubscriptionDetails {
     // fields
@@ -7,17 +6,17 @@ public class UserSubscriptionDetails {
     Subscription subscription;
     private int transactionNumber; // identifier
     private static int COUNTER = 0;
-    Date startDate;
-    Date endDate;
+    LocalDate startDate;
+    LocalDate endDate;
 
     // public constructor
     public UserSubscriptionDetails(User user, Subscription subscription){
         this.user = user;
         this.subscription = subscription;
         this.transactionNumber = ++COUNTER;
-        startDate = Date.from(Instant.now());
-        // TODO: FIX END DATE TO MATCH SUBSCRIPTION DURATION!!!
-        endDate = Date.from(Instant.now()); //endDate = Date.from(Instant.now() + subscribtion.getDuration())
+        startDate = LocalDate.now();
+        
+        endDate = startDate.plusMonths((long) subscription.getDuration());
     }
 
     // TODO: Add a logic function (MUST)
@@ -26,11 +25,11 @@ public class UserSubscriptionDetails {
         return transactionNumber;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
