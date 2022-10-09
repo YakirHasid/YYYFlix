@@ -351,7 +351,7 @@ public class YYYFlixSystem {
 
         if(user.isPasswordCorrect(password))
         {
-            System.out.println("Login successfull, welcome back " + user.getName() + "!");
+            System.out.println("Login successful, welcome back " + user.getName() + "!");
             this.connectedUsersList.add(user);
             return true;
         }
