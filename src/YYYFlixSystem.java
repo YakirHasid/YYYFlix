@@ -303,7 +303,7 @@ public class YYYFlixSystem {
      * inserts an object into a database file
      * @param object represents the object that is required to be inserted into the database file
      * @param path represents the path of the database file
-     * @return
+     * @return true if insert has been successfully completed, false otherwise
      */
     public boolean insertObjectIntoDatabase(Object object, String path) {
         FileOutputStream fos = null;
@@ -314,8 +314,6 @@ public class YYYFlixSystem {
 
             // write object to file
             oos.writeObject(object);
-
-            // TODO: add the username into the hash map database
 
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
