@@ -382,7 +382,7 @@ public class YYYFlixSystem {
             // read User object from the object stream until a matching user is found
             User user = (User) oi.readObject();
             while(user!=null) {
-                if(user.getUsername() == username)
+                if(user.getUsername().equals(username))
                     return user;
 
                 user = (User) oi.readObject();
