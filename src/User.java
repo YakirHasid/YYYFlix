@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.Objects;
 
 public class User implements Serializable {
     // fields
@@ -16,6 +17,28 @@ public class User implements Serializable {
         this.password = password;
         this.name = name;
         this.paymentMethod = paymentMethod;
+    }
+
+    /**
+     * override equals for HashSet usage
+     * @param o compared to object
+     * @return true if the objects are equals, false otherwise (checked on all fields)
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(name, user.name) && Objects.equals(paymentMethod, user.paymentMethod);
+    }
+
+    /**
+     * override hashCode for HashSet usage
+     * @return hash of the current object
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, password, name, paymentMethod);
     }
 
     // TODO: Add a logic function (MUST)
@@ -40,14 +63,16 @@ public class User implements Serializable {
     {
         return this.username;
     }
-    public boolean setUsername(String username) {
-        // TODO: Implement (add validation for free username)
-        return false;
-    }
 
     public boolean setPassword(String password) {
-        // TODO: Implement (add validation for valid password)
-        return false;
+        // check if password is valid
+        if(!isPasswordValid(password))
+            return false;
+
+        // password is valid, update user password and return true
+        // (external database update is assumed to be handled by the caller)
+        this.password = password;
+        return true;
     }
 
     public String getName() {
