@@ -36,7 +36,7 @@ public class YYYFlixSystem {
 
     /**
      * register a new user, ask for details in signup, default the user to free
-     * @return
+     * @return the newly created and registered User
      */
     public User register()
     {
