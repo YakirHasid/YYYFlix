@@ -3,7 +3,8 @@ public class Main {
     {
         //testUserLibrary();
         //testUserSub();
-        testUserRegister();
+        //testUserRegister();
+        testSubCreate();
     }
 
     public static void testUserLibrary()
@@ -53,5 +54,14 @@ public class Main {
     {
         YYYFlixSystem SYS= new YYYFlixSystem();
         SYS.register();
+    }
+
+    public static void testSubCreate()
+    {
+        Subscription sub1 = new Subscription((float)0, (float)0);
+        Subscription sub2 = new Subscription((float)15, (float)1);
+        Subscription sub3 = new Subscription((float)40, (float)3);
+        Subscription sub4 = new Subscription((float)70, (float)6);
+        Subscription sub5 = new Subscription((float)120, (float)12);
     }
 }
