@@ -42,8 +42,6 @@ public class User implements Serializable {
         return Objects.hash(username, password, name, paymentMethod);
     }
 
-    // TODO: Add a logic function (MUST)
-
     /**
      * checks for valid password
       * @param password represents the password that needs to be checked
@@ -111,8 +109,8 @@ public class User implements Serializable {
     }
 
     // name setter (external database update is assumed to be handled by the caller)
-    public boolean setName(String username) {
-        // TODO: Implement
+    public boolean setName(String name) {
+        this.name = name;
         return false;
     }
 
