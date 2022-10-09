@@ -106,13 +106,18 @@ public class YYYFlixSystem {
         }
         
         // add username to the hashset database
+        // TODO: usage of failed username addition into the database? currently assumes it worked
         this.addUsernameToHashset(user.getName());
 
         // return the newly created user
         return user;
     }
 
-    private void addUsernameToHashset(String username)
+    /**
+     * adds the given username into the hashset database
+     * @param username represents the username to be added into the database
+     */
+    private boolean addUsernameToHashset(String username)
     {
                 // read usernames hash set from database
                 Set<String> set = this.readUsernamesHashSet();
@@ -122,10 +127,11 @@ public class YYYFlixSystem {
                     set = new HashSet<String>();
         
                 // add the username of the new user into the hashset
-                set.add(username);
+                if(!set.add(username))
+                    return false;
         
                 // write the new usernames hash set into the database
-                this.writeUsernameHashSet(set);
+                return this.writeUsernameHashSet(set);
     }
 
     public boolean writeUsernameHashSet(Set<String> set)
@@ -135,8 +141,7 @@ public class YYYFlixSystem {
         file.delete();
 
         // insert the hashset into the hashset database
-        insertObjectIntoDatabase(set, USERNAMES_HASHSET_DATABASE_FILE_PATH);
-        return true;
+        return insertObjectIntoDatabase(set, USERNAMES_HASHSET_DATABASE_FILE_PATH);
     }
 
     public HashSet<String> readUsernamesHashSet()
