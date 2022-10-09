@@ -105,8 +105,8 @@ public class YYYFlixSystem {
             return null;
         }
         
-        // add username to the hashset database
-        if(!this.addUsernameToHashset(user.getName()))
+        // add username to the hashset database, in lower cases to make sure hashset contains function works well
+        if(!this.addUsernameToHashset(user.getUsername()))
         {
             System.out.println("Register Failed, Please try again.");
             return null;
@@ -130,7 +130,7 @@ public class YYYFlixSystem {
                     set = new HashSet<String>();
         
                 // add the username of the new user into the hashset
-                if(!set.add(username))
+                if(!set.add(username.toLowerCase()))
                     return false;
         
                 // write the new usernames hash set into the database
