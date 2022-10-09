@@ -173,7 +173,10 @@ public class YYYFlixSystem {
         FileInputStream fi = null;
         ObjectInputStream oi = null;
         try {
+            // open file stream of username hashset database
             fi = new FileInputStream(new File(USERNAMES_HASHSET_DATABASE_FILE_PATH));
+
+            // open object stream using the file stream
             oi = new ObjectInputStream(fi);
 
 
@@ -376,8 +379,8 @@ public class YYYFlixSystem {
         FileInputStream fi = null;
         ObjectInputStream oi = null;
         try {
-            // open file stream of username hashset database
-            fi = new FileInputStream(new File(USERNAMES_HASHSET_DATABASE_FILE_PATH));
+            // open file stream of users database
+            fi = new FileInputStream(new File(USERS_DATABASE_FILE_PATH));
 
             // open object stream using the file stream
             oi = new ObjectInputStream(fi);
