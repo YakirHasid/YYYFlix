@@ -184,10 +184,10 @@ public class YYYFlixSystem {
             Set<String> hashSet = (HashSet<String>) oi.readObject();
             return !hashSet.contains(username);
 
+        // catch all the thrown exceptions, close all open streams in finally
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (EOFException e) {
             return true;
@@ -312,7 +312,10 @@ public class YYYFlixSystem {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
+            // open file stream of a database
             fos = new FileOutputStream(path);
+
+            // open object stream using the file stream
             oos = new ObjectOutputStream(fos);
 
             // write object to file
@@ -393,11 +396,11 @@ public class YYYFlixSystem {
 
                 user = (User) oi.readObject();
             }
+
         // catch all the thrown exceptions, close all open streams in finally
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (EOFException e) {
             return null;
@@ -405,9 +408,11 @@ public class YYYFlixSystem {
             System.out.println("Error initializing stream");
         } finally {
             try {
+                // close file stream
                 if(fi != null)
                     fi.close();
 
+                // close object stream
                 if(oi != null)
                     oi.close();
 
