@@ -2,29 +2,45 @@ import java.io.*;
 import java.util.*;
 
 public class YYYFlixSystem {
+    // fields
     ArrayList<User> connectedUsersList;
 
+    // defines
     private static final String USERS_DATABASE_FILE_PATH = "usersDatabase.dat";
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
 
+    /**
+     * public constructor
+     * resets fields and initializes the databases if necessary
+     */
     public YYYFlixSystem() {
         connectedUsersList = new ArrayList<>();
 
         this.initDatabases();
     }
 
-    
+    /**
+     * initializes the databases if necessary
+     */
     public void initDatabases() {
-
+        // init users database
         initDatabaseFromPath(USERS_DATABASE_FILE_PATH);
+
+        // init usernames hashset database
         initDatabaseFromPath(USERNAMES_HASHSET_DATABASE_FILE_PATH);
 
     }
 
+    /**
+     * initializes a database, given its path
+     * @param path represents the path of the database file
+     */
     public void initDatabaseFromPath(String path) {
         try {
+            // file stream of the database given its path
             File file = new File(path);
 
+            // create a new database file if the file doesn't exist
             if(!file.exists())
                 file.createNewFile();
         }
