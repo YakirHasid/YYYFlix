@@ -149,7 +149,7 @@ public class User implements Serializable {
         return this.name + "'s Details:\n" +
                 "Username: " + this.username + "\n" +
                 "Password (Masked): " + this.maskPassword() + "\n" +
-                "Payment Method" + this.paymentMethod + "\n";
+                "Payment Method: " + this.paymentMethod + "\n";
     }
 
     public boolean isPasswordCorrect(String password) {
