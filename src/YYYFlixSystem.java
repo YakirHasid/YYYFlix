@@ -366,6 +366,9 @@ public class YYYFlixSystem {
             // open object stream using the file stream
             oi = new ObjectInputStream(fi);
 
+            // TODO: [BUG] two consecutive reads results in exception
+            //             first one reads the first object stored as usual
+            //             second one results in exception of EOF            
             // read User object from the object stream until a matching user is found
             User user = (User) oi.readObject();
 
