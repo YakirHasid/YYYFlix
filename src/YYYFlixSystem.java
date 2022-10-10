@@ -337,19 +337,14 @@ public class YYYFlixSystem {
         ObjectInputStream oi = null;
         try {
             // open file stream of users database
-            fi = new FileInputStream(USERS_DATABASE_FILE_PATH);
+            fi = new FileInputStream(USERS_DATABASE_FILE_PATH + "/" + username + ".dat") ;
 
             // open object stream using the file stream
             oi = new ObjectInputStream(fi);
 
             // read User object from the object stream until a matching user is found
             User user = (User) oi.readObject();
-            while(user!=null) {
-                if(user.getUsername().equals(username))
-                    return user;
-
-                user = (User) oi.readObject();
-            }
+            return user;
 
         // catch all the thrown exceptions, close all open streams in finally
         } catch (FileNotFoundException e) {
