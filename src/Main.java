@@ -5,10 +5,11 @@ public class Main {
     {
         //testUserLibrary();
         //testUserSub();
-        testUserRegister();
+        //testUserRegister();
         //testSubCreate();
         //testLogin();
         //testDatabaseBug();
+        testPrintDatabases();
     }
 
     public static void testUserLibrary()
@@ -85,7 +86,7 @@ public class Main {
         SYS.login(username, password);
     }
 
-    public static void testDatabaseBug()
+    private static void testDatabaseBug()
     {
         User uv= new User("uv","1234","yuval yacobi","visa");
         User yakir= new User("yakir","1235","yakir hasid","paypal");        
@@ -98,5 +99,15 @@ public class Main {
         
         if(!SYS.insertObjectIntoDatabase(yakir, "usersDatabase.dat"))
             System.out.println("Register Failed, Please try again.");            
+    }
+
+    private static void testPrintDatabases() {
+        YYYFlixSystem SYS= new YYYFlixSystem();
+        
+        System.out.println("Users Database:");
+        SYS.printUsers();
+        
+        System.out.println("Usernames HashSet Database");
+        SYS.printUsernamesHashset();
     }
 }
