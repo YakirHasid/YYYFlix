@@ -355,4 +355,58 @@ public class YYYFlixSystem {
         
         return null;
     }
+
+    public void printUsers() {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            // open file stream of users database
+            fi = new FileInputStream(USERS_DATABASE_FILE_PATH);
+
+            // open object stream using the file stream
+            oi = new ObjectInputStream(fi);
+
+            // read User object from the object stream until a matching user is found
+            User user = (User) oi.readObject();
+
+            while(user!=null) {
+                // print user details
+                System.out.println(user);
+                
+                // read next user
+                user = (User) oi.readObject();
+            }
+
+        // catch all the thrown exceptions, close all open streams in finally
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                // close object stream
+                if(oi != null)
+                    oi.close();
+
+                // close file stream
+                if(fi != null)
+                    fi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        
+        return;        
+    }
+
+    public void printUsernamesHashset()
+    {
+        System.out.println(readUsernamesHashSet());
+    }
 }
