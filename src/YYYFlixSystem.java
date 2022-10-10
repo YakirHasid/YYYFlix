@@ -6,7 +6,7 @@ public class YYYFlixSystem {
     ArrayList<User> connectedUsersList;
 
     // defines
-    private static final String USERS_DATABASE_FILE_PATH = "usersDatabase.dat";
+    private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
 
     /**
@@ -24,25 +24,37 @@ public class YYYFlixSystem {
      */
     public void initDatabases() {
         // init users database
-        initDatabaseFromPath(USERS_DATABASE_FILE_PATH);
+        initDatabaseFromPath(USERS_DATABASE_FILE_PATH, false);
 
         // init usernames hashset database
-        initDatabaseFromPath(USERNAMES_HASHSET_DATABASE_FILE_PATH);
+        initDatabaseFromPath(USERNAMES_HASHSET_DATABASE_FILE_PATH, true);
 
     }
 
     /**
      * initializes a database, given its path
+     * @param isFile represents if the path is a regular file or not
      * @param path represents the path of the database file
      */
-    public void initDatabaseFromPath(String path) {
+    public void initDatabaseFromPath(String path, boolean isFile) {
         try {
+
             // file stream of the database given its path
             File file = new File(path);
 
-            // create a new database file if the file doesn't exist
+            // if exists than no need for change
             if(!file.exists())
-                file.createNewFile();
+            {
+                // checks if the given path if a directory (user database) or file (username hashset database)
+                if(isFile) {
+                    // create a new database file if the file doesn't exist
+                    file.createNewFile();
+                }
+                else {
+                    // creates the directory in the given path
+                    file.mkdirs();
+                }
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -242,9 +254,20 @@ public class YYYFlixSystem {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
-            //TODO: [BUG] Openning file stream for this file deletes the previous file, so user database only saves the last written user
-            // open file stream of a database, sending path of database and true for appending to previous objects
-            fos = new FileOutputStream(path, true);
+            // check if the given object is a user
+            if (object instanceof User) {
+                // type-cast the object to user, inorder to get information of username for additional pathing
+                User user = (User) object;
+
+                // open file stream of user's database, sending path of database + additional file pathing
+                // and true for appending to previous objects
+                fos = new FileOutputStream(path + "/" + user.getUsername() + ".dat" , true);
+            }
+            // the given object is not a user
+            else {
+                // open file stream of a database, sending path of database and true for appending to previous objects
+                fos = new FileOutputStream(path, true);
+            }
 
             // open object stream using the file stream
             oos = new ObjectOutputStream(fos);
@@ -366,9 +389,6 @@ public class YYYFlixSystem {
             // open object stream using the file stream
             oi = new ObjectInputStream(fi);
 
-            // TODO: [BUG] two consecutive reads results in exception
-            //             first one reads the first object stored as usual
-            //             second one results in exception of EOF            
             // read User object from the object stream until a matching user is found
             User user = (User) oi.readObject();
 

@@ -5,7 +5,7 @@ public class Main {
     {
         //testUserLibrary();
         //testUserSub();
-        //testUserRegister();
+        testUserRegister();
         //testSubCreate();
         //testLogin();
         //testDatabaseBug();
@@ -103,7 +103,7 @@ public class Main {
 
     private static void testPrintDatabases() {
         YYYFlixSystem SYS= new YYYFlixSystem();
-        
+
         System.out.println("Users Database:");
         SYS.printUsers();
         
