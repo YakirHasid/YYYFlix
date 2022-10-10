@@ -378,22 +378,23 @@ public class YYYFlixSystem {
         FileInputStream fi = null;
         ObjectInputStream oi = null;
         try {
-            // open file stream of users database
-            fi = new FileInputStream(USERS_DATABASE_FILE_PATH);
+            File folder = new File(USERS_DATABASE_FILE_PATH);
 
-            // open object stream using the file stream
-            oi = new ObjectInputStream(fi);
+            for (final File fileEntry : folder.listFiles()) {
+                // open file stream of users database
+                fi = new FileInputStream(fileEntry.getPath());
 
-            // read User object from the object stream until a matching user is found
-            User user = (User) oi.readObject();
+                // open object stream using the file stream
+                oi = new ObjectInputStream(fi);                
 
-            while(user!=null) {
-                // print user details
-                System.out.println(user);
-                
-                // read next user
-                user = (User) oi.readObject();
-            }
+                // read User object from the object stream
+                User user = (User) oi.readObject();
+
+                if(user != null)
+                    System.out.println(user);
+                else
+                    System.out.println("[ERROR] Invalid user file found!");
+            }            
 
         // catch all the thrown exceptions, close all open streams in finally
         } catch (FileNotFoundException e) {
