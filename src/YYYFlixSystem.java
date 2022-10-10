@@ -242,6 +242,7 @@ public class YYYFlixSystem {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
+            //TODO: [BUG] Openning file stream for this file deletes the previous file, so user database only saves the last written user
             // open file stream of a database
             fos = new FileOutputStream(path);
 
@@ -279,7 +280,7 @@ public class YYYFlixSystem {
     public boolean login(String username, String password)
     {
         // quick check if the username is even in the database, using the username hashset
-        if(!this.isUsernameValid(username)){
+        if(this.isUsernameValid(username)){
             System.out.println("Username is not in the database.");
             return false;
         }

@@ -1,10 +1,13 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args)
     {
         //testUserLibrary();
         //testUserSub();
-        //testUserRegister();
-        testSubCreate();
+        testUserRegister();
+        //testSubCreate();
+        //testLogin();
     }
 
     public static void testUserLibrary()
@@ -63,5 +66,21 @@ public class Main {
         Subscription sub3 = new Subscription((float)40, (float)3);
         Subscription sub4 = new Subscription((float)70, (float)6);
         Subscription sub5 = new Subscription((float)120, (float)12);
+    }
+
+    public static void testLogin()
+    {
+        // scanner object
+        Scanner scan = new Scanner(System.in);
+
+        // get username from input
+        System.out.println("Please enter the username for login");
+        String username = scan.nextLine();
+
+        System.out.println("Please enter the password for login");
+        String password = scan.nextLine();
+
+        YYYFlixSystem SYS= new YYYFlixSystem();
+        SYS.login(username, password);
     }
 }
