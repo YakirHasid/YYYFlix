@@ -243,8 +243,8 @@ public class YYYFlixSystem {
         ObjectOutputStream oos = null;
         try {
             //TODO: [BUG] Openning file stream for this file deletes the previous file, so user database only saves the last written user
-            // open file stream of a database
-            fos = new FileOutputStream(path);
+            // open file stream of a database, sending path of database and true for appending to previous objects
+            fos = new FileOutputStream(path, true);
 
             // open object stream using the file stream
             oos = new ObjectOutputStream(fos);
@@ -260,13 +260,13 @@ public class YYYFlixSystem {
             return false;
         } finally {
             try {
+                // close object stream
+                if(oos != null)
+                    oos.close();                
+
                 // close file stream
                 if(fos != null)
                     fos.close();
-
-                // close object stream
-                if(oos != null)
-                    oos.close();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -314,7 +314,7 @@ public class YYYFlixSystem {
         ObjectInputStream oi = null;
         try {
             // open file stream of users database
-            fi = new FileInputStream(new File(USERS_DATABASE_FILE_PATH));
+            fi = new FileInputStream(USERS_DATABASE_FILE_PATH);
 
             // open object stream using the file stream
             oi = new ObjectInputStream(fi);
@@ -339,13 +339,13 @@ public class YYYFlixSystem {
             System.out.println("Error initializing stream");
         } finally {
             try {
-                // close file stream
-                if(fi != null)
-                    fi.close();
-
                 // close object stream
                 if(oi != null)
                     oi.close();
+
+                // close file stream
+                if(fi != null)
+                    fi.close();
 
             } catch (IOException e) {
                 e.printStackTrace();

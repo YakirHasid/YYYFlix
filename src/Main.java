@@ -8,6 +8,7 @@ public class Main {
         testUserRegister();
         //testSubCreate();
         //testLogin();
+        //testDatabaseBug();
     }
 
     public static void testUserLibrary()
@@ -82,5 +83,20 @@ public class Main {
 
         YYYFlixSystem SYS= new YYYFlixSystem();
         SYS.login(username, password);
+    }
+
+    public static void testDatabaseBug()
+    {
+        User uv= new User("uv","1234","yuval yacobi","visa");
+        User yakir= new User("yakir","1235","yakir hasid","paypal");        
+
+        YYYFlixSystem SYS= new YYYFlixSystem();
+
+        // insert the user object into the database
+        if(!SYS.insertObjectIntoDatabase(uv, "usersDatabase.dat"))
+            System.out.println("Register Failed, Please try again.");
+        
+        if(!SYS.insertObjectIntoDatabase(yakir, "usersDatabase.dat"))
+            System.out.println("Register Failed, Please try again.");            
     }
 }
