@@ -326,6 +326,23 @@ public class YYYFlixSystem {
             
     }
 
+    public boolean logout(String username){
+        if(this.isUsernameValid(username)){
+            System.out.println("Username is not in the database.");
+            return false;
+        }
+        User user = readUser(username);
+
+        if(!this.connectedUsersList.contains(user)){
+            System.out.println("user is not logged in");
+            return false;
+        }
+        System.out.println("logout successful, hope to see you soon " + user.getName() + "!");
+        this.connectedUsersList.remove(user);
+        return true;
+    }
+
+
     /**
      * read user from the database that matches the username
      * @param username the username of the searched for user in the database
@@ -437,13 +454,13 @@ public class YYYFlixSystem {
             return false;
             
         // write new database file (no need for hashset update, username never changes)
-        insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH)
+        return true;
 
     }
 
     /**
      * deletes the database file of the given user
-     * @param user represents the user we want to delete, username is the identifier
+     * @param username represents the user we want to delete, username is the identifier
      * @return true only if the user's database file exists and has been deleted successfully, otherwise false
      */
     public boolean deleteUser(String username)
@@ -462,5 +479,27 @@ public class YYYFlixSystem {
     public String userPath(String username)
     {
         return USERS_DATABASE_FILE_PATH + "/" + username + ".dat";
+    }
+
+
+    public Boolean changepassword(String username,String password,String newpassword){
+
+        if(!login(username,password)){
+            System.out.println("wrong details");
+            return false;
+        }
+
+        User user =readUser(username);
+        user.setPassword(newpassword);
+        deleteUser(username);
+        String oldpass=user.getPassword();
+
+        if(!this.insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH))
+        {
+            System.out.println("password changed Failed, Please try again.");
+            return false;
+        }
+        System.out.println("password changed");
+        return true;
     }
 }

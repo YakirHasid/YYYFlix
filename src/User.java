@@ -108,6 +108,10 @@ public class User implements Serializable {
         return this.name;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
     // name setter (external database update is assumed to be handled by the caller)
     public boolean setName(String name) {
         this.name = name;
