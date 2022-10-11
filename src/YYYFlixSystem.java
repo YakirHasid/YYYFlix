@@ -433,11 +433,11 @@ public class YYYFlixSystem {
     public boolean updateUser(User user)
     {
         // delete previous database file
-        if(!this.deleteUser(user))
+        if(!this.deleteUser(user.getUsername()))
             return false;
             
         // write new database file (no need for hashset update, username never changes)
-
+        insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH)
 
     }
 
@@ -449,7 +449,7 @@ public class YYYFlixSystem {
     public boolean deleteUser(String username)
     {
         // file stream of given user's database file
-        File file = new File(userPath(user.getUsername()));
+        File file = new File(userPath(username));
 
         // return the result of deleting the user's database file
         return file.delete();
