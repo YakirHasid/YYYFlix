@@ -428,4 +428,39 @@ public class YYYFlixSystem {
     {
         System.out.println(readUsernamesHashSet());
     }
+
+    // updates the database file of the given user with the updated instance of the user
+    public boolean updateUser(User user)
+    {
+        // delete previous database file
+        if(!this.deleteUser(user))
+            return false;
+            
+        // write new database file (no need for hashset update, username never changes)
+
+
+    }
+
+    /**
+     * deletes the database file of the given user
+     * @param user represents the user we want to delete, username is the identifier
+     * @return true only if the user's database file exists and has been deleted successfully, otherwise false
+     */
+    public boolean deleteUser(String username)
+    {
+        // file stream of given user's database file
+        File file = new File(userPath(user.getUsername()));
+
+        // return the result of deleting the user's database file
+        return file.delete();
+    }
+/**
+ * creates the relative path to the user's database file
+ * @param username represents the username of the user's
+ * @return the relative path of the user's database file
+ */
+    public String userPath(String username)
+    {
+        return USERS_DATABASE_FILE_PATH + "/" + username + ".dat";
+    }
 }
