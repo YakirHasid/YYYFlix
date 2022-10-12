@@ -58,12 +58,7 @@ public class Main {
     public static void testUserRegister()
     {
         YYYFlixSystem SYS= new YYYFlixSystem();
-        //SYS.newcontent();
-        //SYS.register();
-        //SYS.login("bigimot","1234567");
-        //SYS.changepassword("bigimot","123123","abcdefg");
-        //SYS.login("bigimot","abcdefg");
-       //SYS.logout("abcd");
+        SYS.register();
     }
 
     public static void testSubCreate()
