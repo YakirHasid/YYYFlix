@@ -467,17 +467,26 @@ public class YYYFlixSystem {
         // return the result of deleting the user's database file
         return file.delete();
     }
-/**
- * creates the relative path to the user's database file
- * @param username represents the username of the user's
- * @return the relative path of the user's database file
- */
+    /**
+     * creates the relative path to the user's database file
+     * @param username represents the username of the user's
+     * @return the relative path of the user's database file
+     */
     public String userPath(String username)
     {
         return USERS_DATABASE_FILE_PATH + "/" + username + ".dat";
     }
 
-    public Boolean changepassword(User user, String oldPassword, String newPassword) {
+    // TODO: Maybe no need for password security check?
+    //       OR add security check for each function change of details (payment method, name, password)
+    /**
+     * changes the password of the given user both locally and in the database
+     * @param user represents the the given user to be updated
+     * @param oldPassword represents the old password for security check
+     * @param newPassword represents the new password to be updated
+     * @return true if the update has been sucessful, false otherwise
+     */    
+    public boolean changePassword(User user, String oldPassword, String newPassword) {
         // check if the old password is currently the user's password
         if(!user.isPasswordCorrect(oldPassword)) {
             System.out.println("The given 'old' password does not match the current user's password.");
@@ -488,16 +497,69 @@ public class YYYFlixSystem {
         if(!User.isPasswordValid(newPassword))
         {
             System.out.println("The given 'new' password is not valid, please enter a valid password (at least 6 characters).");
+            return false;
         }
         
         // update locally the user's password
         if(!user.setPassword(newPassword))
         {
             System.out.println("Failed to update the user's password due to an internal error, please try again.");
+            return false;
         }
         
+        // updates the object of user in the database to be the given object
+        return updateUserInDatabase(user);
+    }
+
+    /**
+     * changes the payment method of the given user both locally and in the database
+     * @param user represents the the given user to be updated
+     * @param newName represents the new name to be updated
+     * @return true if the update has been sucessful, false otherwise
+     */    
+    public boolean changeName(User user, String newName) {
+        // update locally the user's name
+        if(!user.setName(newName))
+        {
+            System.out.println("Failed to update the user's name due to an internal error, please try again.");
+            return false;
+        }
+
+        // updates the object of user in the database to be the given object
+        return updateUserInDatabase(user);
+    }
+
+    /**
+     * changes the payment method of the given user both locally and in the database
+     * @param user represents the the given user to be updated
+     * @param newPaymentMethod represents the new payment method to be updated
+     * @return true if the update has been sucessful, false otherwise
+     */
+    public boolean changePaymentMethod(User user, String newPaymentMethod) {
+        // update locally the user's payment method
+        if(!user.setPaymentMethod(newPaymentMethod))
+        {
+            System.out.println("Failed to update the user's payment method due to an internal error, please try again.");
+            return false;
+        }        
+
+        // updates the object of user in the database to be the given object
+        return updateUserInDatabase(user);
+    }
+
+    /**
+     * updates an old copy of user in the database to be the new given copy
+     * @param user the given user instance to be updated in the database
+     * @return true if the update has been sucessful (the given user has been found in the database and has been removed), false otherwise
+     */
+    public boolean updateUserInDatabase(User user) {
+
         // deletes the database of the current user, prepares for new database file
-        deleteUser(user.getUsername());
+        if(!deleteUser(user.getUsername()))
+        {
+            System.out.println("User " + user.getUsername() + " has not been found inside the database, can't update the instance.");
+            return false;
+        }
 
         // inserts the newly updated user into the database
         if(!this.insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH))
