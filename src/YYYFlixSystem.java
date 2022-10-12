@@ -481,25 +481,38 @@ public class YYYFlixSystem {
         return USERS_DATABASE_FILE_PATH + "/" + username + ".dat";
     }
 
-
-    public Boolean changepassword(String username,String password,String newpassword){
-
-        if(!login(username,password)){
-            System.out.println("wrong details");
+    public Boolean changepassword(User user, String oldPassword, String newPassword) {
+        // check if the old password is currently the user's password
+        if(!user.isPasswordCorrect(oldPassword)) {
+            System.out.println("The given 'old' password does not match the current user's password.");
             return false;
         }
 
-        User user =readUser(username);
-        user.setPassword(newpassword);
-        deleteUser(username);
-        String oldpass=user.getPassword();
+        // check if the new password is valid
+        if(!User.isPasswordValid(newPassword))
+        {
+            System.out.println("The given 'new' password is not valid, please enter a valid password (at least 6 characters).");
+        }
+        
+        // update locally the user's password
+        if(!user.setPassword(newPassword))
+        {
+            System.out.println("Failed to update the user's password due to an internal error, please try again.");
+        }
+        
+        // deletes the database of the current user, prepares for new database file
+        deleteUser(user.getUsername());
 
+        // inserts the newly updated user into the database
         if(!this.insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH))
         {
-            System.out.println("password changed Failed, Please try again.");
+            System.out.println("Failed to insert the updated user into database.");
+            // TODO: Probably exception throw because user is now not in the database
             return false;
         }
-        System.out.println("password changed");
+
+        // user's password has been successfully updated in the database
+        System.out.println("Password has been changed successfully.");
         return true;
     }
 }
