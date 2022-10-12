@@ -327,8 +327,6 @@ public class YYYFlixSystem {
     }
 
     public boolean logout(User user){
-        
-        User user = readUser(username);
 
         if(!this.connectedUsersList.contains(user)){
             System.out.println("user is not logged in");
