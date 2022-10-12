@@ -101,13 +101,18 @@ public class Main {
             System.out.println("Register Failed, Please try again.");            
     }
 
-    private static void testPrintDatabases() {
-        YYYFlixSystem SYS= new YYYFlixSystem();
+    private static void testPrintDatabases(YYYFlixSystem SYS) {
 
         System.out.println("Users Database:");
         SYS.printUsers();
         
         System.out.println("Usernames HashSet Database");
         SYS.printUsernamesHashset();
+    }
+
+    private static void testUserChangeDetails() {
+        YYYFlixSystem SYS= new YYYFlixSystem();
+
+
     }
 }
