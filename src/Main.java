@@ -5,11 +5,12 @@ public class Main {
     {
         //testUserLibrary();
         //testUserSub();
-        testUserRegister();
+        //testUserRegister();
         //testSubCreate();
         //testLogin();
         //testDatabaseBug();
-        testPrintDatabases();
+        //testPrintDatabases();
+        testUserChangeDetails();
     }
 
     public static void testUserLibrary()
@@ -112,7 +113,24 @@ public class Main {
 
     private static void testUserChangeDetails() {
         YYYFlixSystem SYS= new YYYFlixSystem();
+        
+        User user1 = new User("testUpdateUser", "123456", "Yakir Hasid", "VISA");
+        testPrintDatabases(SYS);
 
+        SYS.insertAndAddUser(user1);
+        testPrintDatabases(SYS);
+
+        SYS.changeName(user1, "New Name");
+        testPrintDatabases(SYS);
+
+        SYS.changePassword(user1, "12345", "New Password");
+        testPrintDatabases(SYS);
+
+        SYS.changePassword(user1, "123456", "New Password");
+        testPrintDatabases(SYS);
+
+        SYS.changePaymentMethod(user1, "New Payment Method");
+        testPrintDatabases(SYS);
 
     }
 }
