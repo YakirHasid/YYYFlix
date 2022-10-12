@@ -326,7 +326,7 @@ public class YYYFlixSystem {
             
     }
 
-    public boolean logout(String username){
+    public boolean logout(User user){
         if(this.isUsernameValid(username)){
             System.out.println("Username is not in the database.");
             return false;
