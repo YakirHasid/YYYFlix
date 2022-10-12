@@ -328,14 +328,14 @@ public class YYYFlixSystem {
 
     public boolean logout(User user){
 
-        // check if the user is connected to the system
-        if(!this.connectedUsersList.contains(user)){
-            System.out.println("user is not logged in");
-            return false;
+        // upon successful remove from the connected list, it means the user was connected, else, they were not.
+        if(this.connectedUsersList.remove(user)) {
+            System.out.println("Logout successful, hope to see you soon " + user.getName() + "!");
+            return true;    
         }
-        System.out.println("logout successful, hope to see you soon " + user.getName() + "!");
-        this.connectedUsersList.remove(user);
-        return true;
+        
+        System.out.println("Failed to logout, user " + user.getUsername() + " is not logged in.");
+        return false;
     }
 
 
