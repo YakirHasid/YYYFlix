@@ -110,22 +110,37 @@ public class YYYFlixSystem {
         // create user object from the given parameters
         User user = new User(username, password, name, paymentMethod);
 
+        // inserts the user into the user database and inserts the username into the username hashset
+        if(!insertAndAddUser(user))
+            return null;
+
+        // return the newly created user
+        return user;
+    }
+
+    // TODO: Different name?
+    /**
+     * inserts the user into the user database and inserts the username into the username hashset
+     * @param user represents the given user to be inserted into both databases
+     * @return true if all of the insertions have been successfully completed, false otherwise
+     */
+    public boolean insertAndAddUser(User user) {
+
         // insert the user object into the database
         if(!this.insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH))
         {
             System.out.println("Register Failed, Please try again.");
-            return null;
+            return false;
         }
         
         // add username to the hashset database, in lower cases to make sure hashset contains function works well
         if(!this.addUsernameToHashset(user.getUsername()))
         {
             System.out.println("Register Failed, Please try again.");
-            return null;
-        }
+            return false;
+        }        
 
-        // return the newly created user
-        return user;
+        return true;
     }
 
     /**
