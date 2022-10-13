@@ -123,8 +123,8 @@ public class User implements Serializable {
      * payment method setter with validation
      * (external database update is assumed to be handled by the caller)
      * @param paymentMethod represents the updated payment method
-     * @return true if the given password is valid and local password update has been successfully completed
-     *         false if the given password is not valid
+     * @return true if the given payment method is valid and local payment method update has been successfully completed
+     *         false if the given payment method is not valid
      */
     public boolean setPaymentMethod(String paymentMethod) {
         // check for valid payment method checker
