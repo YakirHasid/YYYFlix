@@ -275,13 +275,12 @@ public class YYYFlixSystem {
                 User user = (User) object;
 
                 // open file stream of user's database, sending path of database + additional file pathing
-                // and true for appending to previous objects
-                fos = new FileOutputStream(path + "/" + user.getUsername() + ".dat" , true);
+                fos = new FileOutputStream(path + "/" + user.getUsername() + ".dat");
             }
             // the given object is not a user
             else {
-                // open file stream of a database, sending path of database and true for appending to previous objects
-                fos = new FileOutputStream(path, true);
+                // open file stream of a database, sending path of database
+                fos = new FileOutputStream(path);
             }
 
             // open object stream using the file stream
