@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Main {
@@ -11,6 +14,7 @@ public class Main {
         //testDatabaseBug();
         //testPrintDatabases();
         testUserChangeDetails();
+        //testDeleteFile();
     }
 
     public static void testUserLibrary()
@@ -114,7 +118,7 @@ public class Main {
     private static void testUserChangeDetails() {
         YYYFlixSystem SYS= new YYYFlixSystem();
         
-        User user1 = new User("testUpdateUser", "123456", "Yakir Hasid", "VISA");
+        User user1 = new User("testUpdateUser2", "123456", "Yakir Hasid", "VISA");
         testPrintDatabases(SYS);
 
         SYS.insertAndAddUser(user1);
@@ -132,5 +136,17 @@ public class Main {
         SYS.changePaymentMethod(user1, "New Payment Method");
         testPrintDatabases(SYS);
 
+    }
+
+    public static void testDeleteFile()
+    {
+        YYYFlixSystem SYS= new YYYFlixSystem();  
+        User user1 = new User("testUpdateUser2", "123456", "Yakir Hasid", "VISA"); 
+        try {
+            Files.delete(Path.of(SYS.userPath(user1.getUsername())));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
