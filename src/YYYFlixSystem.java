@@ -110,22 +110,37 @@ public class YYYFlixSystem {
         // create user object from the given parameters
         User user = new User(username, password, name, paymentMethod);
 
+        // inserts the user into the user database and inserts the username into the username hashset
+        if(!insertAndAddUser(user))
+            return null;
+
+        // return the newly created user
+        return user;
+    }
+
+    // TODO: Different name?
+    /**
+     * inserts the user into the user database and inserts the username into the username hashset
+     * @param user represents the given user to be inserted into both databases
+     * @return true if all of the insertions have been successfully completed, false otherwise
+     */
+    public boolean insertAndAddUser(User user) {
+
         // insert the user object into the database
         if(!this.insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH))
         {
             System.out.println("Register Failed, Please try again.");
-            return null;
+            return false;
         }
         
         // add username to the hashset database, in lower cases to make sure hashset contains function works well
         if(!this.addUsernameToHashset(user.getUsername()))
         {
             System.out.println("Register Failed, Please try again.");
-            return null;
-        }
+            return false;
+        }        
 
-        // return the newly created user
-        return user;
+        return true;
     }
 
     /**
@@ -181,11 +196,11 @@ public class YYYFlixSystem {
             System.out.println("Error initializing stream");
         } finally {
             try {
-                if(fi != null)
-                    fi.close();
-
                 if(oi != null)
                     oi.close();
+
+                if(fi != null)
+                    fi.close();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -229,11 +244,11 @@ public class YYYFlixSystem {
             System.out.println("Error initializing stream");
         } finally {
             try {
-                if(fi != null)
-                    fi.close();
-
                 if(oi != null)
                     oi.close();
+
+                if(fi != null)
+                    fi.close();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -260,13 +275,12 @@ public class YYYFlixSystem {
                 User user = (User) object;
 
                 // open file stream of user's database, sending path of database + additional file pathing
-                // and true for appending to previous objects
-                fos = new FileOutputStream(path + "/" + user.getUsername() + ".dat" , true);
+                fos = new FileOutputStream(userPath(user.getUsername()));
             }
             // the given object is not a user
             else {
-                // open file stream of a database, sending path of database and true for appending to previous objects
-                fos = new FileOutputStream(path, true);
+                // open file stream of a database, sending path of database
+                fos = new FileOutputStream(path);
             }
 
             // open object stream using the file stream
@@ -325,6 +339,19 @@ public class YYYFlixSystem {
         return false;
             
     }
+
+    public boolean logout(User user){
+
+        // upon successful remove from the connected list, it means the user was connected, else, they were not.
+        if(this.connectedUsersList.remove(user)) {
+            System.out.println("Logout successful, hope to see you soon " + user.getName() + "!");
+            return true;    
+        }
+        
+        System.out.println("Failed to logout, user " + user.getUsername() + " is not logged in.");
+        return false;
+    }
+
 
     /**
      * read user from the database that matches the username
@@ -394,6 +421,12 @@ public class YYYFlixSystem {
                     System.out.println(user);
                 else
                     System.out.println("[ERROR] Invalid user file found!");
+
+                if(oi != null)
+                    oi.close();
+
+                if(fi != null)
+                    fi.close();
             }            
 
         // catch all the thrown exceptions, close all open streams in finally
@@ -427,5 +460,138 @@ public class YYYFlixSystem {
     public void printUsernamesHashset()
     {
         System.out.println(readUsernamesHashSet());
+    }
+
+    // updates the database file of the given user with the updated instance of the user
+    public boolean updateUser(User user)
+    {
+        // delete previous database file
+        if(!this.deleteUser(user.getUsername()))
+            return false;
+            
+        // write new database file (no need for hashset update, username never changes)
+        return true;
+
+    }
+
+    /**
+     * deletes the database file of the given user
+     * @param username represents the user we want to delete, username is the identifier
+     * @return true only if the user's database file exists and has been deleted successfully, otherwise false
+     */
+    public boolean deleteUser(String username)
+    {
+
+        // file stream of given user's database file
+        File file = new File(userPath(username));
+
+        // return the result of deleting the user's database file
+        return file.delete();
+    }
+    /**
+     * creates the relative path to the user's database file
+     * @param username represents the username of the user's
+     * @return the relative path of the user's database file
+     */
+    public String userPath(String username)
+    {
+        return USERS_DATABASE_FILE_PATH + "/" + username + ".dat";
+    }
+
+    // TODO: Maybe no need for password security check?
+    //       OR add security check for each function change of details (payment method, name, password)
+    /**
+     * changes the password of the given user both locally and in the database
+     * @param user represents the the given user to be updated
+     * @param oldPassword represents the old password for security check
+     * @param newPassword represents the new password to be updated
+     * @return true if the update has been sucessful, false otherwise
+     */    
+    public boolean changePassword(User user, String oldPassword, String newPassword) {
+        // check if the old password is currently the user's password
+        if(!user.isPasswordCorrect(oldPassword)) {
+            System.out.println("The given 'old' password does not match the current user's password.");
+            return false;
+        }
+
+        // check if the new password is valid
+        if(!User.isPasswordValid(newPassword))
+        {
+            System.out.println("The given 'new' password is not valid, please enter a valid password (at least 6 characters).");
+            return false;
+        }
+        
+        // update locally the user's password
+        if(!user.setPassword(newPassword))
+        {
+            System.out.println("Failed to update the user's password due to an internal error, please try again.");
+            return false;
+        }
+        
+        // updates the object of user in the database to be the given object
+        return updateUserInDatabase(user);
+    }
+
+    /**
+     * changes the payment method of the given user both locally and in the database
+     * @param user represents the the given user to be updated
+     * @param newName represents the new name to be updated
+     * @return true if the update has been sucessful, false otherwise
+     */    
+    public boolean changeName(User user, String newName) {
+        // update locally the user's name
+        if(!user.setName(newName))
+        {
+            System.out.println("Failed to update the user's name due to an internal error, please try again.");
+            return false;
+        }
+
+        // updates the object of user in the database to be the given object
+        return updateUserInDatabase(user);
+    }
+
+    /**
+     * changes the payment method of the given user both locally and in the database
+     * @param user represents the the given user to be updated
+     * @param newPaymentMethod represents the new payment method to be updated
+     * @return true if the update has been sucessful, false otherwise
+     */
+    public boolean changePaymentMethod(User user, String newPaymentMethod) {
+        // update locally the user's payment method
+        if(!user.setPaymentMethod(newPaymentMethod))
+        {
+            System.out.println("Failed to update the user's payment method due to an internal error, please try again.");
+            return false;
+        }        
+
+        // updates the object of user in the database to be the given object
+        return updateUserInDatabase(user);
+    }
+
+    /**
+     * updates an old copy of user in the database to be the new given copy
+     * @param user the given user instance to be updated in the database
+     * @return true if the update has been sucessful (the given user has been found in the database and has been removed), false otherwise
+     */
+    public boolean updateUserInDatabase(User user) {
+
+        // deletes the database of the current user, prepares for new database file
+        if(!deleteUser(user.getUsername()))
+        {
+            System.out.println("User " + user.getUsername() + " has not been found inside the database, can't update the instance.");
+            return false;
+        }
+
+        // inserts the newly updated user into the database
+        if(!this.insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH))
+        {
+            System.out.println("Failed to insert the updated user into database.");
+            // TODO: Probably exception throw because user is now not in the database
+            return false;
+        }
+
+        // user's details has been successfully updated in the database
+        System.out.println("Details have been updated successfully.");
+        return true;
     }
 }
