@@ -196,11 +196,11 @@ public class YYYFlixSystem {
             System.out.println("Error initializing stream");
         } finally {
             try {
-                if(fi != null)
-                    fi.close();
-
                 if(oi != null)
                     oi.close();
+
+                if(fi != null)
+                    fi.close();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -244,11 +244,11 @@ public class YYYFlixSystem {
             System.out.println("Error initializing stream");
         } finally {
             try {
-                if(fi != null)
-                    fi.close();
-
                 if(oi != null)
                     oi.close();
+
+                if(fi != null)
+                    fi.close();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -275,7 +275,7 @@ public class YYYFlixSystem {
                 User user = (User) object;
 
                 // open file stream of user's database, sending path of database + additional file pathing
-                fos = new FileOutputStream(path + "/" + user.getUsername() + ".dat");
+                fos = new FileOutputStream(userPath(user.getUsername()));
             }
             // the given object is not a user
             else {
@@ -421,6 +421,12 @@ public class YYYFlixSystem {
                     System.out.println(user);
                 else
                     System.out.println("[ERROR] Invalid user file found!");
+
+                if(oi != null)
+                    oi.close();
+
+                if(fi != null)
+                    fi.close();
             }            
 
         // catch all the thrown exceptions, close all open streams in finally
@@ -475,6 +481,7 @@ public class YYYFlixSystem {
      */
     public boolean deleteUser(String username)
     {
+
         // file stream of given user's database file
         File file = new File(userPath(username));
 
@@ -583,8 +590,8 @@ public class YYYFlixSystem {
             return false;
         }
 
-        // user's password has been successfully updated in the database
-        System.out.println("Password has been changed successfully.");
+        // user's details has been successfully updated in the database
+        System.out.println("Details have been updated successfully.");
         return true;
     }
 }
