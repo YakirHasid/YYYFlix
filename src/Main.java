@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Main {
@@ -5,11 +8,13 @@ public class Main {
     {
         //testUserLibrary();
         //testUserSub();
-        testUserRegister();
+        //testUserRegister();
         //testSubCreate();
         //testLogin();
         //testDatabaseBug();
-        testPrintDatabases();
+        //testPrintDatabases();
+        testUserChangeDetails();
+        //testDeleteFile();
     }
 
     public static void testUserLibrary()
@@ -101,13 +106,47 @@ public class Main {
             System.out.println("Register Failed, Please try again.");            
     }
 
-    private static void testPrintDatabases() {
-        YYYFlixSystem SYS= new YYYFlixSystem();
+    private static void testPrintDatabases(YYYFlixSystem SYS) {
 
         System.out.println("Users Database:");
         SYS.printUsers();
         
         System.out.println("Usernames HashSet Database");
         SYS.printUsernamesHashset();
+    }
+
+    private static void testUserChangeDetails() {
+        YYYFlixSystem SYS= new YYYFlixSystem();
+        
+        User user1 = new User("testUpdateUser2", "123456", "Yakir Hasid", "VISA");
+        testPrintDatabases(SYS);
+
+        SYS.insertAndAddUser(user1);
+        testPrintDatabases(SYS);
+
+        SYS.changeName(user1, "New Name");
+        testPrintDatabases(SYS);
+
+        SYS.changePassword(user1, "12345", "New Password");
+        testPrintDatabases(SYS);
+
+        SYS.changePassword(user1, "123456", "New Password");
+        testPrintDatabases(SYS);
+
+        SYS.changePaymentMethod(user1, "New Payment Method");
+        testPrintDatabases(SYS);
+
+    }
+
+    public static void testDeleteFile()
+    {
+        YYYFlixSystem SYS= new YYYFlixSystem();  
+        User user1 = new User("testUpdateUser2", "123456", "Yakir Hasid", "VISA"); 
+        try {
+            Files.delete(Path.of(SYS.userPath(user1.getUsername())));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
