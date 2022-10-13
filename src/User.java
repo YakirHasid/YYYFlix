@@ -111,7 +111,7 @@ public class User implements Serializable {
     // name setter (external database update is assumed to be handled by the caller)
     public boolean setName(String name) {
         this.name = name;
-        return false;
+        return true;
     }
 
     public String getPaymentMethod()
@@ -137,7 +137,7 @@ public class User implements Serializable {
         // payment method is valid, update payment method and return true
         // (external database update is assumed to be handled by the caller)
         this.paymentMethod = payment;
-        return false;
+        return true;
     }
 
     /**
