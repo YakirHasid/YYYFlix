@@ -146,6 +146,7 @@ public class User implements Serializable {
      */
     @Override
     public String toString() {
+        // TODO: synchronize this process with the thread pool.
         return this.name + "'s Details:\n" +
                 "Username: " + this.username + "\n" +
                 "Password (Masked): " + this.maskPassword() + "\n" +
