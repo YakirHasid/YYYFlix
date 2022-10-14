@@ -235,7 +235,7 @@ public class YYYFlixSystem {
 
             // the set that contains all the usernames inside the database
             Set<String> hashSet = (HashSet<String>) oi.readObject();
-            return !hashSet.contains(username);
+            return !hashSet.contains(username.toLowerCase());
 
         // catch all the thrown exceptions, close all open streams in finally
         } catch (FileNotFoundException e) {
