@@ -106,6 +106,12 @@ public class Main {
             System.out.println("Register Failed, Please try again.");            
     }
 
+    private static void testPrintDatabases() {
+
+        YYYFlixSystem SYS = new YYYFlixSystem();
+        testPrintDatabases(SYS);
+    }
+
     private static void testPrintDatabases(YYYFlixSystem SYS) {
 
         System.out.println("Users Database:");
