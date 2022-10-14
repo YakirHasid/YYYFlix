@@ -145,7 +145,7 @@ public class User implements Serializable {
      * @return a string that represents the User
      */
     @Override
-    public String toString() {
+    public String toString() {        
         return this.name + "'s Details:\n" +
                 "Username: " + this.username + "\n" +
                 "Password (Masked): " + this.maskPassword() + "\n" +

@@ -1,5 +1,9 @@
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class YYYFlixSystem {
     // fields
@@ -231,7 +235,7 @@ public class YYYFlixSystem {
 
             // the set that contains all the usernames inside the database
             Set<String> hashSet = (HashSet<String>) oi.readObject();
-            return !hashSet.contains(username);
+            return !hashSet.contains(username.toLowerCase());
 
         // catch all the thrown exceptions, close all open streams in finally
         } catch (FileNotFoundException e) {
@@ -402,34 +406,48 @@ public class YYYFlixSystem {
     }
 
     public void printUsers() {
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            File folder = new File(USERS_DATABASE_FILE_PATH);
 
-            for (final File fileEntry : folder.listFiles()) {
+        File folder = new File(USERS_DATABASE_FILE_PATH);
+
+        ExecutorService executor = Executors.newCachedThreadPool();
+
+        for (final File fileEntry : folder.listFiles()) {
+            
+
+            executor.execute(fileRunnable(fileEntry));                
+        }            
+    
+        return;        
+    }
+
+    private Runnable fileRunnable(File fileEntry) {
+        return () -> {
+
+            FileInputStream fi = null;
+            ObjectInputStream oi = null;
+
+            try {
                 // open file stream of users database
                 fi = new FileInputStream(fileEntry.getPath());
-
+    
                 // open object stream using the file stream
                 oi = new ObjectInputStream(fi);                
-
+    
                 // read User object from the object stream
                 User user = (User) oi.readObject();
-
+    
                 if(user != null)
                     System.out.println(user);
                 else
                     System.out.println("[ERROR] Invalid user file found!");
-
+    
                 if(oi != null)
                     oi.close();
-
+    
                 if(fi != null)
                     fi.close();
-            }            
 
-        // catch all the thrown exceptions, close all open streams in finally
+                    // catch all the thrown exceptions, close all open streams in finally
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (ClassNotFoundException e) {
@@ -453,8 +471,8 @@ public class YYYFlixSystem {
             }
 
         }
-        
-        return;        
+
+        };
     }
 
     public void printUsernamesHashset()
