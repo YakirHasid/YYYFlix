@@ -12,10 +12,10 @@ public class Main {
         //testSubCreate();
         //testLogin();
         //testDatabaseBug();
-        //testPrintDatabases();
+        testPrintDatabases();
         //testUserChangeDetails();
         //testDeleteFile();
-        testContentCreation();
+        //testContentCreation();
     }
 
     public static void testUserLibrary()
@@ -122,11 +122,12 @@ public class Main {
 
     private static void testPrintDatabases(YYYFlixSystem SYS) {
 
-        System.out.println("Users Database:");
-        SYS.printUsers();
+        SYS.printUsers();     
         
-        System.out.println("Usernames HashSet Database");
         SYS.printUsernamesHashset();
+        
+        SYS.printContents();
+
     }
 
     private static void testUserChangeDetails() {
