@@ -405,6 +405,9 @@ public class YYYFlixSystem {
         return null;
     }
 
+    /**
+     * prints all the users in the database
+     */
     public void printUsers() {
 
         File folder = new File(USERS_DATABASE_FILE_PATH);
@@ -422,6 +425,11 @@ public class YYYFlixSystem {
         return;        
     }
 
+    /**
+     * the task of openning a single file
+     * @param fileEntry represents the file to be opened
+     * @return a runnable task of openning a file
+     */
     private Runnable fileRunnable(File fileEntry) {
         return () -> {
 
@@ -449,34 +457,37 @@ public class YYYFlixSystem {
                 if(fi != null)
                     fi.close();
 
-                    // catch all the thrown exceptions, close all open streams in finally
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                // close object stream
-                if(oi != null)
-                    oi.close();
-
-                // close file stream
-                if(fi != null)
-                    fi.close();
-
-            } catch (IOException e) {
+            // catch all the thrown exceptions, close all open streams in finally
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found");
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
-            }
+            } catch (EOFException e) {
+                return;
+            } catch (IOException e) {
+                System.out.println("Error initializing stream");
+            } finally {
+                try {
+                    // close object stream
+                    if(oi != null)
+                        oi.close();
 
-        }
+                    // close file stream
+                    if(fi != null)
+                        fi.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
 
         };
     }
 
+    /**
+     * prints the usernames hashset
+     */
     public void printUsernamesHashset()
     {
         System.out.println(readUsernamesHashSet());
