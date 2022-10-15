@@ -484,7 +484,7 @@ public class YYYFlixSystem {
         ObjectInputStream oi = null;
         try {
             // open file stream of users database
-            fi = new FileInputStream(USERS_DATABASE_FILE_PATH + "/" + username + ".dat") ;
+            fi = new FileInputStream(objectPath(USERS_DATABASE_FILE_PATH, username)) ;
 
             // open object stream using the file stream
             oi = new ObjectInputStream(fi);
