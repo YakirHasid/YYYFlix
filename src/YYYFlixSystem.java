@@ -14,6 +14,10 @@ public class YYYFlixSystem {
     // fields
     ArrayList<User> connectedUsersList;
 
+    ModelMenu m;
+    ViewMenu v;
+    ControllerMenu c;
+
     // defines
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
     private static final String CONTENTS_DATABASE_FILE_PATH = "ContentDatabase";
@@ -28,13 +32,22 @@ public class YYYFlixSystem {
 
         this.initDatabases();        
 
-        ModelLogin m = new ModelLogin("", "");
-        ViewLogin v = new ViewLogin("YYYFlix");
-        ControllerLogin c = new ControllerLogin(m, v);
+        ModelLogin m1 = new ModelLogin("", "");
+        ViewLogin v1 = new ViewLogin("YYYFlix");
+        ControllerLogin c1 = new ControllerLogin(m1, v1);
+
+        // action for pressing login
+        v1.getLogin().addActionListener(e -> login(m1.getUsername(), m1.getPassword()));
+        c1.initController();        
+
+
+        this.m = new ModelMenu("", "", "");
+        this.v = new ViewMenu("YYYFlix");
+        this.c = new ControllerMenu(this.m, this.v);
 
         // action for pressing login
         v.getLogin().addActionListener(e -> login(m.getUsername(), m.getPassword()));
-        c.initController();        
+        c.initController();   
     }
 
     /**
@@ -463,7 +476,8 @@ public class YYYFlixSystem {
         if(user.isPasswordCorrect(password))
         {
             System.out.println("Login successful, welcome back " + user.getName() + "!");
-            this.connectedUsersList.add(user);
+            this.connectedUsersList.add(user);   
+            this.c.connectedUser(username);         
             return true;
         }
 
@@ -477,6 +491,7 @@ public class YYYFlixSystem {
         // upon successful remove from the connected list, it means the user was connected, else, they were not.
         if(this.connectedUsersList.remove(user)) {
             System.out.println("Logout successful, hope to see you soon " + user.getName() + "!");
+            this.c.connectedUser("");
             return true;    
         }
         
