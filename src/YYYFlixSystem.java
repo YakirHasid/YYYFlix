@@ -415,7 +415,9 @@ public class YYYFlixSystem {
             
 
             executor.execute(fileRunnable(fileEntry));                
-        }            
+        }
+        
+        executor.shutdown();
     
         return;        
     }
