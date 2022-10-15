@@ -1,4 +1,6 @@
-abstract public class Content {
+import java.io.Serializable;
+
+abstract public class Content implements Serializable {
     // fields
     private final int ID; // identifier
     private static int COUNTER = 0;
@@ -10,6 +12,12 @@ abstract public class Content {
     // defines
     private static final int SECONDS_IN_MINUTE = 60; // 60 seconds in 1 minute
     private static final int MINUTES_IN_HOUR = 60; // 60 minutes in 1 hour
+    public static enum VALID_CONTENT_TYPES {
+        Commercial,
+        Movie,
+        TVShow
+      }
+    //public static final String[] VALID_CONTENT_TYPES = {"Commercial", "Movie", "TVShow"};
 
 
     /**
@@ -88,6 +96,22 @@ abstract public class Content {
     public void setLength(float length){
         this.length=length;
     }
+
+    /**
+     * checks if the given content is a valid form of content from the VALID_CONTENT_TYPES array
+     * @param content represents the given content
+     * @return a valid matching content (case corrected if necessary), null if given content is not valid
+     */
+    public static VALID_CONTENT_TYPES isContentValid(String content)
+    {
+        
+        for (VALID_CONTENT_TYPES contentType :
+             VALID_CONTENT_TYPES.values()) {
+            if(content.equalsIgnoreCase(contentType.toString()))
+                return contentType;
+        }
+        return null;
+    }    
 
     /**
      * toString method of the Content
