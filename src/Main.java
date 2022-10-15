@@ -13,8 +13,9 @@ public class Main {
         //testLogin();
         //testDatabaseBug();
         //testPrintDatabases();
-        testUserChangeDetails();
+        //testUserChangeDetails();
         //testDeleteFile();
+        testContentCreation();
     }
 
     public static void testUserLibrary()
@@ -66,6 +67,12 @@ public class Main {
         SYS.register();
     }
 
+    public static void testContentCreation()
+    {
+        YYYFlixSystem SYS= new YYYFlixSystem();
+        SYS.createContent();
+    }
+
     public static void testSubCreate()
     {
         Subscription sub1 = new Subscription((float)0, (float)0);
@@ -89,6 +96,7 @@ public class Main {
 
         YYYFlixSystem SYS= new YYYFlixSystem();
         SYS.login(username, password);
+        
     }
 
     private static void testDatabaseBug()
