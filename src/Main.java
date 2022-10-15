@@ -16,7 +16,8 @@ public class Main {
         //testUserChangeDetails();
         //testDeleteFile();
         //testContentCreation();
-        SwingGUI gui = new SwingGUI();
+        //SwingGUI gui = new SwingGUI();
+        YYYFlixSystem SYS= new YYYFlixSystem();
     }
 
     public static void testUserLibrary()
