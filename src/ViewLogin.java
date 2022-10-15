@@ -14,7 +14,7 @@ public class ViewLogin {
  private JTextField passwordTextfield;
  private JButton usernameSaveButton;
  private JButton passwordSaveButton;
- private JButton hello;
+ private JButton login;
  private JButton bye;
  public ViewLogin(String title) {
   frame = new JFrame(title);
@@ -30,7 +30,7 @@ public class ViewLogin {
   passwordTextfield = new JTextField();
   usernameSaveButton = new JButton("Save username");
   passwordSaveButton = new JButton("Save password");
-  hello = new JButton("Hello!");
+  login = new JButton("Login");
   bye = new JButton("Bye!");
   // Add UI element to frame
   GroupLayout layout = new GroupLayout(frame.getContentPane());
@@ -43,15 +43,15 @@ public class ViewLogin {
     .addComponent(passwordTextfield))
     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(usernameSaveButton)
     .addComponent(passwordSaveButton))
-    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(hello)
+    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(login)
     .addComponent(bye)));
   layout.setVerticalGroup(layout.createSequentialGroup()
     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(usernameLabel)
-    .addComponent(usernameTextfield).addComponent(usernameSaveButton).addComponent(hello))
+    .addComponent(usernameTextfield).addComponent(usernameSaveButton).addComponent(login))
     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(passwordLabel)
     .addComponent(passwordTextfield).addComponent(passwordSaveButton).addComponent(bye)));
   layout.linkSize(SwingConstants.HORIZONTAL, usernameSaveButton, passwordSaveButton);
-  layout.linkSize(SwingConstants.HORIZONTAL, hello, bye);
+  layout.linkSize(SwingConstants.HORIZONTAL, login, bye);
   frame.getContentPane().setLayout(layout);
  }
  public JFrame getFrame() {
@@ -96,11 +96,11 @@ public class ViewLogin {
  public void setPasswordSaveButton(JButton passwordSaveButton) {
      this.passwordSaveButton = passwordSaveButton;
  }
- public JButton getHello() {
-  return hello;
+ public JButton getLogin() {
+  return login;
  }
- public void setHello(JButton hello) {
-  this.hello = hello;
+ public void setLogin(JButton login) {
+  this.login = login;
  }
  public JButton getBye() {
   return bye;
