@@ -4,6 +4,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class YYYFlixSystem {
     // fields
@@ -572,9 +573,9 @@ public class YYYFlixSystem {
     /**
      * prints all the users in the database
      */
-    public void printUsers() {
+    public void printObjects(String path) {
 
-        File folder = new File(USERS_DATABASE_FILE_PATH);
+        File folder = new File(path);
 
         ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -585,9 +586,48 @@ public class YYYFlixSystem {
         }
         
         executor.shutdown();
+
+        try {
+            while(!executor.awaitTermination(10, TimeUnit.SECONDS)) {
+                System.out.println("Not yet. Still waiting for termination");
+            }
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     
         return;        
+    }    
+
+    /**
+     * prints all the users in the database
+     */
+    public void printUsers() {
+        System.out.println("==============================================");
+        System.out.println("Users Database:");
+        printObjects(USERS_DATABASE_FILE_PATH); 
+        System.out.println("==============================================");             
     }
+
+    /**
+     * prints all the users in the database
+     */
+    public void printContents() {
+        System.out.println("==============================================");
+        System.out.println("Content Database:");
+        printObjects(CONTENTS_DATABASE_FILE_PATH);  
+        System.out.println("==============================================");          
+    }
+    
+    /**
+     * prints the usernames hashset
+     */
+    public void printUsernamesHashset() {        
+        System.out.println("==============================================");
+        System.out.println("Usernames HashSet Database:");
+        System.out.println(readUsernamesHashSet());
+        System.out.println("==============================================");
+    }    
 
     /**
      * the task of openning a single file
@@ -606,14 +646,43 @@ public class YYYFlixSystem {
     
                 // open object stream using the file stream
                 oi = new ObjectInputStream(fi);                
-    
-                // read User object from the object stream
-                User user = (User) oi.readObject();
-    
-                if(user != null)
-                    System.out.println(user);
-                else
-                    System.out.println("[ERROR] Invalid user file found!");
+
+                Object obj = oi.readObject();
+
+                // type-cast the object to 
+                if (obj instanceof User) {
+                    
+                    User user = (User) obj;
+
+                    if(user != null)
+                        System.out.println(user);                 
+                }
+                else if (obj instanceof Commercial) {
+
+                    Commercial commercial = (Commercial) obj;
+
+                    if(commercial != null)
+                        System.out.println(commercial);      
+                }
+
+                else if (obj instanceof Movie) {
+
+                    Movie movie = (Movie) obj;
+
+                    if(movie != null)
+                        System.out.println(movie);      
+                }
+
+                else if (obj instanceof TVShow) {
+
+                    TVShow tvShow = (TVShow) obj;
+
+                    if(tvShow != null)
+                        System.out.println(tvShow);      
+                }
+                else {
+                    System.out.println("[ERROR] Invalid object file found!");
+                }
     
                 if(oi != null)
                     oi.close();
@@ -647,14 +716,6 @@ public class YYYFlixSystem {
             }
 
         };
-    }
-
-    /**
-     * prints the usernames hashset
-     */
-    public void printUsernamesHashset()
-    {
-        System.out.println(readUsernamesHashSet());
     }
 
     // updates the database file of the given user with the updated instance of the user
