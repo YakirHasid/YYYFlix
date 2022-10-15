@@ -6,6 +6,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import java.awt.event.*;
+
+import javax.swing.JFrame;
+
 public class YYYFlixSystem {
     // fields
     ArrayList<User> connectedUsersList;
@@ -19,10 +23,18 @@ public class YYYFlixSystem {
      * public constructor
      * resets fields and initializes the databases if necessary
      */
-    public YYYFlixSystem() {
+    public YYYFlixSystem() {        
         connectedUsersList = new ArrayList<>();
 
-        this.initDatabases();
+        this.initDatabases();        
+
+        ModelLogin m = new ModelLogin("", "");
+        ViewLogin v = new ViewLogin("YYYFlix");
+        ControllerLogin c = new ControllerLogin(m, v);
+
+        // action for pressing login
+        v.getHello().addActionListener(e -> login(m.getUsername(), m.getPassword()));
+        c.initController();        
     }
 
     /**
