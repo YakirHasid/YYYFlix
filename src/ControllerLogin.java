@@ -16,7 +16,7 @@ public class ControllerLogin {
   //view.getPasswordTextfield().addActionListener(e -> savePassword());
   //view.getUsernameSaveButton().addActionListener(e -> saveUsername());
   //view.getPasswordSaveButton().addActionListener(e -> savePassword());
-  view.getHello().addActionListener(e -> sayHello());
+  view.getLogin().addActionListener(e -> pressLogin());
   view.getBye().addActionListener(e -> sayBye());
  }
  private void saveUsername() {
@@ -27,10 +27,10 @@ public class ControllerLogin {
   model.setPassword(view.getPasswordTextfield().getText());
   JOptionPane.showMessageDialog(null, "Password saved : " + model.getPassword(), "Info", JOptionPane.INFORMATION_MESSAGE);
  }
- private void sayHello() {
+ private void pressLogin() {
     model.setUsername(view.getUsernameTextfield().getText());
     model.setPassword(view.getPasswordTextfield().getText());
-  //JOptionPane.showMessageDialog(null, "Hello " + model.getUsername() + ", your password is: " + model.getPassword(), "Info", JOptionPane.INFORMATION_MESSAGE);
+    //JOptionPane.showMessageDialog(null, "Hello " + model.getUsername() + ", your password is: " + model.getPassword(), "Info", JOptionPane.INFORMATION_MESSAGE);
  }
  private void sayBye() {
   System.exit(0);
