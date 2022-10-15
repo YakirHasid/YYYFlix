@@ -522,6 +522,54 @@ public class YYYFlixSystem {
     }
 
     /**
+     * read content from the database that matches the content id
+     * @param contentID the content id of the searched for content in the database
+     * @return if a matching content is found, returns the content,if not, returns null
+     */
+    public Content readContent(int contentID)
+    {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            // open file stream of users database
+            fi = new FileInputStream(objectPath(CONTENTS_DATABASE_FILE_PATH, String.valueOf(contentID))) ;
+
+            // open object stream using the file stream
+            oi = new ObjectInputStream(fi);
+
+            // read User object from the object stream until a matching user is found
+            Content content = (Content) oi.readObject();
+            return content;
+
+        // catch all the thrown exceptions, close all open streams in finally
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                // close object stream
+                if(oi != null)
+                    oi.close();
+
+                // close file stream
+                if(fi != null)
+                    fi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        
+        return null;
+    }    
+
+    /**
      * prints all the users in the database
      */
     public void printUsers() {
