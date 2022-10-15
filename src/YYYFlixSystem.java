@@ -33,7 +33,7 @@ public class YYYFlixSystem {
         ControllerLogin c = new ControllerLogin(m, v);
 
         // action for pressing login
-        v.getHello().addActionListener(e -> login(m.getUsername(), m.getPassword()));
+        v.getLogin().addActionListener(e -> login(m.getUsername(), m.getPassword()));
         c.initController();        
     }
 
