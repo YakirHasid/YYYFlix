@@ -15,17 +15,20 @@ public class YYYFlixSystem extends JFrame implements ActionListener {
     // fields
     ArrayList<User> connectedUsersList;
     User connectedUser;
+    boolean waiting=false;
 
     // defines
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
     private static final String CONTENTS_DATABASE_FILE_PATH = "ContentDatabase";
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
+    private static final String CONTENT_ID_DATABASE_FILE_PATH = "contentIdDatabase.dat";
 
     JTextField UserNameField;
     JTextField PasswordField;
     JLabel UserNameField1 =new JLabel("username: ");
     JLabel PasswordField1 =new JLabel("password: ");
     JPanel panel=new JPanel();
+    JPanel panel2=new JPanel();
 
     JButton submit=new JButton("Submit");
 
@@ -56,7 +59,7 @@ public class YYYFlixSystem extends JFrame implements ActionListener {
         panel.add(PasswordField);
         panel.add(submit);
         this.add(panel);
-        this.setVisible(true);
+        this.setVisible(false);
 
     }
 
@@ -74,6 +77,7 @@ public class YYYFlixSystem extends JFrame implements ActionListener {
         initDatabaseFromPath(USERNAMES_HASHSET_DATABASE_FILE_PATH, true);
 
     }
+    // TODO: bug create content overite id's
 
     /**
      * initializes a database, given its path
@@ -153,7 +157,7 @@ public class YYYFlixSystem extends JFrame implements ActionListener {
         }
 
         // finished input from user, close input scanner
-        scan.close();
+//        scan.close();
 
         // create user object from the given parameters
         User user = new User(username, password, name, paymentMethod);
@@ -251,7 +255,7 @@ public class YYYFlixSystem extends JFrame implements ActionListener {
         //#endregion
 
         // finished input from user, close input scanner
-        scan.close();
+//        scan.close();
 
         // inserts the user into the user database and inserts the username into the username hashset
         if(!insertObjectIntoDatabase(content, YYYFlixSystem.CONTENTS_DATABASE_FILE_PATH))
@@ -435,6 +439,7 @@ public class YYYFlixSystem extends JFrame implements ActionListener {
                                                             YYYFlixSystem.CONTENTS_DATABASE_FILE_PATH, String.valueOf(obj.getID())
                                                       )
                                           );
+                insertObjectIntoDatabase(Integer.valueOf(obj.getID()+1),CONTENT_ID_DATABASE_FILE_PATH);
             }            
             // the given object is not a user
             else {
@@ -500,20 +505,11 @@ public class YYYFlixSystem extends JFrame implements ActionListener {
             
     }
 
-    public boolean logout(User user){
-
-        // upon successful remove from the connected list, it means the user was connected, else, they were not.
-        if(this.connectedUsersList.remove(user)) {
-            System.out.println("Logout successful, hope to see you soon " + user.getName() + "!");
-            return true;    
-        }
-        
-        System.out.println("Failed to logout, user " + user.getUsername() + " is not logged in.");
-        return false;
+    public void logout(){ connectedUser=null;
+    System.out.println("logout successfully hope to see you soon!!");
     }
 
 
-    // TODO: make readObject and check for instance of
     /**
      * read user from the database that matches the username
      * @param username the username of the searched for user in the database
@@ -911,9 +907,11 @@ public class YYYFlixSystem extends JFrame implements ActionListener {
                  connectedUser=readUser(UserNameField.getText());
                 UserNameField.setText("");
                 PasswordField.setText("");
+
             }
             // set the text of field to blank
 this.setVisible(false);
+            this.waiting=true;
         }
     }
 }
