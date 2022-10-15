@@ -11,7 +11,8 @@ public class YYYFlixSystem {
 
     // defines
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
-    private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
+    private static final String CONTENTS_DATABASE_FILE_PATH = "ContentDatabase";
+    private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";    
 
     /**
      * public constructor
@@ -29,6 +30,9 @@ public class YYYFlixSystem {
     public void initDatabases() {
         // init users database
         initDatabaseFromPath(USERS_DATABASE_FILE_PATH, false);
+
+        // init contents database
+        initDatabaseFromPath(CONTENTS_DATABASE_FILE_PATH, false);
 
         // init usernames hashset database
         initDatabaseFromPath(USERNAMES_HASHSET_DATABASE_FILE_PATH, true);
@@ -122,6 +126,101 @@ public class YYYFlixSystem {
         return user;
     }
 
+    public Content createContent() {
+        // input scanner
+        Scanner scan = new Scanner(System.in);
+
+        // get content type from user
+        System.out.println("Please enter your desired content [Commercial / Movie / TVShow]: ");
+        String contentStr = scan.nextLine();   
+        
+        // use enum to grab the content type
+        Content.VALID_CONTENT_TYPES contentType = Content.isContentValid(contentStr);   
+        while(contentType == null)
+        {
+            System.out.println("[ERROR]: Given content is not valid.");
+            System.out.println("Please enter your desired content [Commercial / Movie / TVShow]: ");
+            contentStr = scan.nextLine();   
+            contentType = Content.isContentValid(contentStr);  
+        }
+
+        //#region gets content fields from user
+       
+        // get format from user
+        System.out.println("Please enter your desired format: ");
+        String format = scan.nextLine();
+
+        // get subtitlesFileName from user
+        System.out.println("Please enter your desired subtitles file name: ");
+        String subtitlesFileName = scan.nextLine();
+
+        // get name from user
+        System.out.println("Please enter your desired name: ");
+        String name = scan.nextLine();
+
+        // get length from user
+        System.out.println("Please enter your desired length: ");
+        float length = Float.parseFloat(scan.nextLine());
+
+         //#endregion                     
+        
+        //#region create the derived content object
+        Content content = null;
+
+        switch(contentType)
+        {
+            // Commercial
+            case Commercial:
+                // get publisher from user
+                System.out.println("Please enter your desired publisher: ");
+                String publisher = scan.nextLine(); 
+                
+                // create Commercial object from the given parameters
+                content = new Commercial(format, subtitlesFileName, name, length, publisher);
+                break;
+
+            // Movie
+            case Movie:
+                // get director from user
+                System.out.println("Please enter your desired director: ");
+                String director = scan.nextLine(); 
+                
+                // create Movie object from the given parameters     
+                content =  new Movie(format, subtitlesFileName, name, length, director);       
+                break;
+
+            // TVShow
+            case TVShow:
+                // get season from user
+                System.out.println("Please enter your desired season: ");
+                int season = Integer.parseInt(scan.nextLine()); 
+
+                // get episode from user
+                System.out.println("Please enter your desired episode: ");
+                int episode = Integer.parseInt(scan.nextLine());                 
+                
+                // create TVShow object from the given parameters     
+                content =  new TVShow(format, subtitlesFileName, name, length, season, episode);       
+                break;
+
+            default:
+                // TODO: maybe throws exception because for the given content there is no getting details from user implementation        
+                content =  null;        
+                break;                          
+        }
+        //#endregion
+
+        // finished input from user, close input scanner
+        scan.close();
+
+        // inserts the user into the user database and inserts the username into the username hashset
+        if(!insertObjectIntoDatabase(content, YYYFlixSystem.CONTENTS_DATABASE_FILE_PATH))
+            return null;
+
+        // return the newly created user
+        return content;
+
+    }
     // TODO: Different name?
     /**
      * inserts the user into the user database and inserts the username into the username hashset
@@ -276,11 +375,27 @@ public class YYYFlixSystem {
             // check if the given object is a user
             if (object instanceof User) {
                 // type-cast the object to user, inorder to get information of username for additional pathing
-                User user = (User) object;
+                User obj = (User) object;
 
                 // open file stream of user's database, sending path of database + additional file pathing
-                fos = new FileOutputStream(userPath(user.getUsername()));
+                fos = new FileOutputStream(
+                                            objectPath(
+                                                            YYYFlixSystem.USERS_DATABASE_FILE_PATH, obj.getUsername()
+                                                      )
+                                          );
             }
+            // check if the given object is a content
+            else if (object instanceof Content) {
+                // type-cast the object to user, inorder to get information of username for additional pathing
+                Content obj = (Content) object;
+
+                // open file stream of user's database, sending path of database + additional file pathing
+                fos = new FileOutputStream(
+                                            objectPath(
+                                                            YYYFlixSystem.CONTENTS_DATABASE_FILE_PATH, String.valueOf(obj.getID())
+                                                      )
+                                          );
+            }            
             // the given object is not a user
             else {
                 // open file stream of a database, sending path of database
@@ -357,6 +472,7 @@ public class YYYFlixSystem {
     }
 
 
+    // TODO: make readObject and check for instance of
     /**
      * read user from the database that matches the username
      * @param username the username of the searched for user in the database
@@ -519,6 +635,17 @@ public class YYYFlixSystem {
         // return the result of deleting the user's database file
         return file.delete();
     }
+
+    /**
+     * creates the relative path to the user's database file
+     * @param username represents the username of the user's
+     * @return the relative path of the user's database file
+     */
+    public String objectPath(String path, String ending)
+    {
+        return path + "/" + ending + ".dat";
+    }
+
     /**
      * creates the relative path to the user's database file
      * @param username represents the username of the user's
@@ -526,7 +653,8 @@ public class YYYFlixSystem {
      */
     public String userPath(String username)
     {
-        return USERS_DATABASE_FILE_PATH + "/" + username + ".dat";
+        return objectPath(USERS_DATABASE_FILE_PATH, username);
+        //return USERS_DATABASE_FILE_PATH + "/" + username + ".dat";
     }
 
     // TODO: Maybe no need for password security check?
