@@ -1,3 +1,8 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.Executor;
@@ -6,14 +11,24 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class YYYFlixSystem {
+public class YYYFlixSystem extends JFrame implements ActionListener {
     // fields
     ArrayList<User> connectedUsersList;
+    User connectedUser;
 
     // defines
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
     private static final String CONTENTS_DATABASE_FILE_PATH = "ContentDatabase";
-    private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";    
+    private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
+
+    JTextField UserNameField;
+    JTextField PasswordField;
+    JLabel UserNameField1 =new JLabel("username: ");
+    JLabel PasswordField1 =new JLabel("password: ");
+    JPanel panel=new JPanel();
+
+    JButton submit=new JButton("Submit");
+
 
     /**
      * public constructor
@@ -23,6 +38,26 @@ public class YYYFlixSystem {
         connectedUsersList = new ArrayList<>();
 
         this.initDatabases();
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(300,140);
+        panel.setBackground(Color.CYAN);
+        UserNameField=new JTextField(16);
+        PasswordField=new JTextField(16);
+        submit.setBounds(150,80,50,30);
+        UserNameField.setBounds(120,10,100,20);
+        UserNameField1.setBounds(10,10,100,20);
+        PasswordField.setBounds(120,40,100,20);
+        PasswordField1.setBounds(10,40,100,20);
+        submit.addActionListener(this);
+        panel.add(UserNameField1);
+        panel.add(UserNameField);
+        panel.add(PasswordField1);
+        panel.add(PasswordField);
+        panel.add(submit);
+        this.add(panel);
+        this.setVisible(true);
+
     }
 
     /**
@@ -68,6 +103,10 @@ public class YYYFlixSystem {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setUpGUI(){
+        setTitle("yossis app");
     }
 
     /**
@@ -436,6 +475,7 @@ public class YYYFlixSystem {
     // login function
     public boolean login(String username, String password)
     {
+
         // quick check if the username is even in the database, using the username hashset
         if(this.isUsernameValid(username)){
             System.out.println("Username is not in the database.");
@@ -745,11 +785,7 @@ public class YYYFlixSystem {
         return file.delete();
     }
 
-    /**
-     * creates the relative path to the user's database file
-     * @param username represents the username of the user's
-     * @return the relative path of the user's database file
-     */
+
     public String objectPath(String path, String ending)
     {
         return path + "/" + ending + ".dat";
@@ -861,5 +897,23 @@ public class YYYFlixSystem {
         // user's details has been successfully updated in the database
         System.out.println("Details have been updated successfully.");
         return true;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("test1");
+        String s = e.getActionCommand();
+        if (s.equals("Submit")) {
+            // set the text of the label to the text of the field
+            if(!login(UserNameField.getText(), PasswordField.getText())){
+                JOptionPane.showMessageDialog(this,"wrong username or password");
+            } else{
+                 connectedUser=readUser(UserNameField.getText());
+                UserNameField.setText("");
+                PasswordField.setText("");
+            }
+            // set the text of field to blank
+this.setVisible(false);
+        }
     }
 }
