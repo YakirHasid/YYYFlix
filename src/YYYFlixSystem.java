@@ -14,6 +14,8 @@ public class YYYFlixSystem {
     // fields
     ArrayList<User> connectedUsersList;
 
+    User connectedUser;
+
     ModelMenu m;
     ViewMenu v;
     ControllerMenu c;
@@ -30,15 +32,17 @@ public class YYYFlixSystem {
     public YYYFlixSystem() {        
         connectedUsersList = new ArrayList<>();
 
+        connectedUser = null;
+
         this.initDatabases();        
 
-        ModelLogin m1 = new ModelLogin("", "");
-        ViewLogin v1 = new ViewLogin("YYYFlix");
-        ControllerLogin c1 = new ControllerLogin(m1, v1);
+        //ModelLogin m1 = new ModelLogin("", "");
+        //ViewLogin v1 = new ViewLogin("YYYFlix");
+        //ControllerLogin c1 = new ControllerLogin(m1, v1);
 
         // action for pressing login
-        v1.getLogin().addActionListener(e -> login(m1.getUsername(), m1.getPassword()));
-        c1.initController();        
+        //v1.getLogin().addActionListener(e -> login(m1.getUsername(), m1.getPassword()));
+        //c1.initController();        
 
 
         this.m = new ModelMenu("", "", "");
@@ -47,6 +51,7 @@ public class YYYFlixSystem {
 
         // action for pressing login
         v.getLogin().addActionListener(e -> login(m.getUsername(), m.getPassword()));
+        v.getLogout().addActionListener(e -> logout(connectedUser));
         c.initController();   
     }
 
@@ -463,7 +468,8 @@ public class YYYFlixSystem {
     {
         // quick check if the username is even in the database, using the username hashset
         if(this.isUsernameValid(username)){
-            System.out.println("Username is not in the database.");
+            System.out.println("[ERROR] Username is not in the database.");
+            this.c.sayInvalidUsername();
             return false;
         }
             
@@ -473,30 +479,43 @@ public class YYYFlixSystem {
         // read the user with the matching username
         User user = readUser(username);
 
-        if(user.isPasswordCorrect(password))
+        if(!user.isPasswordCorrect(password))
         {
-            System.out.println("Login successful, welcome back " + user.getName() + "!");
-            this.connectedUsersList.add(user);   
-            this.c.connectedUser(username);         
-            return true;
+            System.out.println("[ERROR]: Login Failed, password is wrong.");
+            this.c.sayIncorrectPassword();
+            return false;
         }
 
-        System.out.println("[ERROR]: Login Failed, password is wrong.");
-        return false;
+        System.out.println("Login successful, welcome back " + user.getName() + "!");
+        this.connectedUsersList.add(user);
+        this.connectedUser = user;   
+        this.c.connectedUser(username);   
+        this.c.sayHello();      
+        return true;
             
     }
 
     public boolean logout(User user){
-
-        // upon successful remove from the connected list, it means the user was connected, else, they were not.
-        if(this.connectedUsersList.remove(user)) {
-            System.out.println("Logout successful, hope to see you soon " + user.getName() + "!");
-            this.c.connectedUser("");
-            return true;    
-        }
+        this.c.sayBye();
         
-        System.out.println("Failed to logout, user " + user.getUsername() + " is not logged in.");
-        return false;
+        if(user != null) {
+            // upon successful remove from the connected list, it means the user was connected, else, they were not.
+            if(this.connectedUsersList.remove(user)) {
+                System.out.println("Logout successful, hope to see you soon " + user.getName() + "!");                                        
+                this.connectedUser = null;
+                this.c.connectedUser("");            
+                return true;    
+            }
+            
+            System.out.println("Failed to logout, user " + user.getUsername() + " is not logged in.");
+            return false;
+        }
+        else {
+            System.out.println("Failed to logout, no user is logged in.");
+            return false;
+        }
+
+
     }
 
 
