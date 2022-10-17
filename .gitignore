@@ -16,5 +16,6 @@ contentHashSetDatabase.dat
 ContentDatabase/*
 LibrariesDatabase/*
 SubsDatabase/*
+UsersSubsDetailsDatabase/*
 /out/*
 contentID.dat
