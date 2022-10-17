@@ -27,18 +27,19 @@ public class YYYFlixSystem {
     private static final String LIBRARIES_DATABASE_FILE_PATH = "LibrariesDatabase";
     private static final String SUBS_DATABASE_FILE_PATH = "SubsDatabase";
     private static final String CONTENTS_DATABASE_FILE_PATH = "ContentDatabase";
-    private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";    
+    private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
+    private static final String LAST_ID_DATABASE_FILE_PATH = "contentID.dat";
 
     /**
      * public constructor
      * resets fields and initializes the databases if necessary
      */
-    public YYYFlixSystem() {        
+    public YYYFlixSystem() {
         connectedUsersList = new ArrayList<>();
 
         connectedUser = null;
 
-        this.initDatabases();        
+        this.initDatabases();
 
         //ModelLogin m1 = new ModelLogin("", "");
         //ViewLogin v1 = new ViewLogin("YYYFlix");
@@ -46,7 +47,7 @@ public class YYYFlixSystem {
 
         // action for pressing login
         //v1.getLogin().addActionListener(e -> login(m1.getUsername(), m1.getPassword()));
-        //c1.initController();        
+        //c1.initController();
 
 
         this.m = new ModelMenu("", "", "");
@@ -106,6 +107,9 @@ public class YYYFlixSystem {
 
         // init usernames hashset database
         initDatabaseFromPath(USERNAMES_HASHSET_DATABASE_FILE_PATH, true);
+
+        // init content last id database
+        initDatabaseFromPath(LAST_ID_DATABASE_FILE_PATH, true);
 
     }
 
@@ -202,20 +206,20 @@ public class YYYFlixSystem {
 
         // get content type from user
         System.out.println("Please enter your desired content [Commercial / Movie / TVShow]: ");
-        String contentStr = scan.nextLine();   
-        
+        String contentStr = scan.nextLine();
+
         // use enum to grab the content type
-        Content.VALID_CONTENT_TYPES contentType = Content.isContentValid(contentStr);   
+        Content.VALID_CONTENT_TYPES contentType = Content.isContentValid(contentStr);
         while(contentType == null)
         {
             System.out.println("[ERROR]: Given content is not valid.");
             System.out.println("Please enter your desired content [Commercial / Movie / TVShow]: ");
-            contentStr = scan.nextLine();   
-            contentType = Content.isContentValid(contentStr);  
+            contentStr = scan.nextLine();
+            contentType = Content.isContentValid(contentStr);
         }
 
         //#region gets content fields from user
-       
+
         // get format from user
         System.out.println("Please enter your desired format: ");
         String format = scan.nextLine();
@@ -232,19 +236,22 @@ public class YYYFlixSystem {
         System.out.println("Please enter your desired length: ");
         float length = Float.parseFloat(scan.nextLine());
 
-         //#endregion                     
-        
+        //#endregion
+
         //#region create the derived content object
         Content content = null;
-
+        if(readContentCounter()==null)
+            Content.COUNTER = 0;
+        else
+            Content.COUNTER=readContentCounter();
         switch(contentType)
         {
             // Commercial
             case Commercial:
                 // get publisher from user
                 System.out.println("Please enter your desired publisher: ");
-                String publisher = scan.nextLine(); 
-                
+                String publisher = scan.nextLine();
+
                 // create Commercial object from the given parameters
                 content = new Commercial(format, subtitlesFileName, name, length, publisher);
                 break;
@@ -253,30 +260,30 @@ public class YYYFlixSystem {
             case Movie:
                 // get director from user
                 System.out.println("Please enter your desired director: ");
-                String director = scan.nextLine(); 
-                
-                // create Movie object from the given parameters     
-                content =  new Movie(format, subtitlesFileName, name, length, director);       
+                String director = scan.nextLine();
+
+                // create Movie object from the given parameters
+                content =  new Movie(format, subtitlesFileName, name, length, director);
                 break;
 
             // TVShow
             case TVShow:
                 // get season from user
                 System.out.println("Please enter your desired season: ");
-                int season = Integer.parseInt(scan.nextLine()); 
+                int season = Integer.parseInt(scan.nextLine());
 
                 // get episode from user
                 System.out.println("Please enter your desired episode: ");
-                int episode = Integer.parseInt(scan.nextLine());                 
-                
-                // create TVShow object from the given parameters     
-                content =  new TVShow(format, subtitlesFileName, name, length, season, episode);       
+                int episode = Integer.parseInt(scan.nextLine());
+
+                // create TVShow object from the given parameters
+                content =  new TVShow(format, subtitlesFileName, name, length, season, episode);
                 break;
 
             default:
-                // TODO: maybe throws exception because for the given content there is no getting details from user implementation        
-                content =  null;        
-                break;                          
+                // TODO: maybe throws exception because for the given content there is no getting details from user implementation
+                content =  null;
+                break;
         }
         //#endregion
 
@@ -286,6 +293,8 @@ public class YYYFlixSystem {
         // inserts the user into the user database and inserts the username into the username hashset
         if(!insertObjectIntoDatabase(content, YYYFlixSystem.CONTENTS_DATABASE_FILE_PATH))
             return null;
+
+        writeIntegerToCounter(Content.COUNTER++);
 
         // return the newly created user
         return content;
@@ -322,12 +331,13 @@ public class YYYFlixSystem {
             return false;
         }
         
+
         // add username to the hashset database, in lower cases to make sure hashset contains function works well
         if(!this.addUsernameToHashset(user.getUsername()))
         {
             System.out.println("Register Failed, Please try again.");
             return false;
-        }        
+        }
 
         return true;
     }
@@ -338,19 +348,19 @@ public class YYYFlixSystem {
      */
     private boolean addUsernameToHashset(String username)
     {
-                // read usernames hash set from database
-                Set<String> set = this.readUsernamesHashSet();
+        // read usernames hash set from database
+        Set<String> set = this.readUsernamesHashSet();
 
-                // if hash set in database is invalid or not init
-                if(set == null)
-                    set = new HashSet<String>();
-        
-                // add the username of the new user into the hashset
-                if(!set.add(username.toLowerCase()))
-                    return false;
-        
-                // write the new usernames hash set into the database
-                return this.writeUsernameHashSet(set);
+        // if hash set in database is invalid or not init
+        if(set == null)
+            set = new HashSet<String>();
+
+        // add the username of the new user into the hashset
+        if(!set.add(username.toLowerCase()))
+            return false;
+
+        // write the new usernames hash set into the database
+        return this.writeUsernameHashSet(set);
     }
 
     public boolean writeUsernameHashSet(Set<String> set)
@@ -396,13 +406,66 @@ public class YYYFlixSystem {
             }
 
         }
-        
+
         return null;
     }
 
+    public Integer readContentCounter()
+    {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            fi = new FileInputStream(new File(LAST_ID_DATABASE_FILE_PATH));
+            oi = new ObjectInputStream(fi);
+
+
+            // the set that contains all the usernames inside the database
+            return (Integer) oi.readObject();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                if(oi != null)
+                    oi.close();
+
+                if(fi != null)
+                    fi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return null;
+    }
+
+    public boolean writeIntegerToCounter(Integer count)
+    {
+        // read usernames hash set from database
+        Integer cnt = this.readContentCounter();
+        if(cnt == null)
+            count = (Integer) 1;
+
+        // delete the previous hashset database
+        File file = new File(LAST_ID_DATABASE_FILE_PATH);
+        file.delete();
+
+        // insert the hashset into the hashset database
+        return insertObjectIntoDatabase(count, LAST_ID_DATABASE_FILE_PATH);
+    }
+
+
     /**
      * checks if the given username is not used, implemented with checking for key in hash set
-      * @param username the given username to check
+     * @param username the given username to check
      * @return true if the username is not in the hash set, therefore no user is registered with that username in the database
      *         false if the username is in the hash set, therefore a user is already registered with that username in the database
      */
@@ -422,7 +485,7 @@ public class YYYFlixSystem {
             Set<String> hashSet = (HashSet<String>) oi.readObject();
             return !hashSet.contains(username.toLowerCase());
 
-        // catch all the thrown exceptions, close all open streams in finally
+            // catch all the thrown exceptions, close all open streams in finally
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (ClassNotFoundException e) {
@@ -448,6 +511,7 @@ public class YYYFlixSystem {
         return false;
     }
 
+
     /**
      * inserts an object into a database file
      * @param object represents the object that is required to be inserted into the database file
@@ -465,10 +529,10 @@ public class YYYFlixSystem {
 
                 // open file stream of user's database, sending path of database + additional file pathing
                 fos = new FileOutputStream(
-                                            objectPath(
-                                                            YYYFlixSystem.USERS_DATABASE_FILE_PATH, obj.getUsername()
-                                                      )
-                                          );
+                        objectPath(
+                                YYYFlixSystem.USERS_DATABASE_FILE_PATH, obj.getUsername()
+                        )
+                );
             }
             // check if the given object is a content
             else if (object instanceof Content) {
@@ -527,7 +591,7 @@ public class YYYFlixSystem {
             try {
                 // close object stream
                 if(oos != null)
-                    oos.close();                
+                    oos.close();
 
                 // close file stream
                 if(fos != null)
@@ -550,7 +614,7 @@ public class YYYFlixSystem {
             this.c.sayInvalidUsername();
             return false;
         }
-            
+
         // a user with the matching username is inside the database
         // now we need to check for matching password
 
@@ -572,22 +636,22 @@ public class YYYFlixSystem {
         this.c.connectedUser(username);   
         this.c.sayHello();      
         return true;
-            
+
     }
 
     public boolean logout(User user){
         this.c.sayBye();
-        
+
         if(user != null) {
             // upon successful remove from the connected list, it means the user was connected, else, they were not.
             if(this.connectedUsersList.remove(user)) {
-                System.out.println("Logout successful, hope to see you soon " + user.getName() + "!");                                        
+                System.out.println("Logout successful, hope to see you soon " + user.getName() + "!");
                 this.connectedUser = null;
                 this.userLibrary = null;
                 this.c.connectedUser("");            
                 return true;    
             }
-            
+
             System.out.println("Failed to logout, user " + user.getUsername() + " is not logged in.");
             return false;
         }
@@ -720,7 +784,7 @@ public class YYYFlixSystem {
             User user = (User) oi.readObject();
             return user;
 
-        // catch all the thrown exceptions, close all open streams in finally
+            // catch all the thrown exceptions, close all open streams in finally
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (ClassNotFoundException e) {
@@ -744,9 +808,10 @@ public class YYYFlixSystem {
             }
 
         }
-        
+
         return null;
     }
+
 
     /**
      * asks a user for content id and read content from the database that matches the content id
@@ -779,7 +844,7 @@ public class YYYFlixSystem {
             Content content = (Content) oi.readObject();
             return content;
 
-        // catch all the thrown exceptions, close all open streams in finally
+            // catch all the thrown exceptions, close all open streams in finally
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (ClassNotFoundException e) {
@@ -803,9 +868,9 @@ public class YYYFlixSystem {
             }
 
         }
-        
+
         return null;
-    }    
+    }
 
     /**
      * prints all the users in the database
@@ -817,11 +882,11 @@ public class YYYFlixSystem {
         ExecutorService executor = Executors.newCachedThreadPool();
 
         for (final File fileEntry : folder.listFiles()) {
-            
 
-            executor.execute(fileRunnable(fileEntry));                
+
+            executor.execute(fileRunnable(fileEntry));
         }
-        
+
         executor.shutdown();
 
         try {
@@ -832,9 +897,9 @@ public class YYYFlixSystem {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    
-        return;        
-    }    
+
+        return;
+    }
 
     /**
      * prints all the users in the database
@@ -842,8 +907,8 @@ public class YYYFlixSystem {
     public void printUsers() {
         System.out.println("==============================================");
         System.out.println("Users Database:");
-        printObjects(USERS_DATABASE_FILE_PATH); 
-        System.out.println("==============================================");             
+        printObjects(USERS_DATABASE_FILE_PATH);
+        System.out.println("==============================================");
     }
 
     /**
@@ -852,19 +917,19 @@ public class YYYFlixSystem {
     public void printContents() {
         System.out.println("==============================================");
         System.out.println("Content Database:");
-        printObjects(CONTENTS_DATABASE_FILE_PATH);  
-        System.out.println("==============================================");          
+        printObjects(CONTENTS_DATABASE_FILE_PATH);
+        System.out.println("==============================================");
     }
-    
+
     /**
      * prints the usernames hashset
      */
-    public void printUsernamesHashset() {        
+    public void printUsernamesHashset() {
         System.out.println("==============================================");
         System.out.println("Usernames HashSet Database:");
         System.out.println(readUsernamesHashSet());
         System.out.println("==============================================");
-    }    
+    }
 
     /**
      * the task of openning a single file
@@ -880,26 +945,26 @@ public class YYYFlixSystem {
             try {
                 // open file stream of users database
                 fi = new FileInputStream(fileEntry.getPath());
-    
+
                 // open object stream using the file stream
-                oi = new ObjectInputStream(fi);                
+                oi = new ObjectInputStream(fi);
 
                 Object obj = oi.readObject();
 
                 // type-cast the object to 
                 if (obj instanceof User) {
-                    
+
                     User user = (User) obj;
 
                     if(user != null)
-                        System.out.println(user);                 
+                        System.out.println(user);
                 }
                 else if (obj instanceof Commercial) {
 
                     Commercial commercial = (Commercial) obj;
 
                     if(commercial != null)
-                        System.out.println(commercial);      
+                        System.out.println(commercial);
                 }
 
                 else if (obj instanceof Movie) {
@@ -907,7 +972,7 @@ public class YYYFlixSystem {
                     Movie movie = (Movie) obj;
 
                     if(movie != null)
-                        System.out.println(movie);      
+                        System.out.println(movie);
                 }
 
                 else if (obj instanceof TVShow) {
@@ -915,19 +980,19 @@ public class YYYFlixSystem {
                     TVShow tvShow = (TVShow) obj;
 
                     if(tvShow != null)
-                        System.out.println(tvShow);      
+                        System.out.println(tvShow);
                 }
                 else {
                     System.out.println("[ERROR] Invalid object file found!");
                 }
-    
+
                 if(oi != null)
                     oi.close();
-    
+
                 if(fi != null)
                     fi.close();
 
-            // catch all the thrown exceptions, close all open streams in finally
+                // catch all the thrown exceptions, close all open streams in finally
             } catch (FileNotFoundException e) {
                 System.out.println("File not found");
             } catch (ClassNotFoundException e) {
@@ -1030,7 +1095,7 @@ public class YYYFlixSystem {
      * @param oldPassword represents the old password for security check
      * @param newPassword represents the new password to be updated
      * @return true if the update has been sucessful, false otherwise
-     */    
+     */
     public boolean changePassword(User user, String oldPassword, String newPassword) {
         // check if the old password is currently the user's password
         if(!user.isPasswordCorrect(oldPassword)) {
@@ -1044,14 +1109,14 @@ public class YYYFlixSystem {
             System.out.println("The given 'new' password is not valid, please enter a valid password (at least 6 characters).");
             return false;
         }
-        
+
         // update locally the user's password
         if(!user.setPassword(newPassword))
         {
             System.out.println("Failed to update the user's password due to an internal error, please try again.");
             return false;
         }
-        
+
         // updates the object of user in the database to be the given object
         return updateUserInDatabase(user);
     }
@@ -1061,7 +1126,7 @@ public class YYYFlixSystem {
      * @param user represents the the given user to be updated
      * @param newName represents the new name to be updated
      * @return true if the update has been sucessful, false otherwise
-     */    
+     */
     public boolean changeName(User user, String newName) {
         // update locally the user's name
         if(!user.setName(newName))
@@ -1086,7 +1151,7 @@ public class YYYFlixSystem {
         {
             System.out.println("Failed to update the user's payment method due to an internal error, please try again.");
             return false;
-        }        
+        }
 
         // updates the object of user in the database to be the given object
         return updateUserInDatabase(user);
