@@ -45,14 +45,16 @@ public class ViewMenu {
 
         // Creating the MenuBar and adding components
         JMenuBar mb = new JMenuBar();
-        JMenu m1 = new JMenu("FILE");
+        JMenu m1 = new JMenu("Menu");
         JMenu m2 = new JMenu("Help");
         mb.add(m1);
         mb.add(m2);
-        JMenuItem m11 = new JMenuItem("Open");
-        JMenuItem m22 = new JMenuItem("Save as");
+        JMenuItem m11 = new JMenuItem("Login/Logout");
+        JMenuItem m12 = new JMenuItem("Create Content");
+        JMenuItem m13 = new JMenuItem("Add Content To Library");
         m1.add(m11);
-        m1.add(m22);
+        m1.add(m12);
+        m1.add(m13);
 
         // Add UI element to frame
         GroupLayout layout = new GroupLayout(frame.getContentPane());

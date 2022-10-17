@@ -16,9 +16,13 @@ public class YYYFlixSystem {
 
     User connectedUser;
 
-    ModelMenu m;
-    ViewMenu v;
-    ControllerMenu c;
+    ModelMenu m1;
+    ViewMenu v1;
+    ControllerMenu c1;
+
+    ModelMenu m2;
+    ViewCreateContent v2;
+    ControllerMenu c2;
 
     // defines
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
@@ -45,14 +49,14 @@ public class YYYFlixSystem {
         //c1.initController();        
 
 
-        this.m = new ModelMenu("", "", "");
-        this.v = new ViewMenu("YYYFlix");
-        this.c = new ControllerMenu(this.m, this.v);
+        this.m1 = new ModelMenu("", "", "");
+        this.v1 = new ViewMenu("YYYFlix");
+        this.c1 = new ControllerMenu(this.m1, this.v1);
 
         // action for pressing login
-        v.getLogin().addActionListener(e -> login(m.getUsername(), m.getPassword()));
-        v.getLogout().addActionListener(e -> logout(connectedUser));
-        c.initController();   
+        v1.getLogin().addActionListener(e -> login(m1.getUsername(), m1.getPassword()));
+        v1.getLogout().addActionListener(e -> logout(connectedUser));
+        c1.initController();   
     }
 
     /**
