@@ -68,8 +68,8 @@ public class YYYFlixSystem {
         if(this.connectedUser == null)
             return false;
 
-        this.userLibrary = readLibrary(this.connectedUser.getUsername());
-        return this.userLibrary.addContent(readContent());
+            
+        return this.userLibrary.addContent(readContent());        
     }
 
     /**
@@ -528,7 +528,8 @@ public class YYYFlixSystem {
 
         System.out.println("Login successful, welcome back " + user.getName() + "!");
         this.connectedUsersList.add(user);
-        this.connectedUser = user;   
+        this.connectedUser = user;
+        this.userLibrary = readLibrary(this.connectedUser.getUsername());   
         this.c.connectedUser(username);   
         this.c.sayHello();      
         return true;
@@ -543,6 +544,7 @@ public class YYYFlixSystem {
             if(this.connectedUsersList.remove(user)) {
                 System.out.println("Logout successful, hope to see you soon " + user.getName() + "!");                                        
                 this.connectedUser = null;
+                this.userLibrary = null;
                 this.c.connectedUser("");            
                 return true;    
             }
