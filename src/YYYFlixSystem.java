@@ -26,6 +26,7 @@ public class YYYFlixSystem {
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
     private static final String LIBRARIES_DATABASE_FILE_PATH = "LibrariesDatabase";
     private static final String USERS_SUBS_DETAILS_DATABASE_FILE_PATH = "UsersSubsDetailsDatabase";
+    private static final String SUBS_DATABASE_FILE_PATH = "SubsDatabase";
     private static final String CONTENTS_DATABASE_FILE_PATH = "ContentDatabase";
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
     private static final String LAST_ID_DATABASE_FILE_PATH = "contentID.dat";
@@ -76,9 +77,16 @@ public class YYYFlixSystem {
             
         
         Scanner scan = new Scanner(System.in);
-        System.out.println("Please enter how many month you want to subscribe to [1/3/6]: ");
-        int months = Integer.parseInt(scan.nextLine());
-        Subscription sub = new Subscription(months*10, months);
+        System.out.println("Please choose the subscription ID you'd like to subscribe to: ");
+        int subID = Integer.parseInt(scan.nextLine());
+        Subscription sub = readSub(subID);
+        while(sub == null) {
+            System.out.println("[ERROR] Invalid sub ID, please enter a valid sub ID.");
+            System.out.println("Please choose the subscription ID you'd like to subscribe to: ");
+            subID = Integer.parseInt(scan.nextLine());
+            sub = readSub(subID);
+        }
+
         this.userSubDetails = new UserSubscriptionDetails(connectedUser, sub);
         return updateSubDetailsInDatabase();
     }
@@ -102,7 +110,16 @@ public class YYYFlixSystem {
         initDatabaseFromPath(USERS_DATABASE_FILE_PATH, false);
 
         // init users subs details database
-        initDatabaseFromPath(USERS_SUBS_DETAILS_DATABASE_FILE_PATH, false);         
+        initDatabaseFromPath(USERS_SUBS_DETAILS_DATABASE_FILE_PATH, false);     
+        
+        // init subs database
+        initDatabaseFromPath(SUBS_DATABASE_FILE_PATH, false);
+        // insert hard-coded subs
+        insertObjectIntoDatabase(new Subscription((float)0, (float)0), SUBS_DATABASE_FILE_PATH);
+        insertObjectIntoDatabase(new Subscription((float)15, (float)1), SUBS_DATABASE_FILE_PATH);
+        insertObjectIntoDatabase(new Subscription((float)40, (float)3), SUBS_DATABASE_FILE_PATH);
+        insertObjectIntoDatabase(new Subscription((float)70, (float)6), SUBS_DATABASE_FILE_PATH);
+        insertObjectIntoDatabase(new Subscription((float)120, (float)12), SUBS_DATABASE_FILE_PATH);
 
         // init library database
         initDatabaseFromPath(LIBRARIES_DATABASE_FILE_PATH, false);        
@@ -556,7 +573,7 @@ public class YYYFlixSystem {
             }
             // check if the given object is a library
             else if (object instanceof Library) {
-                // type-cast the object to user, inorder to get information of username for additional pathing
+                // type-cast the object to library, inorder to get information of username for additional pathing
                 Library obj = (Library) object;
 
                 // open file stream of user's database, sending path of database + additional file pathing
@@ -566,6 +583,18 @@ public class YYYFlixSystem {
                                                       )
                                           );
             } 
+            // check if the given object is a Subscription
+            else if (object instanceof Subscription) {
+                // type-cast the object to sub, inorder to get information of id for additional pathing
+                Subscription obj = (Subscription) object;
+
+                // open file stream of user's database, sending path of database + additional file pathing
+                fos = new FileOutputStream(
+                                            objectPath(
+                                                            YYYFlixSystem.SUBS_DATABASE_FILE_PATH, String.valueOf(obj.getID())
+                                                      )
+                                          );
+            }             
             else if (object instanceof UserSubscriptionDetails) {
                 // type-cast the object to user, inorder to get information of username for additional pathing
                 UserSubscriptionDetails obj = (UserSubscriptionDetails) object;
@@ -670,6 +699,55 @@ public class YYYFlixSystem {
 
 
     }
+
+    // TODO: make readObject and check for instance of
+    /**
+     * read sub from the database that matches the sub id
+     * @param subID the sub id of the searched for sub in the database
+     * @return if a matching sub is found, returns the sub,if not, returns null
+     */
+    public Subscription readSub(int subID)
+    {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            // open file stream of users database
+            fi = new FileInputStream(objectPath(SUBS_DATABASE_FILE_PATH, String.valueOf(subID))) ;
+
+            // open object stream using the file stream
+            oi = new ObjectInputStream(fi);
+
+            // read User object from the object stream until a matching user is found
+            Subscription sub = (Subscription) oi.readObject();
+            return sub;
+
+        // catch all the thrown exceptions, close all open streams in finally
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                // close object stream
+                if(oi != null)
+                    oi.close();
+
+                // close file stream
+                if(fi != null)
+                    fi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        
+        return null;
+    }     
 
     // TODO: make readObject and check for instance of
     /**
