@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class NotifyUser {
+public class NotifyUser implements Serializable {
     // fields
     private User user;
     private ArrayList<Notification> notificationList;

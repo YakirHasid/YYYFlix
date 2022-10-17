@@ -15,4 +15,5 @@ UsersDatabase/*
 contentHashSetDatabase.dat
 ContentDatabase/*
 LibrariesDatabase/*
+SubsDatabase/*
 /out/*
