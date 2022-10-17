@@ -69,7 +69,8 @@ public class YYYFlixSystem {
             return false;
 
             
-        return this.userLibrary.addContent(readContent());        
+        this.userLibrary.addContent(readContent());        
+        return updateLibraryInDatabase();
     }
 
     /**
@@ -867,17 +868,20 @@ public class YYYFlixSystem {
         };
     }
 
-    // updates the database file of the given user with the updated instance of the user
-    public boolean updateUser(User user)
+    /**
+     * deletes the database file of the given user
+     * @param username represents the user we want to delete, username is the identifier
+     * @return true only if the user's database file exists and has been deleted successfully, otherwise false
+     */
+    public boolean deleteLibrary(String username)
     {
-        // delete previous database file
-        if(!this.deleteUser(user.getUsername()))
-            return false;
-            
-        // write new database file (no need for hashset update, username never changes)
-        return true;
 
-    }
+        // file stream of given user's database file
+        File file = new File(objectPath(LIBRARIES_DATABASE_FILE_PATH, username));
+
+        // return the result of deleting the user's database file
+        return file.delete();
+    }    
 
     /**
      * deletes the database file of the given user
@@ -1008,6 +1012,32 @@ public class YYYFlixSystem {
         }
 
         // user's details has been successfully updated in the database
+        System.out.println("Details have been updated successfully.");
+        return true;
+    }
+
+        /**
+     * updates an old copy of library in the database to be the new given copy     
+     * @return true if the update has been sucessful (the given user has been found in the database and has been removed), false otherwise
+     */
+    public boolean updateLibraryInDatabase() {
+
+        // deletes the database of the current user, prepares for new database file
+        if(!deleteLibrary(this.connectedUser.getUsername()))
+        {
+            System.out.println("Library of " + this.connectedUser.getUsername() + " has not been found inside the database, can't update the instance.");
+            return false;
+        }
+
+        // inserts the newly updated library into the database
+        if(!this.insertObjectIntoDatabase(this.userLibrary, LIBRARIES_DATABASE_FILE_PATH))
+        {
+            System.out.println("Failed to insert the updated library into database.");
+            // TODO: Probably exception throw because library is now not in the database
+            return false;
+        }
+
+        // library's details has been successfully updated in the database
         System.out.println("Details have been updated successfully.");
         return true;
     }
