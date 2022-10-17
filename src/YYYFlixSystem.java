@@ -69,8 +69,11 @@ public class YYYFlixSystem {
     }
 
     private boolean subscribe() {
-        if(this.connectedUser == null)
+        if(this.connectedUser == null) {
+            this.c.sayNotLoggedIn();
             return false;
+        }
+            
         
         Scanner scan = new Scanner(System.in);
         System.out.println("Please enter how many month you want to subscribe to [1/3/6]: ");
@@ -81,8 +84,10 @@ public class YYYFlixSystem {
     }
 
     private boolean addContentToLibrary() {
-        if(this.connectedUser == null)
+        if(this.connectedUser == null) {
+            this.c.sayNotLoggedIn();
             return false;
+        }            
 
             
         this.userLibrary.addContent(readContent());        

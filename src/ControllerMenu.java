@@ -106,4 +106,9 @@ public class ControllerMenu {
       JOptionPane.showMessageDialog(null, "[ERROR] Incorrect password", "Info",
       JOptionPane.INFORMATION_MESSAGE); 
    }
+
+   public void sayNotLoggedIn() {
+      JOptionPane.showMessageDialog(null, "[ERROR] Please Login before using the system.", "Info",
+      JOptionPane.INFORMATION_MESSAGE); 
+   }
 }
