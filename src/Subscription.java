@@ -1,4 +1,6 @@
-public class Subscription {
+import java.io.Serializable;
+
+public class Subscription implements Serializable {
     // fields
     private int ID; // identifier
     private static int COUNTER = 0;
