@@ -9,10 +9,18 @@ import javax.swing.SwingConstants;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.ObjectInputStream.GetField;
 
 public class ViewMenu {
     // View uses Swing framework to display UI to user
     private JFrame frame;
+    private JMenuBar mb;
+    private JMenu m1;
+    private JMenuItem m11;
+    private JMenuItem m12;
+    private JMenuItem m13;
+    private JMenuItem m14;
+    private JMenuItem m15;
     private JLabel usernameLabel;
     private JLabel passwordLabel;
     private JLabel connectedUserLabel;
@@ -40,19 +48,21 @@ public class ViewMenu {
         logout = new JButton("Logout");
 
         // Creating the MenuBar and adding components
-        JMenuBar mb = new JMenuBar();
-        JMenu m1 = new JMenu("Menu");
+        mb = new JMenuBar();
+        m1 = new JMenu("Menu");
         JMenu m2 = new JMenu("Help");
         mb.add(m1);
         mb.add(m2);
-        JMenuItem m11 = new JMenuItem("Create Content");
-        JMenuItem m12 = new JMenuItem("Add Content To Your Library");
-        JMenuItem m13 = new JMenuItem("Subscribe");
-        JMenuItem m14 = new JMenuItem("Send Notification To A User");
-        m1.add(m11);
+        m11 = new JMenuItem("Register");        
+        m12 = new JMenuItem("Create Content");
+        m13 = new JMenuItem("Add Content To Your Library");
+        m14 = new JMenuItem("Subscribe");
+        m15 = new JMenuItem("Send Notification To A User");           
+        m1.add(m11);        
         m1.add(m12);
         m1.add(m13);
-        m1.add(m14);        
+        m1.add(m14);
+        m1.add(m15);        
 
         // Add UI element to frame
         GroupLayout layout = new GroupLayout(frame.getContentPane());
@@ -90,6 +100,38 @@ public class ViewMenu {
 
     public void setFrame(JFrame frame) {
         this.frame = frame;
+    }
+
+    public JMenuBar getMb() {
+        return mb;
+    }
+
+    public void setMb(JMenuBar mb) {
+        this.mb = mb;
+    }
+
+    public JMenu getMainMenu() {
+        return this.m1;
+    }
+
+    public JMenuItem getMenu1() {
+        return this.m11;
+    }
+
+    public JMenuItem getMenu2() {
+        return this.m12;
+    }
+
+    public JMenuItem getMenu3() {
+        return this.m13;
+    }
+
+    public JMenuItem getMenu4() {
+        return this.m14;
+    }
+
+    public JMenuItem getMenu5() {
+        return this.m15;
     }
 
     public JLabel getConnectedUserLabel() {
