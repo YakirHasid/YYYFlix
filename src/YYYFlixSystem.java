@@ -240,10 +240,13 @@ public class YYYFlixSystem {
 
         //#region create the derived content object
         Content content = null;
-        if(readContentCounter()==null)
+
+        Integer counter = readContentCounter()
+        if(counter==null)
             Content.COUNTER = 0;
         else
-            Content.COUNTER=readContentCounter();
+            Content.COUNTER=counter;
+
         switch(contentType)
         {
             // Commercial
