@@ -16,7 +16,7 @@ public class YYYFlixSystem {
 
     User connectedUser;
     Library userLibrary;
-    UserSubscriptionDetails userSub;
+    UserSubscriptionDetails userSubDetails;
 
     ModelMenu m;
     ViewMenu v;
@@ -25,7 +25,7 @@ public class YYYFlixSystem {
     // defines
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
     private static final String LIBRARIES_DATABASE_FILE_PATH = "LibrariesDatabase";
-    private static final String SUBS_DATABASE_FILE_PATH = "SubsDatabase";
+    private static final String USERS_SUBS_DETAILS_DATABASE_FILE_PATH = "UsersSubsDetailsDatabase";
     private static final String CONTENTS_DATABASE_FILE_PATH = "ContentDatabase";
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
     private static final String LAST_ID_DATABASE_FILE_PATH = "contentID.dat";
@@ -79,7 +79,7 @@ public class YYYFlixSystem {
         System.out.println("Please enter how many month you want to subscribe to [1/3/6]: ");
         int months = Integer.parseInt(scan.nextLine());
         Subscription sub = new Subscription(months*10, months);
-        this.userSub = new UserSubscriptionDetails(connectedUser, sub);
+        this.userSubDetails = new UserSubscriptionDetails(connectedUser, sub);
         return updateSubDetailsInDatabase();
     }
 
@@ -101,8 +101,8 @@ public class YYYFlixSystem {
         // init users database
         initDatabaseFromPath(USERS_DATABASE_FILE_PATH, false);
 
-        // init library database
-        initDatabaseFromPath(SUBS_DATABASE_FILE_PATH, false);         
+        // init users subs details database
+        initDatabaseFromPath(USERS_SUBS_DETAILS_DATABASE_FILE_PATH, false);         
 
         // init library database
         initDatabaseFromPath(LIBRARIES_DATABASE_FILE_PATH, false);        
@@ -331,9 +331,9 @@ public class YYYFlixSystem {
             return false;
         }
 
-        UserSubscriptionDetails subDetails = new UserSubscriptionDetails(user, new Subscription(0, 0));
+        UserSubscriptionDetails userSubDetails = new UserSubscriptionDetails(user, new Subscription(0, 0));
         // insert the library object into the database
-        if(!this.insertObjectIntoDatabase(subDetails, SUBS_DATABASE_FILE_PATH))
+        if(!this.insertObjectIntoDatabase(userSubDetails, USERS_SUBS_DETAILS_DATABASE_FILE_PATH))
         {
             System.out.println("Register Failed, Please try again.");
             return false;
@@ -573,7 +573,7 @@ public class YYYFlixSystem {
                 // open file stream of user's database, sending path of database + additional file pathing
                 fos = new FileOutputStream(
                                             objectPath(
-                                                            YYYFlixSystem.SUBS_DATABASE_FILE_PATH, String.valueOf(obj.getUser().getUsername())
+                                                            YYYFlixSystem.USERS_SUBS_DETAILS_DATABASE_FILE_PATH, String.valueOf(obj.getUser().getUsername())
                                                       )
                                           );
             }                           
@@ -640,7 +640,7 @@ public class YYYFlixSystem {
         this.connectedUsersList.add(user);
         this.connectedUser = user;
         this.userLibrary = readLibrary(this.connectedUser.getUsername()); 
-        this.userSub = readSub(this.connectedUser.getUsername());   
+        this.userSubDetails = readUserSubDetails(this.connectedUser.getUsername());   
         this.c.connectedUser(username);   
         this.c.sayHello();      
         return true;
@@ -677,13 +677,13 @@ public class YYYFlixSystem {
      * @param username the username of the searched for user in the database
      * @return if a matching user is found, returns the user,if not, returns null
      */
-    public UserSubscriptionDetails readSub(String username)
+    public UserSubscriptionDetails readUserSubDetails(String username)
     {
         FileInputStream fi = null;
         ObjectInputStream oi = null;
         try {
             // open file stream of users database
-            fi = new FileInputStream(objectPath(SUBS_DATABASE_FILE_PATH, username)) ;
+            fi = new FileInputStream(objectPath(USERS_SUBS_DETAILS_DATABASE_FILE_PATH, username)) ;
 
             // open object stream using the file stream
             oi = new ObjectInputStream(fi);
@@ -1037,7 +1037,7 @@ public class YYYFlixSystem {
     {
 
         // file stream of given user's database file
-        File file = new File(objectPath(SUBS_DATABASE_FILE_PATH, username));
+        File file = new File(objectPath(USERS_SUBS_DETAILS_DATABASE_FILE_PATH, username));
 
         // return the result of deleting the user's database file
         return file.delete();
@@ -1206,7 +1206,7 @@ public class YYYFlixSystem {
         }
 
         // inserts the newly updated library into the database
-        if(!this.insertObjectIntoDatabase(this.userSub, SUBS_DATABASE_FILE_PATH))
+        if(!this.insertObjectIntoDatabase(this.userSubDetails, USERS_SUBS_DETAILS_DATABASE_FILE_PATH))
         {
             System.out.println("Failed to insert the updated sub into database.");
             // TODO: Probably exception throw because library is now not in the database
