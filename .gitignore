@@ -17,3 +17,4 @@ ContentDatabase/*
 LibrariesDatabase/*
 SubsDatabase/*
 /out/*
+contentID.dat
