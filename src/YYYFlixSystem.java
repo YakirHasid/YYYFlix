@@ -20,9 +20,9 @@ public class YYYFlixSystem {
     ViewMenu v1;
     ControllerMenu c1;
 
-    ModelMenu m2;
+    ModelCreateContent m2;
     ViewCreateContent v2;
-    ControllerMenu c2;
+    ControllerCreateContent c2;
 
     // defines
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
@@ -56,7 +56,15 @@ public class YYYFlixSystem {
         // action for pressing login
         v1.getLogin().addActionListener(e -> login(m1.getUsername(), m1.getPassword()));
         v1.getLogout().addActionListener(e -> logout(connectedUser));
-        c1.initController();   
+        c1.initController(); 
+        
+        this.m2 = new ModelCreateContent("", "", "", "", "");
+        this.v2 = new ViewCreateContent("YYYFlix - Create Content");
+        this.c2 = new ControllerCreateContent(this.m2, this.v2);
+
+
+        v2.getSubmit().addActionListener(e -> createContent(m2.getContentType(), m2.getFormat(), m2.getSubtitlesFileName(), m2.getName(), m2.getLength()));
+        c2.initController();        
     }
 
     /**
@@ -160,6 +168,64 @@ public class YYYFlixSystem {
         // return the newly created user
         return user;
     }
+
+    public Content createContent(String contentTypeStr, String format, String subtitlesFileName, String name, float length) {
+
+        Content.VALID_CONTENT_TYPES contentType = Content.isContentValid(contentTypeStr);
+        switch(contentType)
+        {
+            // Commercial
+            case Commercial:
+                // get publisher from user
+                System.out.println("Please enter your desired publisher: ");
+                String publisher = scan.nextLine(); 
+                
+                // create Commercial object from the given parameters
+                content = new Commercial(format, subtitlesFileName, name, length, publisher);
+                break;
+
+            // Movie
+            case Movie:
+                // get director from user
+                System.out.println("Please enter your desired director: ");
+                String director = scan.nextLine(); 
+                
+                // create Movie object from the given parameters     
+                content =  new Movie(format, subtitlesFileName, name, length, director);       
+                break;
+
+            // TVShow
+            case TVShow:
+                // get season from user
+                System.out.println("Please enter your desired season: ");
+                int season = Integer.parseInt(scan.nextLine()); 
+
+                // get episode from user
+                System.out.println("Please enter your desired episode: ");
+                int episode = Integer.parseInt(scan.nextLine());                 
+                
+                // create TVShow object from the given parameters     
+                content =  new TVShow(format, subtitlesFileName, name, length, season, episode);       
+                break;
+
+            default:
+                // TODO: maybe throws exception because for the given content there is no getting details from user implementation        
+                content =  null;        
+                break;                          
+        }
+        //#endregion
+
+        // finished input from user, close input scanner
+        scan.close();
+
+        // inserts the user into the user database and inserts the username into the username hashset
+        if(!insertObjectIntoDatabase(content, YYYFlixSystem.CONTENTS_DATABASE_FILE_PATH))
+            return null;
+
+        // return the newly created user
+        return content;
+
+    }    
 
     public Content createContent() {
         // input scanner
@@ -473,7 +539,7 @@ public class YYYFlixSystem {
         // quick check if the username is even in the database, using the username hashset
         if(this.isUsernameValid(username)){
             System.out.println("[ERROR] Username is not in the database.");
-            this.c.sayInvalidUsername();
+            this.c1.sayInvalidUsername();
             return false;
         }
             
@@ -486,28 +552,28 @@ public class YYYFlixSystem {
         if(!user.isPasswordCorrect(password))
         {
             System.out.println("[ERROR]: Login Failed, password is wrong.");
-            this.c.sayIncorrectPassword();
+            this.c1.sayIncorrectPassword();
             return false;
         }
 
         System.out.println("Login successful, welcome back " + user.getName() + "!");
         this.connectedUsersList.add(user);
         this.connectedUser = user;   
-        this.c.connectedUser(username);   
-        this.c.sayHello();      
+        this.c1.connectedUser(username);   
+        this.c1.sayHello();      
         return true;
             
     }
 
     public boolean logout(User user){
-        this.c.sayBye();
+        this.c1.sayBye();
         
         if(user != null) {
             // upon successful remove from the connected list, it means the user was connected, else, they were not.
             if(this.connectedUsersList.remove(user)) {
                 System.out.println("Logout successful, hope to see you soon " + user.getName() + "!");                                        
                 this.connectedUser = null;
-                this.c.connectedUser("");            
+                this.c1.connectedUser("");            
                 return true;    
             }
             
