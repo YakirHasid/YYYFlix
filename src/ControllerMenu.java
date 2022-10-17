@@ -1,5 +1,8 @@
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.*;
+import java.awt.*;
 
 public class ControllerMenu {
    private ModelMenu model;
@@ -23,9 +26,22 @@ public class ControllerMenu {
       // view.getPasswordTextfield().addActionListener(e -> savePassword());
       // view.getUsernameSaveButton().addActionListener(e -> saveUsername());
       // view.getPasswordSaveButton().addActionListener(e -> savePassword());
+      view.getMenu1().addActionListener(e -> pressMenu());
+      view.getMenu2().addActionListener(e -> pressMenu());
+      view.getMenu3().addActionListener(e -> pressMenu());
+      view.getMenu4().addActionListener(e -> pressMenu());
+      view.getMenu5().addActionListener(e -> pressMenu());
       view.getLogin().addActionListener(e -> pressLogin());
       view.getLogout().addActionListener(e -> pressLogout());      
    }
+
+   private void pressMenu() {
+       JOptionPane.showMessageDialog(null, "Check Console Command For Further Actions.", "Info", JOptionPane.INFORMATION_MESSAGE);      
+   }
+
+   private void returnToMenu() {
+      JOptionPane.showMessageDialog(null, "Continue Actions in the GUI", "Info", JOptionPane.INFORMATION_MESSAGE);      
+  }
 
    public void cleanFields() {
       view.getUsernameTextfield().setText("");
