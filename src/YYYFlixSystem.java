@@ -16,6 +16,7 @@ public class YYYFlixSystem {
 
     User connectedUser;
     Library userLibrary;
+    UserSubscriptionDetails userSub;
 
     ModelMenu m;
     ViewMenu v;
@@ -24,6 +25,7 @@ public class YYYFlixSystem {
     // defines
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
     private static final String LIBRARIES_DATABASE_FILE_PATH = "LibrariesDatabase";
+    private static final String SUBS_DATABASE_FILE_PATH = "SubsDatabase";
     private static final String CONTENTS_DATABASE_FILE_PATH = "ContentDatabase";
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";    
 
@@ -61,7 +63,20 @@ public class YYYFlixSystem {
         v.getMenu1().addActionListener(e -> register());
         v.getMenu2().addActionListener(e -> createContent());
         v.getMenu3().addActionListener(e -> addContentToLibrary());        
+        v.getMenu4().addActionListener(e -> subscribe());
         c.initController();   
+    }
+
+    private boolean subscribe() {
+        if(this.connectedUser == null)
+            return false;
+        
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Please enter how many month you want to subscribe to [1/3/6]: ");
+        int months = Integer.parseInt(scan.nextLine());
+        Subscription sub = new Subscription(months*10, months);
+        this.userSub = new UserSubscriptionDetails(connectedUser, sub);
+        return updateSubDetailsInDatabase();
     }
 
     private boolean addContentToLibrary() {
@@ -79,6 +94,9 @@ public class YYYFlixSystem {
     public void initDatabases() {
         // init users database
         initDatabaseFromPath(USERS_DATABASE_FILE_PATH, false);
+
+        // init library database
+        initDatabaseFromPath(SUBS_DATABASE_FILE_PATH, false);         
 
         // init library database
         initDatabaseFromPath(LIBRARIES_DATABASE_FILE_PATH, false);        
@@ -295,6 +313,14 @@ public class YYYFlixSystem {
             System.out.println("Register Failed, Please try again.");
             return false;
         }
+
+        UserSubscriptionDetails subDetails = new UserSubscriptionDetails(user, new Subscription(0, 0));
+        // insert the library object into the database
+        if(!this.insertObjectIntoDatabase(subDetails, SUBS_DATABASE_FILE_PATH))
+        {
+            System.out.println("Register Failed, Please try again.");
+            return false;
+        }
         
         // add username to the hashset database, in lower cases to make sure hashset contains function works well
         if(!this.addUsernameToHashset(user.getUsername()))
@@ -467,7 +493,18 @@ public class YYYFlixSystem {
                                                             YYYFlixSystem.LIBRARIES_DATABASE_FILE_PATH, String.valueOf(obj.getUser().getUsername())
                                                       )
                                           );
-            }                         
+            } 
+            else if (object instanceof UserSubscriptionDetails) {
+                // type-cast the object to user, inorder to get information of username for additional pathing
+                UserSubscriptionDetails obj = (UserSubscriptionDetails) object;
+
+                // open file stream of user's database, sending path of database + additional file pathing
+                fos = new FileOutputStream(
+                                            objectPath(
+                                                            YYYFlixSystem.SUBS_DATABASE_FILE_PATH, String.valueOf(obj.getUser().getUsername())
+                                                      )
+                                          );
+            }                           
             // the given object is not a user
             else {
                 // open file stream of a database, sending path of database
@@ -530,7 +567,8 @@ public class YYYFlixSystem {
         System.out.println("Login successful, welcome back " + user.getName() + "!");
         this.connectedUsersList.add(user);
         this.connectedUser = user;
-        this.userLibrary = readLibrary(this.connectedUser.getUsername());   
+        this.userLibrary = readLibrary(this.connectedUser.getUsername()); 
+        this.userSub = readSub(this.connectedUser.getUsername());   
         this.c.connectedUser(username);   
         this.c.sayHello();      
         return true;
@@ -560,6 +598,55 @@ public class YYYFlixSystem {
 
 
     }
+
+    // TODO: make readObject and check for instance of
+    /**
+     * read user from the database that matches the username
+     * @param username the username of the searched for user in the database
+     * @return if a matching user is found, returns the user,if not, returns null
+     */
+    public UserSubscriptionDetails readSub(String username)
+    {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            // open file stream of users database
+            fi = new FileInputStream(objectPath(SUBS_DATABASE_FILE_PATH, username)) ;
+
+            // open object stream using the file stream
+            oi = new ObjectInputStream(fi);
+
+            // read User object from the object stream until a matching user is found
+            UserSubscriptionDetails sub = (UserSubscriptionDetails) oi.readObject();
+            return sub;
+
+        // catch all the thrown exceptions, close all open streams in finally
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                // close object stream
+                if(oi != null)
+                    oi.close();
+
+                // close file stream
+                if(fi != null)
+                    fi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        
+        return null;
+    }     
 
 
     // TODO: make readObject and check for instance of
@@ -873,6 +960,22 @@ public class YYYFlixSystem {
      * @param username represents the user we want to delete, username is the identifier
      * @return true only if the user's database file exists and has been deleted successfully, otherwise false
      */
+    public boolean deleteSub(String username)
+    {
+
+        // file stream of given user's database file
+        File file = new File(objectPath(SUBS_DATABASE_FILE_PATH, username));
+
+        // return the result of deleting the user's database file
+        return file.delete();
+    }    
+    
+
+    /**
+     * deletes the database file of the given user
+     * @param username represents the user we want to delete, username is the identifier
+     * @return true only if the user's database file exists and has been deleted successfully, otherwise false
+     */
     public boolean deleteLibrary(String username)
     {
 
@@ -1016,7 +1119,33 @@ public class YYYFlixSystem {
         return true;
     }
 
-        /**
+    /**
+     * updates an old copy of library in the database to be the new given copy     
+     * @return true if the update has been sucessful (the given user has been found in the database and has been removed), false otherwise
+     */
+    public boolean updateSubDetailsInDatabase() {
+
+        // deletes the database of the current user, prepares for new database file
+        if(!deleteSub(this.connectedUser.getUsername()))
+        {
+            System.out.println("Sub of " + this.connectedUser.getUsername() + " has not been found inside the database, can't update the instance.");
+            return false;
+        }
+
+        // inserts the newly updated library into the database
+        if(!this.insertObjectIntoDatabase(this.userSub, SUBS_DATABASE_FILE_PATH))
+        {
+            System.out.println("Failed to insert the updated sub into database.");
+            // TODO: Probably exception throw because library is now not in the database
+            return false;
+        }
+
+        // library's details has been successfully updated in the database
+        System.out.println("Details have been updated successfully.");
+        return true;
+    }    
+
+    /**
      * updates an old copy of library in the database to be the new given copy     
      * @return true if the update has been sucessful (the given user has been found in the database and has been removed), false otherwise
      */
