@@ -241,7 +241,7 @@ public class YYYFlixSystem {
         //#region create the derived content object
         Content content = null;
 
-        Integer counter = readContentCounter()
+        Integer counter = readContentCounter();
         if(counter==null)
             Content.COUNTER = 0;
         else
