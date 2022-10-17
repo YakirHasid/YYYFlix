@@ -19,8 +19,6 @@ public class ViewMenu {
     private JTextField usernameTextfield;
     private JTextField passwordTextfield;
     private JTextField connectedUserTextfield;
-    private JButton usernameSaveButton;
-    private JButton passwordSaveButton;
     private JButton login;
     private JButton logout;
 
@@ -38,21 +36,23 @@ public class ViewMenu {
         usernameTextfield = new JTextField();
         passwordTextfield = new JTextField();
         connectedUserTextfield = new JTextField();
-        usernameSaveButton = new JButton("Save username");
-        passwordSaveButton = new JButton("Save password");
         login = new JButton("Login");
         logout = new JButton("Logout");
 
         // Creating the MenuBar and adding components
         JMenuBar mb = new JMenuBar();
-        JMenu m1 = new JMenu("FILE");
+        JMenu m1 = new JMenu("Menu");
         JMenu m2 = new JMenu("Help");
         mb.add(m1);
         mb.add(m2);
-        JMenuItem m11 = new JMenuItem("Open");
-        JMenuItem m22 = new JMenuItem("Save as");
+        JMenuItem m11 = new JMenuItem("Create Content");
+        JMenuItem m12 = new JMenuItem("Add Content To Your Library");
+        JMenuItem m13 = new JMenuItem("Subscribe");
+        JMenuItem m14 = new JMenuItem("Send Notification To A User");
         m1.add(m11);
-        m1.add(m22);
+        m1.add(m12);
+        m1.add(m13);
+        m1.add(m14);        
 
         // Add UI element to frame
         GroupLayout layout = new GroupLayout(frame.getContentPane());
@@ -66,9 +66,6 @@ public class ViewMenu {
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(connectedUserTextfield)
                         .addComponent(usernameTextfield).addComponent(passwordTextfield))
 
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(usernameSaveButton)
-                        .addComponent(passwordSaveButton))
-
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(login)
                         .addComponent(logout)));
 
@@ -77,12 +74,11 @@ public class ViewMenu {
                         .addComponent(connectedUserTextfield))
 
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(usernameLabel)
-                        .addComponent(usernameTextfield).addComponent(usernameSaveButton).addComponent(login))
+                        .addComponent(usernameTextfield).addComponent(login))
 
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(passwordLabel)
-                        .addComponent(passwordTextfield).addComponent(passwordSaveButton).addComponent(logout)));
+                        .addComponent(passwordTextfield).addComponent(logout)));
 
-        layout.linkSize(SwingConstants.HORIZONTAL, usernameSaveButton, passwordSaveButton);
         layout.linkSize(SwingConstants.HORIZONTAL, login, logout);
         frame.getContentPane().setLayout(layout);    
         frame.setJMenuBar(mb);    
@@ -142,22 +138,6 @@ public class ViewMenu {
 
     public void setPasswordTextfield(JTextField passwordTextfield) {
         this.passwordTextfield = passwordTextfield;
-    }
-
-    public JButton getUsernameSaveButton() {
-        return usernameSaveButton;
-    }
-
-    public void setUsernameSaveButton(JButton usernameSaveButton) {
-        this.usernameSaveButton = usernameSaveButton;
-    }
-
-    public JButton getPasswordSaveButton() {
-        return passwordSaveButton;
-    }
-
-    public void setPasswordSaveButton(JButton passwordSaveButton) {
-        this.passwordSaveButton = passwordSaveButton;
     }
 
     public JButton getLogin() {
