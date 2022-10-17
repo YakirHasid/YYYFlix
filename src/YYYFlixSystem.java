@@ -172,6 +172,7 @@ public class YYYFlixSystem {
     public Content createContent(String contentTypeStr, String format, String subtitlesFileName, String name, float length) {
 
         Content.VALID_CONTENT_TYPES contentType = Content.isContentValid(contentTypeStr);
+        
         switch(contentType)
         {
             // Commercial
