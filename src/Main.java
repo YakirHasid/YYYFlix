@@ -12,10 +12,12 @@ public class Main {
         //testSubCreate();
         //testLogin();
         //testDatabaseBug();
-        testPrintDatabases();
+        //testPrintDatabases();
         //testUserChangeDetails();
         //testDeleteFile();
         //testContentCreation();
+        //SwingGUI gui = new SwingGUI();
+        YYYFlixSystem SYS= new YYYFlixSystem();
     }
 
     public static void testUserLibrary()

@@ -3,7 +3,7 @@ import java.io.Serializable;
 abstract public class Content implements Serializable {
     // fields
     private final int ID; // identifier
-    private static int COUNTER = 0;
+    public static int COUNTER = 0;
     public String format;
     public String subtitlesFileName;
     public String name;

@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Library {
+public class Library implements Serializable {
     // fields
     private User user;
     private ArrayList<Content> contentList;
