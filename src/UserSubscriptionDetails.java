@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class UserSubscriptionDetails {
+public class UserSubscriptionDetails implements Serializable {
     // fields
     User user;
     Subscription subscription;
@@ -31,6 +32,10 @@ public class UserSubscriptionDetails {
 
     public LocalDate getEndDate() {
         return endDate;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override

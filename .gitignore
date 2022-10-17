@@ -14,3 +14,6 @@ usernamesHashSetDatabase.dat
 UsersDatabase/*
 contentHashSetDatabase.dat
 ContentDatabase/*
+LibrariesDatabase/*
+SubsDatabase/*
+/out/*
