@@ -15,6 +15,7 @@ public class YYYFlixSystem {
     ArrayList<User> connectedUsersList;
 
     User connectedUser;
+    Library userLibrary;
 
     ModelMenu m;
     ViewMenu v;
@@ -22,6 +23,7 @@ public class YYYFlixSystem {
 
     // defines
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
+    private static final String LIBRARIES_DATABASE_FILE_PATH = "LibrariesDatabase";
     private static final String CONTENTS_DATABASE_FILE_PATH = "ContentDatabase";
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";    
 
@@ -51,8 +53,23 @@ public class YYYFlixSystem {
 
         // action for pressing login
         v.getLogin().addActionListener(e -> login(m.getUsername(), m.getPassword()));
+
+        // action for pressing logout
         v.getLogout().addActionListener(e -> logout(connectedUser));
+
+        // menu buttons
+        v.getMenu1().addActionListener(e -> register());
+        v.getMenu2().addActionListener(e -> createContent());
+        v.getMenu3().addActionListener(e -> addContentToLibrary());        
         c.initController();   
+    }
+
+    private boolean addContentToLibrary() {
+        if(this.connectedUser == null)
+            return false;
+
+        this.userLibrary = readLibrary(this.connectedUser.getUsername());
+        return this.userLibrary.addContent(readContent());
     }
 
     /**
@@ -61,6 +78,9 @@ public class YYYFlixSystem {
     public void initDatabases() {
         // init users database
         initDatabaseFromPath(USERS_DATABASE_FILE_PATH, false);
+
+        // init library database
+        initDatabaseFromPath(LIBRARIES_DATABASE_FILE_PATH, false);        
 
         // init contents database
         initDatabaseFromPath(CONTENTS_DATABASE_FILE_PATH, false);
@@ -144,7 +164,7 @@ public class YYYFlixSystem {
         }
 
         // finished input from user, close input scanner
-        scan.close();
+        //scan.close();
 
         // create user object from the given parameters
         User user = new User(username, password, name, paymentMethod);
@@ -242,7 +262,7 @@ public class YYYFlixSystem {
         //#endregion
 
         // finished input from user, close input scanner
-        scan.close();
+        //scan.close();
 
         // inserts the user into the user database and inserts the username into the username hashset
         if(!insertObjectIntoDatabase(content, YYYFlixSystem.CONTENTS_DATABASE_FILE_PATH))
@@ -262,6 +282,14 @@ public class YYYFlixSystem {
 
         // insert the user object into the database
         if(!this.insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH))
+        {
+            System.out.println("Register Failed, Please try again.");
+            return false;
+        }
+
+        Library library = new Library(user);
+        // insert the library object into the database
+        if(!this.insertObjectIntoDatabase(library, LIBRARIES_DATABASE_FILE_PATH))
         {
             System.out.println("Register Failed, Please try again.");
             return false;
@@ -426,7 +454,19 @@ public class YYYFlixSystem {
                                                             YYYFlixSystem.CONTENTS_DATABASE_FILE_PATH, String.valueOf(obj.getID())
                                                       )
                                           );
-            }            
+            }
+            // check if the given object is a library
+            else if (object instanceof Library) {
+                // type-cast the object to user, inorder to get information of username for additional pathing
+                Library obj = (Library) object;
+
+                // open file stream of user's database, sending path of database + additional file pathing
+                fos = new FileOutputStream(
+                                            objectPath(
+                                                            YYYFlixSystem.LIBRARIES_DATABASE_FILE_PATH, String.valueOf(obj.getUser().getUsername())
+                                                      )
+                                          );
+            }                         
             // the given object is not a user
             else {
                 // open file stream of a database, sending path of database
@@ -525,6 +565,56 @@ public class YYYFlixSystem {
      * @param username the username of the searched for user in the database
      * @return if a matching user is found, returns the user,if not, returns null
      */
+    public Library readLibrary(String username)
+    {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            // open file stream of users database
+            fi = new FileInputStream(objectPath(LIBRARIES_DATABASE_FILE_PATH, username)) ;
+
+            // open object stream using the file stream
+            oi = new ObjectInputStream(fi);
+
+            // read User object from the object stream until a matching user is found
+            Library library = (Library) oi.readObject();
+            return library;
+
+        // catch all the thrown exceptions, close all open streams in finally
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                // close object stream
+                if(oi != null)
+                    oi.close();
+
+                // close file stream
+                if(fi != null)
+                    fi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        
+        return null;
+    }    
+
+
+    // TODO: make readObject and check for instance of
+    /**
+     * read user from the database that matches the username
+     * @param username the username of the searched for user in the database
+     * @return if a matching user is found, returns the user,if not, returns null
+     */
     public User readUser(String username)
     {
         FileInputStream fi = null;
@@ -566,6 +656,17 @@ public class YYYFlixSystem {
         }
         
         return null;
+    }
+
+    /**
+     * asks a user for content id and read content from the database that matches the content id
+     * @return if a matching content is found, returns the content,if not, returns null
+     */
+    public Content readContent() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Please enter the wanted ContentID");
+        int contentID = Integer.parseInt(scan.nextLine());
+        return readContent(contentID);
     }
 
     /**
