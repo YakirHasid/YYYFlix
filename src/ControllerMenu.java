@@ -24,7 +24,7 @@ public class ControllerMenu {
       // view.getUsernameSaveButton().addActionListener(e -> saveUsername());
       // view.getPasswordSaveButton().addActionListener(e -> savePassword());
       view.getLogin().addActionListener(e -> pressLogin());
-      view.getLogout().addActionListener(e -> pressLogout());
+      view.getLogout().addActionListener(e -> pressLogout());      
    }
 
    public void cleanFields() {
@@ -37,18 +37,6 @@ public class ControllerMenu {
    public void updateModel() {
       model.setUsername(view.getUsernameTextfield().getText());
       model.setPassword(view.getPasswordTextfield().getText());
-   }
-
-   private void saveUsername() {
-      model.setUsername(view.getUsernameTextfield().getText());
-      JOptionPane.showMessageDialog(null, "Username saved : " + model.getUsername(), "Info",
-            JOptionPane.INFORMATION_MESSAGE);
-   }
-
-   private void savePassword() {
-      model.setPassword(view.getPasswordTextfield().getText());
-      JOptionPane.showMessageDialog(null, "Password saved : " + model.getPassword(), "Info",
-            JOptionPane.INFORMATION_MESSAGE);
    }
 
    private void pressLogin() {
