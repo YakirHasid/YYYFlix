@@ -17,5 +17,6 @@ ContentDatabase/*
 LibrariesDatabase/*
 SubsDatabase/*
 UsersSubsDetailsDatabase/*
+NotifyUserDatabase/*
 /out/*
 contentID.dat

@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.Objects;
 
 abstract public class Content implements Serializable {
     // fields
@@ -124,5 +125,27 @@ abstract public class Content implements Serializable {
                 "Length: " + this.calcMinutes() + " Minutes \n" +
                 "Format: " + this.format + "\n" +
                 "Subtitles Filename: " + this.subtitlesFileName + "\n";
+    }
+
+    /**
+     * override equals for HashSet usage
+     * @param o compared to object
+     * @return true if the objects are equals, false otherwise (checked on all fields)
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Content content = (Content) o;
+        return Objects.equals(ID, content.getID());
+    }
+
+    /**
+     * override hashCode for HashSet usage
+     * @return hash of the current object
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.ID, this.format, this.subtitlesFileName, this.name, this.length);
     }
 }

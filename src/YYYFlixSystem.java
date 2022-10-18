@@ -26,6 +26,7 @@ public class YYYFlixSystem {
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
     private static final String LIBRARIES_DATABASE_FILE_PATH = "LibrariesDatabase";
     private static final String USERS_SUBS_DETAILS_DATABASE_FILE_PATH = "UsersSubsDetailsDatabase";
+    private static final String NOTIFY_USER_DATABASE_FILE_PATH = "NotifyUserDatabase";
     private static final String SUBS_DATABASE_FILE_PATH = "SubsDatabase";
     private static final String CONTENTS_DATABASE_FILE_PATH = "ContentDatabase";
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
@@ -67,12 +68,36 @@ public class YYYFlixSystem {
         v.getMenu3().addActionListener(e -> addContentToLibrary());        
         v.getMenu4().addActionListener(e -> subscribe());
         // TODO: Implement a function
-        v.getMenu5().addActionListener(e -> {});
+        v.getMenu5().addActionListener(e -> notifyUser());
         v.getMenu6().addActionListener(e -> printLibrary());
         v.getMenu7().addActionListener(e -> printUserSubDetails());
         v.getMenu8().addActionListener(e -> printNotifyUser());
 
         c.initController();   
+    }
+
+    private void notifyUser() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Please enter the username of the user you want to send a message to: ");
+        String username = scan.nextLine();
+        while(this.isUsernameValid(username))
+        {
+            System.out.println("[ERROR]: No user exists with that username.");
+            System.out.println("Please enter the username of the user you want to send a message to: ");
+            username = scan.nextLine();
+        }
+
+        System.out.println("Please enter the message title you want to send to the user: ");
+        String messageTitle = scan.nextLine();
+        System.out.println("Please enter the message text you want to send to the user: ");
+        String messageText = scan.nextLine();
+
+        Notification notification = new Notification(0, this.connectedUser.getUsername() , messageTitle, messageText);
+        NotifyUser notifyUser = readNotifyUser(username);
+        notifyUser.addNotification(notification);
+        updateNotifyUserInDatabase(notifyUser);                
+
+
     }
 
     private void printLibrary() {
@@ -136,7 +161,7 @@ public class YYYFlixSystem {
 
         Content content = readContent(); 
         String message;   
-        if(this.userLibrary.addContent(content))
+        if(!this.userLibrary.addContent(content))
             message = "Content " + content.getName() + " (ID: " + content.getID() + ") is already in the library.";
         else
             message = "Content " + content.getName() + " (ID: " + content.getID() + ") has been successfully added to the library.";
@@ -154,6 +179,9 @@ public class YYYFlixSystem {
 
         // init users subs details database
         initDatabaseFromPath(USERS_SUBS_DETAILS_DATABASE_FILE_PATH, false);     
+
+        // init notify user database
+        initDatabaseFromPath(NOTIFY_USER_DATABASE_FILE_PATH, false);             
         
         // init subs database
         initDatabaseFromPath(SUBS_DATABASE_FILE_PATH, false);
@@ -414,6 +442,14 @@ public class YYYFlixSystem {
             System.out.println("Register Failed, Please try again.");
             return false;
         }
+
+        NotifyUser notifyUser = new NotifyUser(user);
+        // insert the notify user object into the database
+        if(!this.insertObjectIntoDatabase(notifyUser, NOTIFY_USER_DATABASE_FILE_PATH))
+        {
+            System.out.println("Register Failed, Please try again.");
+            return false;
+        }        
         
 
         // add username to the hashset database, in lower cases to make sure hashset contains function works well
@@ -664,7 +700,18 @@ public class YYYFlixSystem {
                                                             YYYFlixSystem.USERS_SUBS_DETAILS_DATABASE_FILE_PATH, String.valueOf(obj.getUser().getUsername())
                                                       )
                                           );
-            }                           
+            }    
+            else if (object instanceof NotifyUser) {
+                // type-cast the object to notify user, inorder to get information of username for additional pathing
+                NotifyUser obj = (NotifyUser) object;
+
+                // open file stream of user's database, sending path of database + additional file pathing
+                fos = new FileOutputStream(
+                                            objectPath(
+                                                            YYYFlixSystem.NOTIFY_USER_DATABASE_FILE_PATH, String.valueOf(obj.getUser().getUsername())
+                                                      )
+                                          );
+            }                                      
             // the given object is not a user
             else {
                 // open file stream of a database, sending path of database
@@ -758,6 +805,55 @@ public class YYYFlixSystem {
 
 
     }
+
+    // TODO: make readObject and check for instance of
+    /**
+     * read sub from the database that matches the sub id
+     * @param subID the sub id of the searched for sub in the database
+     * @return if a matching sub is found, returns the sub,if not, returns null
+     */
+    public NotifyUser readNotifyUser(String username)
+    {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            // open file stream of users database
+            fi = new FileInputStream(objectPath(NOTIFY_USER_DATABASE_FILE_PATH, username)) ;
+
+            // open object stream using the file stream
+            oi = new ObjectInputStream(fi);
+
+            // read User object from the object stream until a matching user is found
+            NotifyUser notifyUser = (NotifyUser) oi.readObject();
+            return notifyUser;
+
+        // catch all the thrown exceptions, close all open streams in finally
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                // close object stream
+                if(oi != null)
+                    oi.close();
+
+                // close file stream
+                if(fi != null)
+                    fi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        
+        return null;
+    }     
 
     // TODO: make readObject and check for instance of
     /**
@@ -1170,6 +1266,21 @@ public class YYYFlixSystem {
      * @param username represents the user we want to delete, username is the identifier
      * @return true only if the user's database file exists and has been deleted successfully, otherwise false
      */
+    public boolean deleteNotifyUser(String username)
+    {
+
+        // file stream of given user's database file
+        File file = new File(objectPath(NOTIFY_USER_DATABASE_FILE_PATH, username));
+
+        // return the result of deleting the user's database file
+        return file.delete();
+    }      
+
+    /**
+     * deletes the database file of the given user
+     * @param username represents the user we want to delete, username is the identifier
+     * @return true only if the user's database file exists and has been deleted successfully, otherwise false
+     */
     public boolean deleteSub(String username)
     {
 
@@ -1303,6 +1414,34 @@ public class YYYFlixSystem {
     }
 
     /**
+     * updates an old copy of notify user in the database to be the new given copy
+     * @param notifyUser the given notify user instance to be updated in the database
+     * @return true if the update has been sucessful (the given notify user has been found in the database and has been removed), false otherwise
+     */
+    public boolean updateNotifyUserInDatabase(NotifyUser notifyUser) {
+
+        String username = notifyUser.getUser().getUsername();
+        // deletes the database of the current user, prepares for new database file
+        if(!deleteNotifyUser(username))
+        {
+            System.out.println("User " + username + " has not been found inside the database, can't update the instance.");
+            return false;
+        }
+
+        // inserts the newly updated user into the database
+        if(!this.insertObjectIntoDatabase(notifyUser, USERS_DATABASE_FILE_PATH))
+        {
+            System.out.println("Failed to insert the updated user into database.");
+            // TODO: Probably exception throw because user is now not in the database
+            return false;
+        }
+
+        // user's details has been successfully updated in the database
+        System.out.println("Details have been updated successfully.");
+        return true;
+    }    
+
+    /**
      * updates an old copy of user in the database to be the new given copy
      * @param user the given user instance to be updated in the database
      * @return true if the update has been sucessful (the given user has been found in the database and has been removed), false otherwise
@@ -1346,6 +1485,32 @@ public class YYYFlixSystem {
         if(!this.insertObjectIntoDatabase(this.userSubDetails, USERS_SUBS_DETAILS_DATABASE_FILE_PATH))
         {
             System.out.println("Failed to insert the updated sub into database.");
+            // TODO: Probably exception throw because library is now not in the database
+            return false;
+        }
+
+        // library's details has been successfully updated in the database
+        System.out.println("Details have been updated successfully.");
+        return true;
+    }   
+    
+    /**
+     * updates an old copy of library in the database to be the new given copy     
+     * @return true if the update has been sucessful (the given user has been found in the database and has been removed), false otherwise
+     */
+    public boolean updateNotifyUserInDatabase() {
+
+        // deletes the database of the current user, prepares for new database file
+        if(!deleteNotifyUser(this.connectedUser.getUsername()))
+        {
+            System.out.println("Library of " + this.connectedUser.getUsername() + " has not been found inside the database, can't update the instance.");
+            return false;
+        }
+
+        // inserts the newly updated library into the database
+        if(!this.insertObjectIntoDatabase(this.userLibrary, LIBRARIES_DATABASE_FILE_PATH))
+        {
+            System.out.println("Failed to insert the updated library into database.");
             // TODO: Probably exception throw because library is now not in the database
             return false;
         }
