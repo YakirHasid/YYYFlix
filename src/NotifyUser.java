@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class NotifyUser implements Serializable {
     // fields
-    private User user;
+    private String username;
     private ArrayList<Notification> notificationList;
 
     // public constructor
@@ -12,9 +12,9 @@ public class NotifyUser implements Serializable {
      * NotifyUser's public constructor
      * @param user the given user, which owns this Notification Center
      */
-    public NotifyUser(User user)
+    public NotifyUser(String username)
     {
-        this.user = user;
+        this.username = username;
         this.notificationList = new ArrayList<>();
     }
 
@@ -50,8 +50,8 @@ public class NotifyUser implements Serializable {
         return true;
     }
 
-    public User getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
     public ArrayList<Notification> getNotificationList() {
@@ -77,6 +77,6 @@ public class NotifyUser implements Serializable {
      */
     @Override
     public String toString() {
-        return "Hey " + user.getName() + ", you have " + this.notificationList.size() + " Notifications.\n";
+        return "Hey " + username + ", you have " + this.notificationList.size() + " Notifications.\n";
     }
 }
