@@ -921,7 +921,7 @@ public class YYYFlixSystem {
                 // open file stream of user's database, sending path of database + additional file pathing
                 fos = new FileOutputStream(
                                             objectPath(
-                                                            YYYFlixSystem.USERS_SUBS_DETAILS_DATABASE_FILE_PATH, String.valueOf(obj.getUser().getUsername())
+                                                            YYYFlixSystem.USERS_SUBS_DETAILS_DATABASE_FILE_PATH, String.valueOf(obj.getUsername())
                                                       )
                                           );
             }    

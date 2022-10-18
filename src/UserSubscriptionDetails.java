@@ -3,7 +3,8 @@ import java.time.LocalDate;
 
 public class UserSubscriptionDetails implements Serializable {
     // fields
-    User user;
+    String username;
+    String paymentMethod;
     Subscription subscription;
     private int transactionNumber; // identifier
     public static int COUNTER = 0;
@@ -11,8 +12,9 @@ public class UserSubscriptionDetails implements Serializable {
     LocalDate endDate;
 
     // public constructor
-    public UserSubscriptionDetails(User user, Subscription subscription){
-        this.user = user;
+    public UserSubscriptionDetails(User user, Subscription subscription){   
+        this.username = user.getUsername();     
+        this.paymentMethod = user.getPaymentMethod();
         this.subscription = subscription;
         this.transactionNumber = ++COUNTER;
         startDate = LocalDate.now();
@@ -34,16 +36,17 @@ public class UserSubscriptionDetails implements Serializable {
         return endDate;
     }
 
-    public User getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
     @Override
     public String toString() {
-        return this.user.getName() + "'s Subscription Details:" + "\n" +
+        return username + "'s Subscription Details:" + "\n" +
                 this.subscription + "\n" +
                 "Paid/Free=" + ((this.subscription.getPrice()==0) ? "Free" : "Paid") + "\n" +
                 "Transaction Number= " + this.transactionNumber + "\n" +
+                "Paid With= " + this.paymentMethod + "\n" +
                 "Start Date= " + this.startDate + "\n" +
                 "End Date= " + this.endDate + "\n";
     }
