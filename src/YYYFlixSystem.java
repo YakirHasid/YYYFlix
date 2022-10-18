@@ -78,6 +78,11 @@ public class YYYFlixSystem {
     }
 
     private void notifyUser() {
+        if(this.connectedUser == null) {
+            this.c.sayNotLoggedIn();
+            return;
+        }
+                
         Scanner scan = new Scanner(System.in);
         System.out.println("Please enter the username of the user you want to send a message to: ");
         String username = scan.nextLine();
