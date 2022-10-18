@@ -531,7 +531,7 @@ public class YYYFlixSystem {
             return false;
         }
 
-        UserSubscriptionDetails userSubDetails = new UserSubscriptionDetails(user, new Subscription(0, 0));
+        UserSubscriptionDetails userSubDetails = new UserSubscriptionDetails(user, readFreeSub());
         // insert the library object into the database
         if(!this.insertObjectIntoDatabase(userSubDetails, USERS_SUBS_DETAILS_DATABASE_FILE_PATH))
         {
@@ -1001,7 +1001,11 @@ public class YYYFlixSystem {
         }
         
         return null;
-    }     
+    }
+    
+    public Subscription readFreeSub() {
+        return readSub(1);
+    }
 
     // TODO: make readObject and check for instance of
     /**
