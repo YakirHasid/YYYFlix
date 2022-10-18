@@ -111,4 +111,14 @@ public class ControllerMenu {
       JOptionPane.showMessageDialog(null, "[ERROR] Please Login before using the system.", "Info",
       JOptionPane.INFORMATION_MESSAGE); 
    }
+
+   public void returnToGUIMessage() {
+      JOptionPane.showMessageDialog(null, "Returned to GUI, select an action from the menu.", "Info",
+      JOptionPane.INFORMATION_MESSAGE);       
+   }
+
+   public void returnToGUIMessage(String message) {
+      JOptionPane.showMessageDialog(null, message, "Info",
+      JOptionPane.INFORMATION_MESSAGE);       
+   }
 }
