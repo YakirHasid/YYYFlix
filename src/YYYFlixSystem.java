@@ -174,12 +174,30 @@ public class YYYFlixSystem {
         
         Scanner scan = new Scanner(System.in);
         System.out.println("Please choose the subscription ID you'd like to subscribe to: ");
-        int subID = Integer.parseInt(scan.nextLine());
+        int subID = -1;
+        while(subID == -1) {
+            try {
+                subID = Integer.parseInt(scan.nextLine());
+            }
+            catch(Exception e){
+                System.out.println("Wrong subID, only numbers are valid.");    
+                System.out.println("Please choose the subscription ID you'd like to subscribe to: ");
+            }
+        }
         Subscription sub = readSub(subID);
         while(sub == null) {
             System.out.println("[ERROR] Invalid sub ID, please enter a valid sub ID.");
             System.out.println("Please choose the subscription ID you'd like to subscribe to: ");
-            subID = Integer.parseInt(scan.nextLine());
+            subID = -1;
+            while(subID == -1) {
+                try {
+                    subID = Integer.parseInt(scan.nextLine());
+                }
+                catch(Exception e){
+                    System.out.println("Wrong subID, only numbers are valid.");    
+                    System.out.println("Please choose the subscription ID you'd like to subscribe to: ");
+                }
+            }
             sub = readSub(subID);
         }
 
@@ -290,11 +308,21 @@ public class YYYFlixSystem {
         // get username from user
         System.out.println("Please enter your desired username: ");
         String username = scan.nextLine();
+        while(username.isBlank() || !username.matches("\\S+")) {
+            System.out.println("Invalid username, please try again (no spaces or blank).");
+            System.out.println("Please enter your desired username: ");
+            username = scan.nextLine();
+        }
         while(!this.isUsernameValid(username))
         {
             System.out.println("[ERROR]: Username is taken.");
             System.out.println("Please enter your desired username: ");
             username = scan.nextLine();
+            while(username.isBlank() || !username.matches("\\S+")) {
+                System.out.println("Invalid username, please try again (no spaces or blank).");
+                System.out.println("Please enter your desired username: ");
+                username = scan.nextLine();
+            }
         }
 
         // get password from user
@@ -382,8 +410,16 @@ public class YYYFlixSystem {
 
         // get length from user
         System.out.println("Please enter your desired length: ");
-        float length = Float.parseFloat(scan.nextLine());
-
+        float length = -1;
+        while(length == -1) {
+            try {
+                length = Float.parseFloat(scan.nextLine());
+            }
+            catch(Exception e){
+                System.out.println("Wrong length, only float numbers are valid.");    
+                System.out.println("Please enter your desired length: ");
+            }
+        }
         //#endregion
 
         //#region create the derived content object
@@ -421,11 +457,29 @@ public class YYYFlixSystem {
             case TVShow:
                 // get season from user
                 System.out.println("Please enter your desired season: ");
-                int season = Integer.parseInt(scan.nextLine());
+                int season = -1;
+                while(season == -1) {
+                    try {
+                        season = Integer.parseInt(scan.nextLine());
+                    }
+                    catch(Exception e){
+                        System.out.println("Wrong season, only numbers are valid.");    
+                        System.out.println("Please enter your desired season: ");
+                    }
+                }
 
                 // get episode from user
                 System.out.println("Please enter your desired episode: ");
-                int episode = Integer.parseInt(scan.nextLine());
+                int episode = -1;
+                while(episode == -1) {
+                    try {
+                        episode = Integer.parseInt(scan.nextLine());
+                    }
+                    catch(Exception e){
+                        System.out.println("Wrong episode, only numbers are valid.");    
+                        System.out.println("Please enter your desired episode: ");
+                    }
+                }
 
                 // create TVShow object from the given parameters
                 content =  new TVShow(format, subtitlesFileName, name, length, season, episode);
@@ -1155,7 +1209,16 @@ public class YYYFlixSystem {
     public Content readContent() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Please enter the wanted ContentID");
-        int contentID = Integer.parseInt(scan.nextLine());
+        int contentID = -1;
+        while(contentID == -1) {
+            try {
+                contentID = Integer.parseInt(scan.nextLine());
+            }
+            catch(Exception e){
+                System.out.println("Wrong contentID, only numbers are valid.");    
+                System.out.println("Please enter the wanted ContentID");
+            }
+        }
         return readContent(contentID);
     }
 
