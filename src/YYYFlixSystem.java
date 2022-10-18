@@ -66,8 +66,42 @@ public class YYYFlixSystem {
         v.getMenu2().addActionListener(e -> createContent());
         v.getMenu3().addActionListener(e -> addContentToLibrary());        
         v.getMenu4().addActionListener(e -> subscribe());
+        // TODO: Implement a function
+        v.getMenu5().addActionListener(e -> {});
+        v.getMenu6().addActionListener(e -> printLibrary());
+        v.getMenu7().addActionListener(e -> printUserSubDetails());
+        v.getMenu8().addActionListener(e -> printNotifyUser());
+
         c.initController();   
     }
+
+    private void printLibrary() {
+        if(this.connectedUser == null) {
+            this.c.sayNotLoggedIn();
+            return;
+        }
+            
+        returnToGUIMessage(this.userLibrary.toString());
+    }
+
+    private void printUserSubDetails() {
+        if(this.connectedUser == null) {
+            this.c.sayNotLoggedIn();
+            return;
+        }
+
+        returnToGUIMessage(this.userSubDetails.toString());
+    }    
+
+    // TODO: Implement
+    private void printNotifyUser() {
+        if(this.connectedUser == null) {
+            this.c.sayNotLoggedIn();
+            return;
+        }
+        
+        return;
+    }        
 
     private boolean subscribe() {
         if(this.connectedUser == null) {
