@@ -3,7 +3,7 @@ import java.io.Serializable;
 public class Subscription implements Serializable {
     // fields
     private int ID; // identifier
-    private static int COUNTER = 0;
+    public static int COUNTER = 0;
     public float price; // total price
     public float duration; // in months
 
