@@ -71,7 +71,7 @@ public class YYYFlixSystem {
 
     private boolean subscribe() {
         if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();
+            this.c.sayNotLoggedIn();            
             return false;
         }
             
@@ -88,6 +88,9 @@ public class YYYFlixSystem {
         }
 
         this.userSubDetails = new UserSubscriptionDetails(connectedUser, sub);
+
+        String message = "Subscribed successfully, end date of subscription is: " + userSubDetails.getEndDate();
+        returnToGUIMessage(message);
         return updateSubDetailsInDatabase();
     }
 
@@ -97,8 +100,14 @@ public class YYYFlixSystem {
             return false;
         }            
 
-            
-        this.userLibrary.addContent(readContent());        
+        Content content = readContent(); 
+        String message;   
+        if(this.userLibrary.addContent(content))
+            message = "Content " + content.getName() + " (ID: " + content.getID() + ") is already in the library.";
+        else
+            message = "Content " + content.getName() + " (ID: " + content.getID() + ") has been successfully added to the library.";
+
+        returnToGUIMessage(message);    
         return updateLibraryInDatabase();
     }
 
@@ -218,8 +227,21 @@ public class YYYFlixSystem {
         if(!insertAndAddUser(user))
             return null;
 
+        String message = "User " + user.getUsername() + " has been successfully created.";        
+        returnToGUIMessage(message);
         // return the newly created user
         return user;
+    }
+
+    public void returnToGUIMessage(String message) {
+        System.out.println(message);
+        this.c.returnToGUIMessage(message); 
+        returnToGUIMessage();       
+    }
+
+    public void returnToGUIMessage() {
+        System.out.println("Please return to the GUI for further actions.");
+        this.c.returnToGUIMessage();
     }
 
     public Content createContent() {
@@ -320,6 +342,9 @@ public class YYYFlixSystem {
             return null;
 
         writeIntegerToCounter(Content.COUNTER++);
+
+        String message = "Content " + content.getName() + " (ID: " + content.getID() + ") has been successfully created.";        
+        returnToGUIMessage(message);
 
         // return the newly created user
         return content;
