@@ -1252,8 +1252,7 @@ public class YYYFlixSystem {
             while(!executor.awaitTermination(10, TimeUnit.SECONDS)) {
                 System.out.println("Not yet. Still waiting for termination");
             }
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
+        } catch (InterruptedException e) {            
             e.printStackTrace();
         }
 
@@ -1460,8 +1459,7 @@ public class YYYFlixSystem {
         return objectPath(USERS_DATABASE_FILE_PATH, username);
         //return USERS_DATABASE_FILE_PATH + "/" + username + ".dat";
     }
-
-    // TODO: Maybe no need for password security check?
+    
     //       OR add security check for each function change of details (payment method, name, password)
     /**
      * changes the password of the given user both locally and in the database
