@@ -29,7 +29,7 @@ public class ViewMenu {
     private JLabel passwordLabel;
     private JLabel connectedUserLabel;
     private JTextField usernameTextfield;
-    private JTextField passwordTextfield;
+    private JPasswordField passwordTextfield;
     private JTextField connectedUserTextfield;
     private JButton login;
     private JButton logout;
@@ -46,7 +46,7 @@ public class ViewMenu {
         passwordLabel = new JLabel("Password :");
         connectedUserLabel = new JLabel("Connected User :");
         usernameTextfield = new JTextField();
-        passwordTextfield = new JTextField();
+        passwordTextfield = new JPasswordField();
         connectedUserTextfield = new JTextField();
         login = new JButton("Login");
         logout = new JButton("Logout");
@@ -203,11 +203,11 @@ public class ViewMenu {
         this.usernameTextfield = usernameTextfield;
     }
 
-    public JTextField getPasswordTextfield() {
+    public JPasswordField getPasswordTextfield() {
         return passwordTextfield;
     }
 
-    public void setPasswordTextfield(JTextField passwordTextfield) {
+    public void setPasswordTextfield(JPasswordField passwordTextfield) {
         this.passwordTextfield = passwordTextfield;
     }
 

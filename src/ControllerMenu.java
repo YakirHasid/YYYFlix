@@ -49,20 +49,15 @@ public class ControllerMenu {
        JOptionPane.showMessageDialog(null, "Check Console Command For Further Actions.", "Info", JOptionPane.INFORMATION_MESSAGE);      
    }
 
-   private void returnToMenu() {
-      JOptionPane.showMessageDialog(null, "Continue Actions in the GUI", "Info", JOptionPane.INFORMATION_MESSAGE);      
-  }
-
    public void cleanFields() {
       view.getUsernameTextfield().setText("");
       view.getPasswordTextfield().setText("");
-      model.setUsername(view.getUsernameTextfield().getText());                  
-      model.setPassword(view.getPasswordTextfield().getText());
+      updateModel();
    }
 
    public void updateModel() {
       model.setUsername(view.getUsernameTextfield().getText());
-      model.setPassword(view.getPasswordTextfield().getText());
+      model.setPassword(String.valueOf(view.getPasswordTextfield().getPassword()));
    }
 
    private void pressLogin() {
