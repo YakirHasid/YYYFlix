@@ -65,7 +65,6 @@ public class YYYFlixSystem {
         v.getMenu2().addActionListener(e -> createContent());
         v.getMenu3().addActionListener(e -> addContentToLibrary());        
         v.getMenu4().addActionListener(e -> subscribe());
-        // TODO: Implement a function
         v.getMenu5().addActionListener(e -> notifyUser());
         v.getMenu6().addActionListener(e -> printLibrary());
         v.getMenu7().addActionListener(e -> printUserSubDetails());
@@ -735,44 +734,8 @@ public class YYYFlixSystem {
      */
     public boolean isUsernameValid(String username) {
 
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            // open file stream of username hashset database
-            fi = new FileInputStream(new File(USERNAMES_HASHSET_DATABASE_FILE_PATH));
-
-            // open object stream using the file stream
-            oi = new ObjectInputStream(fi);
-
-
-            // the set that contains all the usernames inside the database
-            Set<String> hashSet = (HashSet<String>) oi.readObject();
-            return !hashSet.contains(username.toLowerCase());
-
-            // catch all the thrown exceptions, close all open streams in finally
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return true;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                if(oi != null)
-                    oi.close();
-
-                if(fi != null)
-                    fi.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return false;
+        HashSet<String> hashSet = readUsernamesHashSet();
+        return !hashSet.contains(username);
     }
 
 
