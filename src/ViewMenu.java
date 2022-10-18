@@ -13,24 +13,24 @@ public class ViewMenu {
     private JFrame frame;
     private JMenuBar mb;
 
-    private JMenu m1;
-    private JMenuItem m1_1;
-    private JMenuItem m1_2;
-    private JMenuItem m1_3;
-    private JMenuItem m1_4;
-    private JMenuItem m1_5;
-    private JMenu m1_6;
-    private JMenuItem m1_6_1;
-    private JMenuItem m1_6_2;
-    private JMenuItem m1_6_3;
-    private JMenuItem m1_6_4;    
-    private JMenu m1_7;
-    private JMenuItem m1_7_1;
-    private JMenuItem m1_7_2;
-    private JMenuItem m1_7_3;
+    private JMenu m_Menu;
+    private JMenuItem m_Menu_Register;
+    private JMenuItem m_Menu_CreateContent;
+    private JMenuItem m_Menu_AddContentToYourLibrary;
+    private JMenuItem m_Menu_Subscribe;
+    private JMenuItem m_Menu_SendNotificationToAUser;    
+    private JMenu m_Menu_Print;
+    private JMenuItem m_Menu_Print_MyUserDetails;
+    private JMenuItem m_Menu_Print_MyLibrary;
+    private JMenuItem m_Menu_Print_SubscriptionDetails;
+    private JMenuItem m_Menu_Print_Notifications;    
+    private JMenu m_Menu_Change;
+    private JMenuItem m_Menu_Change_Name;
+    private JMenuItem m_Menu_Change_Password;
+    private JMenuItem m_Menu_Change_PaymentMethod;
 
-    private JMenu m2;
-    private JMenuItem m2_1;
+    private JMenu m_Help;
+    private JMenuItem m_Help_About;
 
     private JLabel usernameLabel;
     private JLabel passwordLabel;
@@ -60,46 +60,46 @@ public class ViewMenu {
 
         // Creating the MenuBar and adding components
         mb = new JMenuBar();
-        m1 = new JMenu("Menu");
+        m_Menu = new JMenu("Menu");
 
-        m1_1 = new JMenuItem("Register");        
-        m1_2 = new JMenuItem("Create Content");
-        m1_3 = new JMenuItem("Add Content To Your Library");
-        m1_4 = new JMenuItem("Subscribe");
-        m1_5 = new JMenuItem("Send Notification To A User"); 
+        m_Menu_Register = new JMenuItem("Register");        
+        m_Menu_CreateContent = new JMenuItem("Create Content");
+        m_Menu_AddContentToYourLibrary = new JMenuItem("Add Content To Your Library");
+        m_Menu_Subscribe = new JMenuItem("Subscribe");
+        m_Menu_SendNotificationToAUser = new JMenuItem("Send Notification To A User"); 
 
-        m1_6 = new JMenu("Print");
-        m1_6_1 = new JMenuItem("My User Details");   
-        m1_6_2 = new JMenuItem("My Library");          
-        m1_6_3 = new JMenuItem("Subscription Details");          
-        m1_6_4 = new JMenuItem("Notifications");
-        m1_6.add(m1_6_1);   
-        m1_6.add(m1_6_2);
-        m1_6.add(m1_6_3);
-        m1_6.add(m1_6_4);
+        m_Menu_Print = new JMenu("Print");
+        m_Menu_Print_MyUserDetails = new JMenuItem("My User Details");   
+        m_Menu_Print_MyLibrary = new JMenuItem("My Library");          
+        m_Menu_Print_SubscriptionDetails = new JMenuItem("Subscription Details");          
+        m_Menu_Print_Notifications = new JMenuItem("Notifications");
+        m_Menu_Print.add(m_Menu_Print_MyUserDetails);   
+        m_Menu_Print.add(m_Menu_Print_MyLibrary);
+        m_Menu_Print.add(m_Menu_Print_SubscriptionDetails);
+        m_Menu_Print.add(m_Menu_Print_Notifications);
 
-        m1_7 = new JMenu("Change");
-        m1_7_1 = new JMenuItem("Name"); 
-        m1_7_2 = new JMenuItem("Password"); 
-        m1_7_3 = new JMenuItem("Payment Method");  
-        m1_7.add(m1_7_1);
-        m1_7.add(m1_7_2);
-        m1_7.add(m1_7_3);
+        m_Menu_Change = new JMenu("Change");
+        m_Menu_Change_Name = new JMenuItem("Name"); 
+        m_Menu_Change_Password = new JMenuItem("Password"); 
+        m_Menu_Change_PaymentMethod = new JMenuItem("Payment Method");  
+        m_Menu_Change.add(m_Menu_Change_Name);
+        m_Menu_Change.add(m_Menu_Change_Password);
+        m_Menu_Change.add(m_Menu_Change_PaymentMethod);
         
-        m1.add(m1_1);
-        m1.add(m1_2);
-        m1.add(m1_3);
-        m1.add(m1_4);
-        m1.add(m1_5);
-        m1.add(m1_6);
-        m1.add(m1_7);
+        m_Menu.add(m_Menu_Register);
+        m_Menu.add(m_Menu_CreateContent);
+        m_Menu.add(m_Menu_AddContentToYourLibrary);
+        m_Menu.add(m_Menu_Subscribe);
+        m_Menu.add(m_Menu_SendNotificationToAUser);
+        m_Menu.add(m_Menu_Print);
+        m_Menu.add(m_Menu_Change);
 
-        m2 = new JMenu("Help");
-        m2_1 = new JMenuItem("About");   
-        m2.add(m2_1);
+        m_Help = new JMenu("Help");
+        m_Help_About = new JMenuItem("About");   
+        m_Help.add(m_Help_About);
 
-        mb.add(m1);
-        mb.add(m2);
+        mb.add(m_Menu);
+        mb.add(m_Help);
         // Add UI element to frame
         GroupLayout layout = new GroupLayout(frame.getContentPane());
         layout.setAutoCreateGaps(true);
@@ -145,62 +145,58 @@ public class ViewMenu {
     public void setMb(JMenuBar mb) {
         this.mb = mb;
     }
-
-    public JMenu getMainMenu() {
-        return this.m1;
-    }
-
-    public JMenuItem getMenu1_1() {
-        return this.m1_1;
-    }
-
-    public JMenuItem getMenu1_2() {
-        return this.m1_2;
-    }
-
-    public JMenuItem getMenu1_3() {
-        return this.m1_3;
-    }
-
-    public JMenuItem getMenu1_4() {
-        return this.m1_4;
-    }
-
-    public JMenuItem getMenu1_5() {
-        return this.m1_5;
-    }
-
-    public JMenuItem getMenu1_6_1() {
-        return this.m1_6_1;
-    }
-
-    public JMenuItem getMenu1_6_2() {
-        return this.m1_6_2;
-    }
-
-    public JMenuItem getMenu1_6_3() {
-        return this.m1_6_3;
-    }
-
-    public JMenuItem getMenu1_6_4() {
-        return this.m1_6_4;
-    }
     
-    public JMenuItem getMenu1_7_1() {
-        return this.m1_7_1;
+    public JMenuItem getM_Menu_Register() {
+        return m_Menu_Register;
     }
-    
-    public JMenuItem getMenu1_7_2() {
-        return this.m1_7_2;
-    }  
 
-    public JMenuItem getMenu1_7_3() {
-        return this.m1_7_3;
-    }    
-    
-    public JMenuItem getMenu2_1() {
-        return this.m2_1;
-    }      
+    public JMenuItem getM_Menu_CreateContent() {
+        return m_Menu_CreateContent;
+    }
+
+    public JMenuItem getM_Menu_AddContentToYourLibrary() {
+        return m_Menu_AddContentToYourLibrary;
+    }
+
+    public JMenuItem getM_Menu_Subscribe() {
+        return m_Menu_Subscribe;
+    }
+
+    public JMenuItem getM_Menu_SendNotificationToAUser() {
+        return m_Menu_SendNotificationToAUser;
+    }
+
+    public JMenuItem getM_Menu_Print_MyUserDetails() {
+        return m_Menu_Print_MyUserDetails;
+    }
+
+    public JMenuItem getM_Menu_Print_MyLibrary() {
+        return m_Menu_Print_MyLibrary;
+    }
+
+    public JMenuItem getM_Menu_Print_SubscriptionDetails() {
+        return m_Menu_Print_SubscriptionDetails;
+    }
+
+    public JMenuItem getM_Menu_Print_Notifications() {
+        return m_Menu_Print_Notifications;
+    }
+
+    public JMenuItem getM_Menu_Change_Name() {
+        return m_Menu_Change_Name;
+    }
+
+    public JMenuItem getM_Menu_Change_Password() {
+        return m_Menu_Change_Password;
+    }
+
+    public JMenuItem getM_Menu_Change_PaymentMethod() {
+        return m_Menu_Change_PaymentMethod;
+    }
+
+    public JMenuItem getM_Help_About() {
+        return m_Help_About;
+    }
 
     public JLabel getConnectedUserLabel() {
         return connectedUserLabel;
