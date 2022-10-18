@@ -18,20 +18,20 @@ public class ControllerMenu {
    }
 
    public void initController() {
-      view.getMenu1_1().addActionListener(e -> pressMenu());
-      view.getMenu1_2().addActionListener(e -> pressMenu());
-      view.getMenu1_3().addActionListener(e -> pressMenu());
-      view.getMenu1_4().addActionListener(e -> pressMenu());
-      view.getMenu1_5().addActionListener(e -> pressMenu());
-      view.getMenu1_7_1().addActionListener(e -> pressMenu());
-      view.getMenu1_7_2().addActionListener(e -> pressMenu());
-      view.getMenu1_7_3().addActionListener(e -> pressMenu());
+      view.getM_Menu_Register().addActionListener(e -> pressMenu());
+      view.getM_Menu_CreateContent().addActionListener(e -> pressMenu());
+      view.getM_Menu_AddContentToYourLibrary().addActionListener(e -> pressMenu());
+      view.getM_Menu_Subscribe().addActionListener(e -> pressMenu());
+      view.getM_Menu_SendNotificationToAUser().addActionListener(e -> pressMenu());
+      view.getM_Menu_Change_Name().addActionListener(e -> pressMenu());
+      view.getM_Menu_Change_Password().addActionListener(e -> pressMenu());
+      view.getM_Menu_Change_PaymentMethod().addActionListener(e -> pressMenu());
       view.getLogin().addActionListener(e -> pressLogin());
       view.getLogout().addActionListener(e -> pressLogout());   
-      view.getMenu2_1().addActionListener(e -> pressMenuAbout());   
+      view.getM_Help_About().addActionListener(e -> pressHelpAbout());   
    }
 
-   private void pressMenuAbout() {
+   private void pressHelpAbout() {
       String message = "YYYFlix inc." + "\n" +
                        "Developed by: " + "\n" +
                        "Yuval Yacobi," + " AKA 'Gangster'" + "\n" +

@@ -76,18 +76,18 @@ public class YYYFlixSystem {
         v.getLogout().addActionListener(e -> logout(connectedUser));
 
         // menu buttons
-        v.getMenu1_1().addActionListener(e -> register());
-        v.getMenu1_2().addActionListener(e -> createContent());
-        v.getMenu1_3().addActionListener(e -> addContentToLibrary());        
-        v.getMenu1_4().addActionListener(e -> subscribe());
-        v.getMenu1_5().addActionListener(e -> notifyUser());
-        v.getMenu1_6_1().addActionListener(e -> printConnectedUser());
-        v.getMenu1_6_2().addActionListener(e -> printLibrary());
-        v.getMenu1_6_3().addActionListener(e -> printUserSubDetails());
-        v.getMenu1_6_4().addActionListener(e -> printNotifyUser());
-        v.getMenu1_7_1().addActionListener(e -> changeName());
-        v.getMenu1_7_2().addActionListener(e -> changePassword());
-        v.getMenu1_7_3().addActionListener(e -> changePaymentMethod());        
+        v.getM_Menu_Register().addActionListener(e -> register());
+        v.getM_Menu_CreateContent().addActionListener(e -> createContent());
+        v.getM_Menu_AddContentToYourLibrary().addActionListener(e -> addContentToLibrary());        
+        v.getM_Menu_Subscribe().addActionListener(e -> subscribe());
+        v.getM_Menu_SendNotificationToAUser().addActionListener(e -> notifyUser());
+        v.getM_Menu_Print_MyUserDetails().addActionListener(e -> printConnectedUser());
+        v.getM_Menu_Print_MyLibrary().addActionListener(e -> printLibrary());
+        v.getM_Menu_Print_SubscriptionDetails().addActionListener(e -> printUserSubDetails());
+        v.getM_Menu_Print_Notifications().addActionListener(e -> printNotifyUser());
+        v.getM_Menu_Change_Name().addActionListener(e -> changeName());
+        v.getM_Menu_Change_Password().addActionListener(e -> changePassword());
+        v.getM_Menu_Change_PaymentMethod().addActionListener(e -> changePaymentMethod());        
 
         c.initController();   
     }
@@ -109,6 +109,7 @@ public class YYYFlixSystem {
         System.out.println("Please enter your desired payment method: ");
         String paymentMethod = scan.nextLine();
 
+        returnToGUIMessage();
         return changePaymentMethod(connectedUser, paymentMethod);
     }
 
@@ -122,6 +123,8 @@ public class YYYFlixSystem {
 
         System.out.println("Please enter the new password you desire: ");
         String newPassword = scan.nextLine();
+
+        returnToGUIMessage();
         return changePassword(this.connectedUser, oldPassword, newPassword);
     }
 
@@ -132,6 +135,8 @@ public class YYYFlixSystem {
 
         System.out.println("Please enter the new name you desire: ");
         String newName = scan.nextLine();
+
+        returnToGUIMessage();
         return changeName(this.connectedUser, newName);
     }
 
@@ -178,7 +183,7 @@ public class YYYFlixSystem {
             return;
         }
 
-        returnToGUIMessage(this.connectedUser.toString());
+        this.c.returnToGUIMessage(this.connectedUser.toString());
         return;
     }    
 
@@ -187,7 +192,7 @@ public class YYYFlixSystem {
             return;
         }
             
-        returnToGUIMessage(this.userLibrary.toString());
+        this.c.returnToGUIMessage(this.userLibrary.toString());
     }
 
     private void printUserSubDetails() {
@@ -195,7 +200,7 @@ public class YYYFlixSystem {
             return;
         }
 
-        returnToGUIMessage(this.userSubDetails.toString());
+        this.c.returnToGUIMessage(this.userSubDetails.toString());
     }    
     
     private void printNotifyUser() {
@@ -224,7 +229,7 @@ public class YYYFlixSystem {
         updateNotifyUserInDatabase(notifyUser);
         
         // alert the user
-        returnToGUIMessage(message);
+        this.c.returnToGUIMessage(message);
         return;
     }        
 
