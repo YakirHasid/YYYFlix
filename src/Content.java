@@ -11,7 +11,6 @@ abstract public class Content implements Serializable {
     public float length;
 
     // defines
-    private static final int SECONDS_IN_MINUTE = 60; // 60 seconds in 1 minute
     private static final int MINUTES_IN_HOUR = 60; // 60 minutes in 1 hour
     public static enum VALID_CONTENT_TYPES {
         Commercial,
@@ -34,15 +33,7 @@ abstract public class Content implements Serializable {
         this.format = format;
         this.subtitlesFileName = subtitlesFileName;
         this.name = name;
-        this.length = length; // seconds
-    }
-
-    /**
-     * calculates the length of the content in minutes by dividing 60 the seconds, as the length field is in seconds
-     * @return the length of the content in minutes
-     */
-    public float calcMinutes() {
-        return this.length/SECONDS_IN_MINUTE;
+        this.length = length; // minutes
     }
 
     /**
@@ -50,7 +41,7 @@ abstract public class Content implements Serializable {
      * @return the length of the content in minutes
      */
     public float calcHours() {
-        return this.calcMinutes()/MINUTES_IN_HOUR;
+        return this.length/MINUTES_IN_HOUR;
     }
 
     // ID getter
@@ -122,7 +113,7 @@ abstract public class Content implements Serializable {
     public String toString() {
         return  "ID: " + this.ID + "\n" +
                 "Name: " + this.name + "\n" +
-                "Length: " + this.calcMinutes() + " Minutes \n" +
+                "Length: " + this.length + " Minutes (" + this.calcHours() + " Hours) \n" +
                 "Format: " + this.format + "\n" +
                 "Subtitles Filename: " + this.subtitlesFileName + "\n";
     }

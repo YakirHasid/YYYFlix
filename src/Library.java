@@ -3,8 +3,8 @@ import java.util.ArrayList;
 
 public class Library implements Serializable {
     // fields
-    private User user;
-    private ArrayList<Content> contentList;
+    private String username;
+    private ArrayList<Integer> contentIDList;
 
     /**
      * Content's public constructor
@@ -12,18 +12,18 @@ public class Library implements Serializable {
      */
     public Library(User user)
     {
-        this.user = user;
-        this.contentList = new ArrayList<Content>();
+        this.username = user.getUsername();
+        this.contentIDList = new ArrayList<Integer>();
     }
 
     // user getter
-    public User getUser(){
-        return user;
+    public String getUsername(){
+        return username;
     }
 
     // content list getter
-    public ArrayList<Content> getContentList() {
-        return contentList;
+    public ArrayList<Integer> getContentIDList() {
+        return contentIDList;
     }
 
     // TODO : Maybe implement Thread here? two YYYFlix accounts running at the same time from different threads
@@ -34,11 +34,11 @@ public class Library implements Serializable {
      */
     public boolean addContent(Content content){
         // checks if the content is already inside the library
-        if (contentList.contains(content))
+        if (contentIDList.contains(content.getID()))
             return false;
 
         // adds the content to the library
-        contentList.add(content);
+        contentIDList.add(content.getID());
 
         return true;
     }
@@ -50,29 +50,37 @@ public class Library implements Serializable {
      */
     public boolean deleteContent(Content content){
         // checks if the content is not inside the library
-        if (!contentList.contains(content))
+        if (!contentIDList.contains(content.getID()))
             return false;
 
         // removes the content to the library
-        contentList.remove(content);
+        contentIDList.remove(content.getID());
 
         return true;
     }
 
+    // TODO: Fix JAVADOC
     /**
      * searches a content in the user's library, via the received content's id
      * @param ID represents the ID of the content that is being requested to be searched for
      * @return the Content object that matches the given ID, returns null if no match is found
      */
-    public Content searchContent(int ID){
+    public Integer searchContentID(int ID){
         // foreach loop the content list
-        for (Content content:contentList)
+        for (Integer contentID:contentIDList)
             // check for a match with the given id, as the object's id field is the identifier
-            if(content.getID()==ID)
-                return content;
+            if(contentID==ID)
+                return contentID;
 
         // no match has been found in the content list
         return null;
+    }
+
+    public String libraryHeader(String name) {
+        // title for display
+        String displayText =  name + "'s (" + username + ") Library:" + "\n" + "Content List:\n";
+
+        return displayText;        
     }
 
     /**
@@ -82,16 +90,16 @@ public class Library implements Serializable {
     @Override
     public String toString() {
         // title for display
-        String displayText =  this.user.getName() + "'s" + " Library:" + "\n" + "Content List:\n";
+        String displayText =  username + "'s" + " Library:" + "\n" + "ContentID List:\n";
 
         // foreach content, add to display
-        for (Content content :
-                this.contentList) {
-            displayText += content.getName() + "\n";
+        for (Integer contentID :
+                contentIDList) {
+            displayText += contentID + "\n";
         }
 
         // total size of library
-        displayText += "Total Library Size = " + this.contentList.size();
+        displayText += "Total Library Size = " + this.contentIDList.size() + "\n";
 
         return displayText;
     }

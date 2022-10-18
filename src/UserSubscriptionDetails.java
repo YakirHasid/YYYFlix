@@ -40,6 +40,16 @@ public class UserSubscriptionDetails implements Serializable {
         return username;
     }
 
+    public String printReciept(String name) {
+        return name + "'s (" + username + ") Subscription Details:" + "\n" +
+                this.subscription + "\n" +
+                "Paid/Free=" + ((this.subscription.getPrice()==0) ? "Free" : "Paid") + "\n" +
+                "Transaction Number= " + this.transactionNumber + "\n" +
+                "Paid With= " + this.paymentMethod + "\n" +
+                "Start Date= " + this.startDate + "\n" +
+                "End Date= " + this.endDate + "\n";
+    }
+
     @Override
     public String toString() {
         return username + "'s Subscription Details:" + "\n" +

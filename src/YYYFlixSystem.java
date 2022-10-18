@@ -191,8 +191,21 @@ public class YYYFlixSystem {
         if(!isLoggedIn()) {
             return;
         }
-            
-        this.c.returnToGUIMessage(this.userLibrary.toString());
+
+        ArrayList<Integer> contentIDList = this.userLibrary.getContentIDList();
+        String message = this.userLibrary.libraryHeader(this.connectedUser.getName());
+        Content content = null;
+        for (Integer contentID : contentIDList) {
+            content = readContent(contentID);
+            if(content != null)
+                message += content  + "\n";
+            else
+                message += "[this content has been deleted, id = " + contentID + "]" + "\n";
+        }
+
+        message += "Total Library Size = " + contentIDList.size() + "\n";
+        
+        this.c.returnToGUIMessage(message);        
     }
 
     private void printUserSubDetails() {
@@ -200,7 +213,7 @@ public class YYYFlixSystem {
             return;
         }
 
-        this.c.returnToGUIMessage(this.userSubDetails.toString());
+        this.c.returnToGUIMessage(this.userSubDetails.printReciept(this.connectedUser.getName()));
     }    
     
     private void printNotifyUser() {
@@ -615,7 +628,7 @@ public class YYYFlixSystem {
         }
         writeIntegerToTransCounter(Subscription.COUNTER);
 
-        NotifyUser notifyUser = new NotifyUser(user);
+        NotifyUser notifyUser = new NotifyUser(user.getUsername());
         // insert the notify user object into the database
         if(!this.insertObjectIntoDatabase(notifyUser, NOTIFY_USER_DATABASE_FILE_PATH))
         {
@@ -914,7 +927,7 @@ public class YYYFlixSystem {
                 // open file stream of user's database, sending path of database + additional file pathing
                 fos = new FileOutputStream(
                                             objectPath(
-                                                            YYYFlixSystem.LIBRARIES_DATABASE_FILE_PATH, String.valueOf(obj.getUser().getUsername())
+                                                            YYYFlixSystem.LIBRARIES_DATABASE_FILE_PATH, String.valueOf(obj.getUsername())
                                                       )
                                           );
             } 
@@ -948,7 +961,7 @@ public class YYYFlixSystem {
                 // open file stream of user's database, sending path of database + additional file pathing
                 fos = new FileOutputStream(
                                             objectPath(
-                                                            YYYFlixSystem.NOTIFY_USER_DATABASE_FILE_PATH, String.valueOf(obj.getUser().getUsername())
+                                                            YYYFlixSystem.NOTIFY_USER_DATABASE_FILE_PATH, String.valueOf(obj.getUsername())
                                                       )
                                           );
             }                                      
@@ -1670,7 +1683,7 @@ public class YYYFlixSystem {
      */
     public boolean updateNotifyUserInDatabase(NotifyUser notifyUser) {
 
-        String username = notifyUser.getUser().getUsername();
+        String username = notifyUser.getUsername();
         // deletes the database of the current user, prepares for new database file
         if(!deleteNotifyUser(username))
         {
