@@ -280,36 +280,7 @@ public class YYYFlixSystem {
      * initializes the databases if necessary
      */
     public void initDatabases() {
-        // init users database
-        initDatabaseFromPath(USERS_DATABASE_FILE_PATH, false);
-
-        // init users subs details database
-        initDatabaseFromPath(USERS_SUBS_DETAILS_DATABASE_FILE_PATH, false);     
-
-        // init notify user database
-        initDatabaseFromPath(NOTIFY_USER_DATABASE_FILE_PATH, false);             
-        
-        // init subs database
-        initDatabaseFromPath(SUBS_DATABASE_FILE_PATH, false);
-        // insert hard-coded subs
-        insertObjectIntoDatabase(new Subscription((float)0, (float)0), SUBS_DATABASE_FILE_PATH);
-        insertObjectIntoDatabase(new Subscription((float)15, (float)1), SUBS_DATABASE_FILE_PATH);
-        insertObjectIntoDatabase(new Subscription((float)40, (float)3), SUBS_DATABASE_FILE_PATH);
-        insertObjectIntoDatabase(new Subscription((float)70, (float)6), SUBS_DATABASE_FILE_PATH);
-        insertObjectIntoDatabase(new Subscription((float)120, (float)12), SUBS_DATABASE_FILE_PATH);
-        writeIntegerToSubCounter(Subscription.COUNTER);
-        
-
-        // init library database
-        initDatabaseFromPath(LIBRARIES_DATABASE_FILE_PATH, false);        
-
-        // init contents database
-        initDatabaseFromPath(CONTENTS_DATABASE_FILE_PATH, false);
-
-        // init usernames hashset database, if a new database has been created, insert empty hashset into it
-        if(initDatabaseFromPath(USERNAMES_HASHSET_DATABASE_FILE_PATH, true))
-            insertObjectIntoDatabase(new HashSet<String>(), USERNAMES_HASHSET_DATABASE_FILE_PATH);
-
+        //#region init id files
         // init content last id database
         initDatabaseFromPath(LAST_CONTENT_ID_DATABASE_FILE_PATH, true);
 
@@ -318,7 +289,47 @@ public class YYYFlixSystem {
 
         // init subscription details last id database
         initDatabaseFromPath(LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH, true);
+        //#endregion
 
+        //#region init main objects database files
+        // init contents database
+        initDatabaseFromPath(CONTENTS_DATABASE_FILE_PATH, false);        
+
+        // init users database
+        initDatabaseFromPath(USERS_DATABASE_FILE_PATH, false);
+
+        // init subs database
+        initDatabaseFromPath(SUBS_DATABASE_FILE_PATH, false);
+        //#endregion
+        
+        //#region init helper database files
+        // init usernames hashset database, if a new database has been created, insert empty hashset into it
+        if(initDatabaseFromPath(USERNAMES_HASHSET_DATABASE_FILE_PATH, true))
+            insertObjectIntoDatabase(new HashSet<String>(), USERNAMES_HASHSET_DATABASE_FILE_PATH);        
+        //#endregion
+
+        //#region insert hard-coded subs and update database
+        // insert hard-coded subs
+        insertObjectIntoDatabase(new Subscription((float)0, (float)0), SUBS_DATABASE_FILE_PATH);
+        insertObjectIntoDatabase(new Subscription((float)15, (float)1), SUBS_DATABASE_FILE_PATH);
+        insertObjectIntoDatabase(new Subscription((float)40, (float)3), SUBS_DATABASE_FILE_PATH);
+        insertObjectIntoDatabase(new Subscription((float)70, (float)6), SUBS_DATABASE_FILE_PATH);
+        insertObjectIntoDatabase(new Subscription((float)120, (float)12), SUBS_DATABASE_FILE_PATH);
+
+        // update subs counter in the database
+        writeIntegerToSubCounter(Subscription.COUNTER);        
+        //#endregion
+
+        //#region init connected objects databases
+        // init users subs details database
+        initDatabaseFromPath(USERS_SUBS_DETAILS_DATABASE_FILE_PATH, false);     
+
+        // init notify user database
+        initDatabaseFromPath(NOTIFY_USER_DATABASE_FILE_PATH, false);             
+
+        // init library database
+        initDatabaseFromPath(LIBRARIES_DATABASE_FILE_PATH, false);        
+        //#endregion
     }
 
     /**
@@ -586,6 +597,7 @@ public class YYYFlixSystem {
             System.out.println("Register Failed, Please try again.");
             return false;
         }
+        writeIntegerToTransCounter(Subscription.COUNTER);
 
         NotifyUser notifyUser = new NotifyUser(user);
         // insert the notify user object into the database
