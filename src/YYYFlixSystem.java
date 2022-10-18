@@ -1,14 +1,8 @@
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import java.awt.event.*;
-
-import javax.swing.JFrame;
 
 public class YYYFlixSystem {
     // fields
@@ -21,6 +15,9 @@ public class YYYFlixSystem {
     ModelMenu m;
     ViewMenu v;
     ControllerMenu c;
+
+    // a single scanner to be used globaly by the program
+    private static Scanner scan = new Scanner(System.in);
 
     // defines
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
@@ -87,8 +84,7 @@ public class YYYFlixSystem {
             this.c.sayNotLoggedIn();
             return;
         }
-                
-        Scanner scan = new Scanner(System.in);
+                        
         System.out.println("Please enter the username of the user you want to send a message to: ");
         String username = scan.nextLine();
         while(this.isUsernameValid(username))
@@ -177,7 +173,6 @@ public class YYYFlixSystem {
             UserSubscriptionDetails.COUNTER=counter;
             
         
-        Scanner scan = new Scanner(System.in);
         System.out.println("Please choose the subscription ID you'd like to subscribe to: ");
         int subID = -1;
         while(subID == -1) {
@@ -307,8 +302,6 @@ public class YYYFlixSystem {
      */
     public User register()
     {
-        // input scanner
-        Scanner scan = new Scanner(System.in);
 
         // get username from user
         System.out.println("Please enter your desired username: ");
@@ -382,8 +375,6 @@ public class YYYFlixSystem {
     }
 
     public Content createContent() {
-        // input scanner
-        Scanner scan = new Scanner(System.in);
 
         // get content type from user
         System.out.println("Please enter your desired content [Commercial / Movie / TVShow]: ");
@@ -1216,7 +1207,6 @@ public class YYYFlixSystem {
      * @return if a matching content is found, returns the content,if not, returns null
      */
     public Content readContent() {
-        Scanner scan = new Scanner(System.in);
         System.out.println("Please enter the wanted ContentID");
         int contentID = -1;
         while(contentID == -1) {
