@@ -77,6 +77,11 @@ public class YYYFlixSystem {
         c.initController();   
     }
 
+    public void start() {
+        String message = "Welcome to YYYFlix inc.";
+        this.c.returnToGUIMessage(message);
+    }
+
     private void notifyUser() {
         if(this.connectedUser == null) {
             this.c.sayNotLoggedIn();
