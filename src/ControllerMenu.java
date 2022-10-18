@@ -32,8 +32,18 @@ public class ControllerMenu {
       view.getMenu4().addActionListener(e -> pressMenu());
       view.getMenu5().addActionListener(e -> pressMenu());
       view.getLogin().addActionListener(e -> pressLogin());
-      view.getLogout().addActionListener(e -> pressLogout());      
+      view.getLogout().addActionListener(e -> pressLogout());   
+      view.getMenuAbout().addActionListener(e -> pressMenuAbout());   
    }
+
+   private void pressMenuAbout() {
+      String message = "YYYFlix inc." + "\n" +
+                       "Developed by: " + "\n" +
+                       "Yuval Yacobi," + " AKA 'Gangster'" + "\n" +
+                       "Yosi Yishaev," + " AKA 'Begemot'" + "\n" +
+                       "Yakir Hasid," + " AKA '// TODO: Implement'" + "\n";
+      JOptionPane.showMessageDialog(null, message, "Credits", JOptionPane.INFORMATION_MESSAGE);      
+  }
 
    private void pressMenu() {
        JOptionPane.showMessageDialog(null, "Check Console Command For Further Actions.", "Info", JOptionPane.INFORMATION_MESSAGE);      

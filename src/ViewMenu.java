@@ -24,6 +24,7 @@ public class ViewMenu {
     private JMenuItem m16;
     private JMenuItem m17;
     private JMenuItem m18;
+    private JMenuItem m21;
     private JLabel usernameLabel;
     private JLabel passwordLabel;
     private JLabel connectedUserLabel;
@@ -64,6 +65,7 @@ public class ViewMenu {
         m16 = new JMenuItem("Print - My Library");          
         m17 = new JMenuItem("Print - Subscription Details");          
         m18 = new JMenuItem("Print - Notifications");          
+        m21 = new JMenuItem("About");   
         m1.add(m11);        
         m1.add(m12);
         m1.add(m13);
@@ -72,6 +74,8 @@ public class ViewMenu {
         m1.add(m16);
         m1.add(m17);
         m1.add(m18);
+
+        m2.add(m21);
 
         // Add UI element to frame
         GroupLayout layout = new GroupLayout(frame.getContentPane());
@@ -153,7 +157,11 @@ public class ViewMenu {
     
     public JMenuItem getMenu8() {
         return this.m18;
-    }    
+    }   
+    
+    public JMenuItem getMenuAbout() {
+        return this.m21;
+    }      
 
     public JLabel getConnectedUserLabel() {
         return connectedUserLabel;
