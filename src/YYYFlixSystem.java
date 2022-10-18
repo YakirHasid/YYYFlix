@@ -96,8 +96,12 @@ public class YYYFlixSystem {
         Notification notification = new Notification(0, this.connectedUser.getUsername() , messageTitle, messageText);
         NotifyUser notifyUser = readNotifyUser(username);
         notifyUser.addNotification(notification);
-        updateNotifyUserInDatabase(notifyUser);                
+        updateNotifyUserInDatabase(notifyUser);   
+        
+        String message = "Successfully send " + username + " a notification.";
 
+        // alert the user
+        returnToGUIMessage(message);
 
     }
 
@@ -118,14 +122,35 @@ public class YYYFlixSystem {
 
         returnToGUIMessage(this.userSubDetails.toString());
     }    
-
-    // TODO: Implement
+    
     private void printNotifyUser() {
         if(this.connectedUser == null) {
             this.c.sayNotLoggedIn();
             return;
         }
         
+        // read notify user object
+        NotifyUser notifyUser = readNotifyUser(this.connectedUser.getUsername());
+
+        // create header for the alert
+        String header = "Notifications Left To Read: " + notifyUser.getNotificationList().size() + "\n";
+
+        // get the latest notification
+        Notification notification = notifyUser.getLatestNotification();
+        String message = "";
+
+        // check if there is a notification, if there is then create a message
+        if(notification!=null)
+            message = notification.createMessage();        
+
+        // append the message to the header, store in message
+        message = header + message;
+
+        // update the notify user database to not include the recently viewed notification
+        updateNotifyUserInDatabase(notifyUser);
+        
+        // alert the user
+        returnToGUIMessage(message);
         return;
     }        
 
@@ -1493,7 +1518,7 @@ public class YYYFlixSystem {
         }
 
         // inserts the newly updated user into the database
-        if(!this.insertObjectIntoDatabase(notifyUser, USERS_DATABASE_FILE_PATH))
+        if(!this.insertObjectIntoDatabase(notifyUser, NOTIFY_USER_DATABASE_FILE_PATH))
         {
             System.out.println("Failed to insert the updated user into database.");
             // TODO: Probably exception throw because user is now not in the database
@@ -1556,33 +1581,7 @@ public class YYYFlixSystem {
         // library's details has been successfully updated in the database
         System.out.println("Details have been updated successfully.");
         return true;
-    }   
-    
-    /**
-     * updates an old copy of library in the database to be the new given copy     
-     * @return true if the update has been sucessful (the given user has been found in the database and has been removed), false otherwise
-     */
-    public boolean updateNotifyUserInDatabase() {
-
-        // deletes the database of the current user, prepares for new database file
-        if(!deleteNotifyUser(this.connectedUser.getUsername()))
-        {
-            System.out.println("Library of " + this.connectedUser.getUsername() + " has not been found inside the database, can't update the instance.");
-            return false;
-        }
-
-        // inserts the newly updated library into the database
-        if(!this.insertObjectIntoDatabase(this.userLibrary, LIBRARIES_DATABASE_FILE_PATH))
-        {
-            System.out.println("Failed to insert the updated library into database.");
-            // TODO: Probably exception throw because library is now not in the database
-            return false;
-        }
-
-        // library's details has been successfully updated in the database
-        System.out.println("Details have been updated successfully.");
-        return true;
-    }    
+    }     
 
     /**
      * updates an old copy of library in the database to be the new given copy     

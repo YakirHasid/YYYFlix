@@ -41,7 +41,10 @@ public class Notification implements Serializable {
     public String createMessage()
     {
         if(this.validForDisplay)
-            return "Notification:\n" + "Title: " + this.messageTitle + "\n" + this.messageText + "\n";
+            return "Notification:\n" + 
+                    "\t" + "From: " + this.sender + "\n" + 
+                    "\t" + "Title: " + this.messageTitle + "\n" + 
+                    "\t" + this.messageText + "\n";
         else
             return "[INVALID MESSAGE LENGTH FOR DISPLAY]";
     }

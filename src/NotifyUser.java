@@ -57,7 +57,19 @@ public class NotifyUser implements Serializable {
     public ArrayList<Notification> getNotificationList() {
         return notificationList;
     }
-    public Notification getLatestNotification() {return notificationList.get(notificationList.size() - 1);}
+    public Notification getLatestNotification() {
+        Notification notification = null;
+
+        // get latest notification only if not empty
+        if(notificationList.size() > 0)
+            notification =  notificationList.get(notificationList.size() - 1);
+
+        // remove from list only if the received notification is not null
+        if(notification != null)
+            this.notificationList.remove(notification);
+            
+        return notification;
+    }
 
     /**
      * toString method of the NotifyUser
