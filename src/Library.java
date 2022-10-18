@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Library implements Serializable {
     // fields
-    private String userame;
+    private String username;
     private ArrayList<Integer> contentIDList;
 
     /**
@@ -12,13 +12,13 @@ public class Library implements Serializable {
      */
     public Library(User user)
     {
-        this.userame = user.getUsername();
+        this.username = user.getUsername();
         this.contentIDList = new ArrayList<Integer>();
     }
 
     // user getter
     public String getUsername(){
-        return userame;
+        return username;
     }
 
     // content list getter
@@ -78,7 +78,7 @@ public class Library implements Serializable {
 
     public String libraryHeader(String name) {
         // title for display
-        String displayText =  name + "'s" + " Library:" + "\n" + "Content List:\n";
+        String displayText =  name + "'s (" + username + ") Library:" + "\n" + "Content List:\n";
 
         return displayText;        
     }
@@ -90,7 +90,7 @@ public class Library implements Serializable {
     @Override
     public String toString() {
         // title for display
-        String displayText =  userame + "'s" + " Library:" + "\n" + "ContentID List:\n";
+        String displayText =  username + "'s" + " Library:" + "\n" + "ContentID List:\n";
 
         // foreach content, add to display
         for (Integer contentID :
