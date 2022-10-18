@@ -1,4 +1,3 @@
-import javax.swing.JOptionPane;
 public class ControllerLogin {
  private ModelLogin model;
  private ViewLogin view;
@@ -18,14 +17,6 @@ public class ControllerLogin {
   //view.getPasswordSaveButton().addActionListener(e -> savePassword());
   view.getLogin().addActionListener(e -> pressLogin());
   view.getBye().addActionListener(e -> sayBye());
- }
- private void saveUsername() {
-  model.setUsername(view.getUsernameTextfield().getText());
-  JOptionPane.showMessageDialog(null, "Username saved : " + model.getUsername(), "Info", JOptionPane.INFORMATION_MESSAGE);
- }
- private void savePassword() {
-  model.setPassword(view.getPasswordTextfield().getText());
-  JOptionPane.showMessageDialog(null, "Password saved : " + model.getPassword(), "Info", JOptionPane.INFORMATION_MESSAGE);
  }
  private void pressLogin() {
     model.setUsername(view.getUsernameTextfield().getText());
