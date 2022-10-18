@@ -69,8 +69,54 @@ public class YYYFlixSystem {
         v.getMenu6().addActionListener(e -> printLibrary());
         v.getMenu7().addActionListener(e -> printUserSubDetails());
         v.getMenu8().addActionListener(e -> printNotifyUser());
+        v.getMenu9().addActionListener(e -> changeName());
+        v.getMenu10().addActionListener(e -> changePassword());
+        v.getMenu11().addActionListener(e -> changePaymentMethod());        
 
         c.initController();   
+    }
+
+    private boolean isLoggedIn() {
+        if(this.connectedUser == null) {
+            this.c.sayNotLoggedIn();
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean changePaymentMethod() {
+        if(!isLoggedIn()) {
+            return false;
+        }
+
+        System.out.println("Please enter your desired payment method: ");
+        String paymentMethod = scan.nextLine();
+
+        return changePaymentMethod(connectedUser, paymentMethod);
+    }
+
+    private boolean changePassword() {
+        if(!isLoggedIn()) {
+            return false;
+        }
+
+        System.out.println("Please enter your old password: ");
+        String oldPassword = scan.nextLine();
+
+        System.out.println("Please enter the new password you desire: ");
+        String newPassword = scan.nextLine();
+        return changePassword(this.connectedUser, oldPassword, newPassword);
+    }
+
+    private boolean changeName() {
+        if(!isLoggedIn()) {
+            return false;
+        }
+
+        System.out.println("Please enter the new name you desire: ");
+        String newName = scan.nextLine();
+        return changeName(this.connectedUser, newName);
     }
 
     public void start() {
@@ -79,8 +125,7 @@ public class YYYFlixSystem {
     }
 
     private void notifyUser() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();
+        if(!isLoggedIn()) {
             return;
         }
                         
@@ -111,8 +156,7 @@ public class YYYFlixSystem {
     }
 
     private void printLibrary() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();
+        if(!isLoggedIn()) {
             return;
         }
             
@@ -120,8 +164,7 @@ public class YYYFlixSystem {
     }
 
     private void printUserSubDetails() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();
+        if(!isLoggedIn()) {
             return;
         }
 
@@ -129,8 +172,7 @@ public class YYYFlixSystem {
     }    
     
     private void printNotifyUser() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();
+        if(!isLoggedIn()) {
             return;
         }
         
@@ -160,8 +202,7 @@ public class YYYFlixSystem {
     }        
 
     private boolean subscribe() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();            
+        if(!isLoggedIn()) {
             return false;
         }
 
@@ -210,10 +251,9 @@ public class YYYFlixSystem {
     }
 
     private boolean addContentToLibrary() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();
+        if(!isLoggedIn()) {
             return false;
-        }            
+        }           
 
         Content content = readContent(); 
         String message;   
