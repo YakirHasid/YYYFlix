@@ -136,6 +136,7 @@ public class YYYFlixSystem {
 
     public void start() {
         String message = "Welcome to YYYFlix inc.";
+        System.out.println(message);
         this.c.returnToGUIMessage(message);
     }
 
@@ -296,6 +297,8 @@ public class YYYFlixSystem {
         insertObjectIntoDatabase(new Subscription((float)40, (float)3), SUBS_DATABASE_FILE_PATH);
         insertObjectIntoDatabase(new Subscription((float)70, (float)6), SUBS_DATABASE_FILE_PATH);
         insertObjectIntoDatabase(new Subscription((float)120, (float)12), SUBS_DATABASE_FILE_PATH);
+        writeIntegerToSubCounter(Subscription.COUNTER);
+        
 
         // init library database
         initDatabaseFromPath(LIBRARIES_DATABASE_FILE_PATH, false);        
@@ -671,6 +674,43 @@ public class YYYFlixSystem {
         return null;
     }
 
+    public Integer readSubCounter()
+    {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            fi = new FileInputStream(new File(LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH));
+            oi = new ObjectInputStream(fi);
+
+
+            // the set that contains all the usernames inside the database
+            return (Integer) oi.readObject();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                if(oi != null)
+                    oi.close();
+
+                if(fi != null)
+                    fi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return null;
+    }
+
     public Integer readContentCounter()
     {
         FileInputStream fi = null;
@@ -759,6 +799,21 @@ public class YYYFlixSystem {
         // insert the hashset into the hashset database
         return insertObjectIntoDatabase(count, LAST_CONTENT_ID_DATABASE_FILE_PATH);
     }
+
+    public boolean writeIntegerToSubCounter(Integer count)
+    {
+        // read usernames hash set from database
+        Integer cnt = this.readSubCounter();
+        if(cnt == null)
+            count = (Integer) 1;
+
+        // delete the previous hashset database
+        File file = new File(LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH);
+        file.delete();
+
+        // insert the hashset into the hashset database
+        return insertObjectIntoDatabase(count, LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH);
+    }    
 
     public boolean writeIntegerToTransCounter(Integer count)
     {
