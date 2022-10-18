@@ -18,17 +18,17 @@ public class ControllerMenu {
    }
 
    public void initController() {
-      view.getMenu1().addActionListener(e -> pressMenu());
-      view.getMenu2().addActionListener(e -> pressMenu());
-      view.getMenu3().addActionListener(e -> pressMenu());
-      view.getMenu4().addActionListener(e -> pressMenu());
-      view.getMenu5().addActionListener(e -> pressMenu());
-      view.getMenu9().addActionListener(e -> pressMenu());
-      view.getMenu10().addActionListener(e -> pressMenu());
-      view.getMenu11().addActionListener(e -> pressMenu());
+      view.getMenu1_1().addActionListener(e -> pressMenu());
+      view.getMenu1_2().addActionListener(e -> pressMenu());
+      view.getMenu1_3().addActionListener(e -> pressMenu());
+      view.getMenu1_4().addActionListener(e -> pressMenu());
+      view.getMenu1_5().addActionListener(e -> pressMenu());
+      view.getMenu1_7_1().addActionListener(e -> pressMenu());
+      view.getMenu1_7_2().addActionListener(e -> pressMenu());
+      view.getMenu1_7_3().addActionListener(e -> pressMenu());
       view.getLogin().addActionListener(e -> pressLogin());
       view.getLogout().addActionListener(e -> pressLogout());   
-      view.getMenuAbout().addActionListener(e -> pressMenuAbout());   
+      view.getMenu2_1().addActionListener(e -> pressMenuAbout());   
    }
 
    private void pressMenuAbout() {
