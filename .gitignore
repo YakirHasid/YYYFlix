@@ -21,3 +21,4 @@ NotifyUserDatabase/*
 /out/*
 contentID.dat
 subscriptionID.dat
+transactionID.dat

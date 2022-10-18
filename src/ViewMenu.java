@@ -21,6 +21,9 @@ public class ViewMenu {
     private JMenuItem m16;
     private JMenuItem m17;
     private JMenuItem m18;
+    private JMenuItem m19;
+    private JMenuItem m110;
+    private JMenuItem m111;
     private JMenuItem m21;
     private JLabel usernameLabel;
     private JLabel passwordLabel;
@@ -61,7 +64,10 @@ public class ViewMenu {
         m15 = new JMenuItem("Send Notification To A User"); 
         m16 = new JMenuItem("Print - My Library");          
         m17 = new JMenuItem("Print - Subscription Details");          
-        m18 = new JMenuItem("Print - Notifications");          
+        m18 = new JMenuItem("Print - Notifications");   
+        m19 = new JMenuItem("Change - Name"); 
+        m110 = new JMenuItem("Change - Password"); 
+        m111 = new JMenuItem("Change - Payment Method");        
         m21 = new JMenuItem("About");   
         m1.add(m11);        
         m1.add(m12);
@@ -71,6 +77,9 @@ public class ViewMenu {
         m1.add(m16);
         m1.add(m17);
         m1.add(m18);
+        m1.add(m19);
+        m1.add(m110);
+        m1.add(m111);
 
         m2.add(m21);
 
@@ -154,7 +163,19 @@ public class ViewMenu {
     
     public JMenuItem getMenu8() {
         return this.m18;
-    }   
+    }  
+    
+    public JMenuItem getMenu9() {
+        return this.m19;
+    }
+    
+    public JMenuItem getMenu10() {
+        return this.m110;
+    }
+    
+    public JMenuItem getMenu11() {
+        return this.m111;
+    }       
     
     public JMenuItem getMenuAbout() {
         return this.m21;

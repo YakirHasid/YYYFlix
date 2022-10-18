@@ -27,7 +27,8 @@ public class YYYFlixSystem {
     private static final String SUBS_DATABASE_FILE_PATH = "SubsDatabase";
     private static final String CONTENTS_DATABASE_FILE_PATH = "ContentDatabase";
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
-    private static final String LAST_ID_DATABASE_FILE_PATH = "contentID.dat";
+    private static final String LAST_CONTENT_ID_DATABASE_FILE_PATH = "contentID.dat";
+    private static final String LAST_TRANSACTION_ID_DATABASE_FILE_PATH = "transactionID.dat";
     private static final String LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH = "subscriptionID.dat";
 
     /**
@@ -49,6 +50,20 @@ public class YYYFlixSystem {
         //v1.getLogin().addActionListener(e -> login(m1.getUsername(), m1.getPassword()));
         //c1.initController();
 
+        Integer counter;
+
+        counter  = readContentCounter();
+        if(counter==null)
+            Content.COUNTER = 0;
+        else
+            Content.COUNTER=counter;
+
+
+        counter = readTransactionCounter();
+        if(counter==null)
+            UserSubscriptionDetails.COUNTER = 0;
+        else
+            UserSubscriptionDetails.COUNTER=counter;            
 
         this.m = new ModelMenu("", "", "");
         this.v = new ViewMenu("YYYFlix");
@@ -69,18 +84,64 @@ public class YYYFlixSystem {
         v.getMenu6().addActionListener(e -> printLibrary());
         v.getMenu7().addActionListener(e -> printUserSubDetails());
         v.getMenu8().addActionListener(e -> printNotifyUser());
+        v.getMenu9().addActionListener(e -> changeName());
+        v.getMenu10().addActionListener(e -> changePassword());
+        v.getMenu11().addActionListener(e -> changePaymentMethod());        
 
         c.initController();   
     }
 
+    private boolean isLoggedIn() {
+        if(this.connectedUser == null) {
+            this.c.sayNotLoggedIn();
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean changePaymentMethod() {
+        if(!isLoggedIn()) {
+            return false;
+        }
+
+        System.out.println("Please enter your desired payment method: ");
+        String paymentMethod = scan.nextLine();
+
+        return changePaymentMethod(connectedUser, paymentMethod);
+    }
+
+    private boolean changePassword() {
+        if(!isLoggedIn()) {
+            return false;
+        }
+
+        System.out.println("Please enter your old password: ");
+        String oldPassword = scan.nextLine();
+
+        System.out.println("Please enter the new password you desire: ");
+        String newPassword = scan.nextLine();
+        return changePassword(this.connectedUser, oldPassword, newPassword);
+    }
+
+    private boolean changeName() {
+        if(!isLoggedIn()) {
+            return false;
+        }
+
+        System.out.println("Please enter the new name you desire: ");
+        String newName = scan.nextLine();
+        return changeName(this.connectedUser, newName);
+    }
+
     public void start() {
         String message = "Welcome to YYYFlix inc.";
+        System.out.println(message);
         this.c.returnToGUIMessage(message);
     }
 
     private void notifyUser() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();
+        if(!isLoggedIn()) {
             return;
         }
                         
@@ -111,8 +172,7 @@ public class YYYFlixSystem {
     }
 
     private void printLibrary() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();
+        if(!isLoggedIn()) {
             return;
         }
             
@@ -120,8 +180,7 @@ public class YYYFlixSystem {
     }
 
     private void printUserSubDetails() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();
+        if(!isLoggedIn()) {
             return;
         }
 
@@ -129,8 +188,7 @@ public class YYYFlixSystem {
     }    
     
     private void printNotifyUser() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();
+        if(!isLoggedIn()) {
             return;
         }
         
@@ -160,16 +218,9 @@ public class YYYFlixSystem {
     }        
 
     private boolean subscribe() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();            
+        if(!isLoggedIn()) {
             return false;
         }
-
-        Integer counter = readTransactionCounter();
-        if(counter==null)
-            UserSubscriptionDetails.COUNTER = 0;
-        else
-            UserSubscriptionDetails.COUNTER=counter;
             
         
         System.out.println("Please choose the subscription ID you'd like to subscribe to: ");
@@ -202,7 +253,7 @@ public class YYYFlixSystem {
 
         this.userSubDetails = new UserSubscriptionDetails(connectedUser, sub);
 
-        writeIntegerToCounter(UserSubscriptionDetails.COUNTER++);
+        writeIntegerToTransCounter(UserSubscriptionDetails.COUNTER);
 
         String message = "Subscribed successfully, end date of subscription is: " + userSubDetails.getEndDate();
         returnToGUIMessage(message);
@@ -210,10 +261,9 @@ public class YYYFlixSystem {
     }
 
     private boolean addContentToLibrary() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();
+        if(!isLoggedIn()) {
             return false;
-        }            
+        }           
 
         Content content = readContent(); 
         String message;   
@@ -230,17 +280,35 @@ public class YYYFlixSystem {
      * initializes the databases if necessary
      */
     public void initDatabases() {
+        //#region init id files
+        // init content last id database
+        initDatabaseFromPath(LAST_CONTENT_ID_DATABASE_FILE_PATH, true);
+
+        // init transaction last id database
+        initDatabaseFromPath(LAST_TRANSACTION_ID_DATABASE_FILE_PATH, true);        
+
+        // init subscription details last id database
+        initDatabaseFromPath(LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH, true);
+        //#endregion
+
+        //#region init main objects database files
+        // init contents database
+        initDatabaseFromPath(CONTENTS_DATABASE_FILE_PATH, false);        
+
         // init users database
         initDatabaseFromPath(USERS_DATABASE_FILE_PATH, false);
 
-        // init users subs details database
-        initDatabaseFromPath(USERS_SUBS_DETAILS_DATABASE_FILE_PATH, false);     
-
-        // init notify user database
-        initDatabaseFromPath(NOTIFY_USER_DATABASE_FILE_PATH, false);             
-        
         // init subs database
         initDatabaseFromPath(SUBS_DATABASE_FILE_PATH, false);
+        //#endregion
+        
+        //#region init helper database files
+        // init usernames hashset database, if a new database has been created, insert empty hashset into it
+        if(initDatabaseFromPath(USERNAMES_HASHSET_DATABASE_FILE_PATH, true))
+            insertObjectIntoDatabase(new HashSet<String>(), USERNAMES_HASHSET_DATABASE_FILE_PATH);        
+        //#endregion
+
+        //#region insert hard-coded subs and update database
         // insert hard-coded subs
         insertObjectIntoDatabase(new Subscription((float)0, (float)0), SUBS_DATABASE_FILE_PATH);
         insertObjectIntoDatabase(new Subscription((float)15, (float)1), SUBS_DATABASE_FILE_PATH);
@@ -248,29 +316,29 @@ public class YYYFlixSystem {
         insertObjectIntoDatabase(new Subscription((float)70, (float)6), SUBS_DATABASE_FILE_PATH);
         insertObjectIntoDatabase(new Subscription((float)120, (float)12), SUBS_DATABASE_FILE_PATH);
 
+        // update subs counter in the database
+        writeIntegerToSubCounter(Subscription.COUNTER);        
+        //#endregion
+
+        //#region init connected objects databases
+        // init users subs details database
+        initDatabaseFromPath(USERS_SUBS_DETAILS_DATABASE_FILE_PATH, false);     
+
+        // init notify user database
+        initDatabaseFromPath(NOTIFY_USER_DATABASE_FILE_PATH, false);             
+
         // init library database
         initDatabaseFromPath(LIBRARIES_DATABASE_FILE_PATH, false);        
-
-        // init contents database
-        initDatabaseFromPath(CONTENTS_DATABASE_FILE_PATH, false);
-
-        // init usernames hashset database
-        initDatabaseFromPath(USERNAMES_HASHSET_DATABASE_FILE_PATH, true);
-
-        // init content last id database
-        initDatabaseFromPath(LAST_ID_DATABASE_FILE_PATH, true);
-
-        // init subscription details last id database
-        initDatabaseFromPath(LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH, true);
-
+        //#endregion
     }
 
     /**
      * initializes a database, given its path
      * @param isFile represents if the path is a regular file or not
      * @param path represents the path of the database file
+     * @return true if a new file has been created, false otherwise
      */
-    public void initDatabaseFromPath(String path, boolean isFile) {
+    public boolean initDatabaseFromPath(String path, boolean isFile) {
         try {
 
             // file stream of the database given its path
@@ -283,16 +351,19 @@ public class YYYFlixSystem {
                 if(isFile) {
                     // create a new database file if the file doesn't exist
                     file.createNewFile();
-                }
+                    return true;             }
                 else {
                     // creates the directory in the given path
                     file.mkdirs();
+                    return true;
                 }
             }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 
     /**
@@ -420,12 +491,6 @@ public class YYYFlixSystem {
         //#region create the derived content object
         Content content = null;
 
-        Integer counter = readContentCounter();
-        if(counter==null)
-            Content.COUNTER = 0;
-        else
-            Content.COUNTER=counter;
-
         switch(contentType)
         {
             // Commercial
@@ -493,7 +558,7 @@ public class YYYFlixSystem {
         if(!insertObjectIntoDatabase(content, YYYFlixSystem.CONTENTS_DATABASE_FILE_PATH))
             return null;
 
-        writeIntegerToCounter(Content.COUNTER++);
+        writeIntegerToContentCounter(Content.COUNTER);
 
         String message = "Content " + content.getName() + " (ID: " + content.getID() + ") has been successfully created.";        
         returnToGUIMessage(message);
@@ -532,6 +597,7 @@ public class YYYFlixSystem {
             System.out.println("Register Failed, Please try again.");
             return false;
         }
+        writeIntegerToTransCounter(Subscription.COUNTER);
 
         NotifyUser notifyUser = new NotifyUser(user);
         // insert the notify user object into the database
@@ -620,12 +686,49 @@ public class YYYFlixSystem {
         return null;
     }
 
+    public Integer readSubCounter()
+    {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            fi = new FileInputStream(new File(LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH));
+            oi = new ObjectInputStream(fi);
+
+
+            // the set that contains all the usernames inside the database
+            return (Integer) oi.readObject();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                if(oi != null)
+                    oi.close();
+
+                if(fi != null)
+                    fi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return null;
+    }
+
     public Integer readContentCounter()
     {
         FileInputStream fi = null;
         ObjectInputStream oi = null;
         try {
-            fi = new FileInputStream(new File(LAST_ID_DATABASE_FILE_PATH));
+            fi = new FileInputStream(new File(LAST_CONTENT_ID_DATABASE_FILE_PATH));
             oi = new ObjectInputStream(fi);
 
 
@@ -662,7 +765,7 @@ public class YYYFlixSystem {
         FileInputStream fi = null;
         ObjectInputStream oi = null;
         try {
-            fi = new FileInputStream(new File(LAST_ID_DATABASE_FILE_PATH));
+            fi = new FileInputStream(new File(LAST_TRANSACTION_ID_DATABASE_FILE_PATH));
             oi = new ObjectInputStream(fi);
 
 
@@ -694,7 +797,7 @@ public class YYYFlixSystem {
         return null;
     }
 
-    public boolean writeIntegerToCounter(Integer count)
+    public boolean writeIntegerToContentCounter(Integer count)
     {
         // read usernames hash set from database
         Integer cnt = this.readContentCounter();
@@ -702,17 +805,17 @@ public class YYYFlixSystem {
             count = (Integer) 1;
 
         // delete the previous hashset database
-        File file = new File(LAST_ID_DATABASE_FILE_PATH);
+        File file = new File(LAST_CONTENT_ID_DATABASE_FILE_PATH);
         file.delete();
 
         // insert the hashset into the hashset database
-        return insertObjectIntoDatabase(count, LAST_ID_DATABASE_FILE_PATH);
+        return insertObjectIntoDatabase(count, LAST_CONTENT_ID_DATABASE_FILE_PATH);
     }
 
-    public boolean writeIntegerToTransCounter(Integer count)
+    public boolean writeIntegerToSubCounter(Integer count)
     {
         // read usernames hash set from database
-        Integer cnt = this.readTransactionCounter();
+        Integer cnt = this.readSubCounter();
         if(cnt == null)
             count = (Integer) 1;
 
@@ -722,6 +825,21 @@ public class YYYFlixSystem {
 
         // insert the hashset into the hashset database
         return insertObjectIntoDatabase(count, LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH);
+    }    
+
+    public boolean writeIntegerToTransCounter(Integer count)
+    {
+        // read usernames hash set from database
+        Integer cnt = this.readTransactionCounter();
+        if(cnt == null)
+            count = (Integer) 1;
+
+        // delete the previous hashset database
+        File file = new File(LAST_TRANSACTION_ID_DATABASE_FILE_PATH);
+        file.delete();
+
+        // insert the hashset into the hashset database
+        return insertObjectIntoDatabase(count, LAST_TRANSACTION_ID_DATABASE_FILE_PATH);
     }
 
 

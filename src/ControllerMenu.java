@@ -23,6 +23,9 @@ public class ControllerMenu {
       view.getMenu3().addActionListener(e -> pressMenu());
       view.getMenu4().addActionListener(e -> pressMenu());
       view.getMenu5().addActionListener(e -> pressMenu());
+      view.getMenu9().addActionListener(e -> pressMenu());
+      view.getMenu10().addActionListener(e -> pressMenu());
+      view.getMenu11().addActionListener(e -> pressMenu());
       view.getLogin().addActionListener(e -> pressLogin());
       view.getLogout().addActionListener(e -> pressLogout());   
       view.getMenuAbout().addActionListener(e -> pressMenuAbout());   
