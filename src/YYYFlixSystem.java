@@ -1,14 +1,8 @@
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import java.awt.event.*;
-
-import javax.swing.JFrame;
 
 public class YYYFlixSystem {
     // fields
@@ -21,6 +15,9 @@ public class YYYFlixSystem {
     ModelMenu m;
     ViewMenu v;
     ControllerMenu c;
+
+    // a single scanner to be used globaly by the program
+    private static Scanner scan = new Scanner(System.in);
 
     // defines
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
@@ -68,7 +65,6 @@ public class YYYFlixSystem {
         v.getMenu2().addActionListener(e -> createContent());
         v.getMenu3().addActionListener(e -> addContentToLibrary());        
         v.getMenu4().addActionListener(e -> subscribe());
-        // TODO: Implement a function
         v.getMenu5().addActionListener(e -> notifyUser());
         v.getMenu6().addActionListener(e -> printLibrary());
         v.getMenu7().addActionListener(e -> printUserSubDetails());
@@ -77,13 +73,17 @@ public class YYYFlixSystem {
         c.initController();   
     }
 
+    public void start() {
+        String message = "Welcome to YYYFlix inc.";
+        this.c.returnToGUIMessage(message);
+    }
+
     private void notifyUser() {
         if(this.connectedUser == null) {
             this.c.sayNotLoggedIn();
             return;
         }
-                
-        Scanner scan = new Scanner(System.in);
+                        
         System.out.println("Please enter the username of the user you want to send a message to: ");
         String username = scan.nextLine();
         while(this.isUsernameValid(username))
@@ -172,7 +172,6 @@ public class YYYFlixSystem {
             UserSubscriptionDetails.COUNTER=counter;
             
         
-        Scanner scan = new Scanner(System.in);
         System.out.println("Please choose the subscription ID you'd like to subscribe to: ");
         int subID = -1;
         while(subID == -1) {
@@ -302,8 +301,6 @@ public class YYYFlixSystem {
      */
     public User register()
     {
-        // input scanner
-        Scanner scan = new Scanner(System.in);
 
         // get username from user
         System.out.println("Please enter your desired username: ");
@@ -377,8 +374,6 @@ public class YYYFlixSystem {
     }
 
     public Content createContent() {
-        // input scanner
-        Scanner scan = new Scanner(System.in);
 
         // get content type from user
         System.out.println("Please enter your desired content [Commercial / Movie / TVShow]: ");
@@ -485,10 +480,9 @@ public class YYYFlixSystem {
                 content =  new TVShow(format, subtitlesFileName, name, length, season, episode);
                 break;
 
-            default:
-                // TODO: maybe throws exception because for the given content there is no getting details from user implementation
-                content =  null;
-                break;
+            default:                
+                content =  null;                
+                return content;
         }
         //#endregion
 
@@ -739,44 +733,8 @@ public class YYYFlixSystem {
      */
     public boolean isUsernameValid(String username) {
 
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            // open file stream of username hashset database
-            fi = new FileInputStream(new File(USERNAMES_HASHSET_DATABASE_FILE_PATH));
-
-            // open object stream using the file stream
-            oi = new ObjectInputStream(fi);
-
-
-            // the set that contains all the usernames inside the database
-            Set<String> hashSet = (HashSet<String>) oi.readObject();
-            return !hashSet.contains(username.toLowerCase());
-
-            // catch all the thrown exceptions, close all open streams in finally
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return true;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                if(oi != null)
-                    oi.close();
-
-                if(fi != null)
-                    fi.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return false;
+        HashSet<String> hashSet = readUsernamesHashSet();
+        return !hashSet.contains(username);
     }
 
 
@@ -1211,7 +1169,6 @@ public class YYYFlixSystem {
      * @return if a matching content is found, returns the content,if not, returns null
      */
     public Content readContent() {
-        Scanner scan = new Scanner(System.in);
         System.out.println("Please enter the wanted ContentID");
         int contentID = -1;
         while(contentID == -1) {
@@ -1295,8 +1252,7 @@ public class YYYFlixSystem {
             while(!executor.awaitTermination(10, TimeUnit.SECONDS)) {
                 System.out.println("Not yet. Still waiting for termination");
             }
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
+        } catch (InterruptedException e) {            
             e.printStackTrace();
         }
 
@@ -1503,8 +1459,7 @@ public class YYYFlixSystem {
         return objectPath(USERS_DATABASE_FILE_PATH, username);
         //return USERS_DATABASE_FILE_PATH + "/" + username + ".dat";
     }
-
-    // TODO: Maybe no need for password security check?
+    
     //       OR add security check for each function change of details (payment method, name, password)
     /**
      * changes the password of the given user both locally and in the database

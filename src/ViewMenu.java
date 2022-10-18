@@ -7,9 +7,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.ObjectInputStream.GetField;
 
 public class ViewMenu {
     // View uses Swing framework to display UI to user

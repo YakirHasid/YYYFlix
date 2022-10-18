@@ -1,8 +1,4 @@
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.*;
-import java.awt.*;
 
 public class ControllerMenu {
    private ModelMenu model;
@@ -22,10 +18,6 @@ public class ControllerMenu {
    }
 
    public void initController() {
-      // view.getUsernameTextfield().addActionListener(e -> saveUsername());
-      // view.getPasswordTextfield().addActionListener(e -> savePassword());
-      // view.getUsernameSaveButton().addActionListener(e -> saveUsername());
-      // view.getPasswordSaveButton().addActionListener(e -> savePassword());
       view.getMenu1().addActionListener(e -> pressMenu());
       view.getMenu2().addActionListener(e -> pressMenu());
       view.getMenu3().addActionListener(e -> pressMenu());
@@ -62,18 +54,10 @@ public class ControllerMenu {
 
    private void pressLogin() {
       updateModel();
-      //view.getUsernameTextfield().setText("");
-      //view.getPasswordTextfield().setText("");
-      // JOptionPane.showMessageDialog(null, "Hello " + model.getUsername() + ", your
-      // password is: " + model.getPassword(), "Info",
-      // JOptionPane.INFORMATION_MESSAGE);
    }
 
    private void pressLogout() {
       cleanFields();     
-      // JOptionPane.showMessageDialog(null, "Hello " + model.getUsername() + ", your
-      // password is: " + model.getPassword(), "Info",
-      // JOptionPane.INFORMATION_MESSAGE);
    }
 
    public void sayHello() {
