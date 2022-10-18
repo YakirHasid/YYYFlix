@@ -628,7 +628,7 @@ public class YYYFlixSystem {
         }
         writeIntegerToTransCounter(Subscription.COUNTER);
 
-        NotifyUser notifyUser = new NotifyUser(user);
+        NotifyUser notifyUser = new NotifyUser(user.getUsername());
         // insert the notify user object into the database
         if(!this.insertObjectIntoDatabase(notifyUser, NOTIFY_USER_DATABASE_FILE_PATH))
         {
@@ -961,7 +961,7 @@ public class YYYFlixSystem {
                 // open file stream of user's database, sending path of database + additional file pathing
                 fos = new FileOutputStream(
                                             objectPath(
-                                                            YYYFlixSystem.NOTIFY_USER_DATABASE_FILE_PATH, String.valueOf(obj.getUser().getUsername())
+                                                            YYYFlixSystem.NOTIFY_USER_DATABASE_FILE_PATH, String.valueOf(obj.getUsername())
                                                       )
                                           );
             }                                      
@@ -1683,7 +1683,7 @@ public class YYYFlixSystem {
      */
     public boolean updateNotifyUserInDatabase(NotifyUser notifyUser) {
 
-        String username = notifyUser.getUser().getUsername();
+        String username = notifyUser.getUsername();
         // deletes the database of the current user, prepares for new database file
         if(!deleteNotifyUser(username))
         {
