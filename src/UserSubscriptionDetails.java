@@ -6,7 +6,7 @@ public class UserSubscriptionDetails implements Serializable {
     User user;
     Subscription subscription;
     private int transactionNumber; // identifier
-    private static int COUNTER = 0;
+    public static int COUNTER = 0;
     LocalDate startDate;
     LocalDate endDate;
 

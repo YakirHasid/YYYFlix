@@ -31,6 +31,7 @@ public class YYYFlixSystem {
     private static final String CONTENTS_DATABASE_FILE_PATH = "ContentDatabase";
     private static final String USERNAMES_HASHSET_DATABASE_FILE_PATH = "usernamesHashSetDatabase.dat";
     private static final String LAST_ID_DATABASE_FILE_PATH = "contentID.dat";
+    private static final String LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH = "subscriptionID.dat";
 
     /**
      * public constructor
@@ -133,6 +134,12 @@ public class YYYFlixSystem {
             this.c.sayNotLoggedIn();            
             return false;
         }
+
+        Integer counter = readTransactionCounter();
+        if(counter==null)
+            UserSubscriptionDetails.COUNTER = 0;
+        else
+            UserSubscriptionDetails.COUNTER=counter;
             
         
         Scanner scan = new Scanner(System.in);
@@ -147,6 +154,8 @@ public class YYYFlixSystem {
         }
 
         this.userSubDetails = new UserSubscriptionDetails(connectedUser, sub);
+
+        writeIntegerToCounter(UserSubscriptionDetails.COUNTER++);
 
         String message = "Subscribed successfully, end date of subscription is: " + userSubDetails.getEndDate();
         returnToGUIMessage(message);
@@ -203,6 +212,9 @@ public class YYYFlixSystem {
 
         // init content last id database
         initDatabaseFromPath(LAST_ID_DATABASE_FILE_PATH, true);
+
+        // init subscription details last id database
+        initDatabaseFromPath(LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH, true);
 
     }
 
@@ -567,6 +579,43 @@ public class YYYFlixSystem {
         return null;
     }
 
+    public Integer readTransactionCounter()
+    {
+        FileInputStream fi = null;
+        ObjectInputStream oi = null;
+        try {
+            fi = new FileInputStream(new File(LAST_ID_DATABASE_FILE_PATH));
+            oi = new ObjectInputStream(fi);
+
+
+            // the set that contains all the usernames inside the database
+            return (Integer) oi.readObject();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (EOFException e) {
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } finally {
+            try {
+                if(oi != null)
+                    oi.close();
+
+                if(fi != null)
+                    fi.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return null;
+    }
+
     public boolean writeIntegerToCounter(Integer count)
     {
         // read usernames hash set from database
@@ -580,6 +629,21 @@ public class YYYFlixSystem {
 
         // insert the hashset into the hashset database
         return insertObjectIntoDatabase(count, LAST_ID_DATABASE_FILE_PATH);
+    }
+
+    public boolean writeIntegerToTransCounter(Integer count)
+    {
+        // read usernames hash set from database
+        Integer cnt = this.readTransactionCounter();
+        if(cnt == null)
+            count = (Integer) 1;
+
+        // delete the previous hashset database
+        File file = new File(LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH);
+        file.delete();
+
+        // insert the hashset into the hashset database
+        return insertObjectIntoDatabase(count, LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH);
     }
 
 
