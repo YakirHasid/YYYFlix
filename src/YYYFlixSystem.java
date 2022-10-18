@@ -76,17 +76,18 @@ public class YYYFlixSystem {
         v.getLogout().addActionListener(e -> logout(connectedUser));
 
         // menu buttons
-        v.getMenu1().addActionListener(e -> register());
-        v.getMenu2().addActionListener(e -> createContent());
-        v.getMenu3().addActionListener(e -> addContentToLibrary());        
-        v.getMenu4().addActionListener(e -> subscribe());
-        v.getMenu5().addActionListener(e -> notifyUser());
-        v.getMenu6().addActionListener(e -> printLibrary());
-        v.getMenu7().addActionListener(e -> printUserSubDetails());
-        v.getMenu8().addActionListener(e -> printNotifyUser());
-        v.getMenu9().addActionListener(e -> changeName());
-        v.getMenu10().addActionListener(e -> changePassword());
-        v.getMenu11().addActionListener(e -> changePaymentMethod());        
+        v.getMenu1_1().addActionListener(e -> register());
+        v.getMenu1_2().addActionListener(e -> createContent());
+        v.getMenu1_3().addActionListener(e -> addContentToLibrary());        
+        v.getMenu1_4().addActionListener(e -> subscribe());
+        v.getMenu1_5().addActionListener(e -> notifyUser());
+        v.getMenu1_6_1().addActionListener(e -> printConnectedUser());
+        v.getMenu1_6_2().addActionListener(e -> printLibrary());
+        v.getMenu1_6_3().addActionListener(e -> printUserSubDetails());
+        v.getMenu1_6_4().addActionListener(e -> printNotifyUser());
+        v.getMenu1_7_1().addActionListener(e -> changeName());
+        v.getMenu1_7_2().addActionListener(e -> changePassword());
+        v.getMenu1_7_3().addActionListener(e -> changePaymentMethod());        
 
         c.initController();   
     }
@@ -170,6 +171,16 @@ public class YYYFlixSystem {
         returnToGUIMessage(message);
 
     }
+
+    private void printConnectedUser() {
+        if(this.connectedUser == null) {
+            this.c.sayNotLoggedIn();
+            return;
+        }
+
+        returnToGUIMessage(this.connectedUser.toString());
+        return;
+    }    
 
     private void printLibrary() {
         if(!isLoggedIn()) {
