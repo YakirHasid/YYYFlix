@@ -3,6 +3,7 @@ import java.io.Serializable;
 public class Notification implements Serializable {
     // fields
     private int messageID;
+    private String sender;
     private String messageTitle;
     private String messageText;
     private boolean validForDisplay;
@@ -17,9 +18,10 @@ public class Notification implements Serializable {
      * @param messageTitle the title of the message
      * @param messageText the text of the message
      */
-    public Notification(int messageID, String messageTitle, String messageText)
+    public Notification(int messageID, String sender, String messageTitle, String messageText)
     {
         this.messageID = messageID;
+        this.sender = sender;
         this.messageTitle = messageTitle;
         this.messageText = messageText;
 
@@ -42,6 +44,14 @@ public class Notification implements Serializable {
             return "Notification:\n" + "Title: " + this.messageTitle + "\n" + this.messageText + "\n";
         else
             return "[INVALID MESSAGE LENGTH FOR DISPLAY]";
+    }
+
+    public String getSender() {
+        return this.sender;
+    }
+    public boolean setSender(String sender) {
+        // TODO: Implement
+        return false;
     }
 
     public int getMessageID() {
