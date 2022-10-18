@@ -480,10 +480,9 @@ public class YYYFlixSystem {
                 content =  new TVShow(format, subtitlesFileName, name, length, season, episode);
                 break;
 
-            default:
-                // TODO: maybe throws exception because for the given content there is no getting details from user implementation
+            default:                
                 content =  null;
-                break;
+                return content;                
         }
         //#endregion
 
