@@ -401,6 +401,13 @@ public class YYYFlixSystem {
             insertObjectIntoDatabase(new HashSet<String>(), USERNAMES_HASHSET_DATABASE_FILE_PATH);        
         //#endregion
 
+        //#region insert hard-coded content and update database
+        // insert hard-coded content
+        insertObjectIntoDatabase(new Movie("mp4", "YYYFlix.src", "YYYFlix inc.", 100, "InTheCredits"), CONTENTS_DATABASE_FILE_PATH);
+
+        writeIntegerToContentCounter(Content.COUNTER);
+        //#endregion
+
         //#region insert hard-coded subs and update database
         // insert hard-coded subs
         insertObjectIntoDatabase(new Subscription((float)0, (float)0), SUBS_DATABASE_FILE_PATH);
