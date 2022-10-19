@@ -496,9 +496,10 @@ public class YYYFlixSystem {
         System.out.println("Please enter your desired name: ");
         String name = scan.nextLine();
 
-        // get payment method from user
+        // get payment method from user, ignore case-sensitivity in insertion and pass case-corrected values
         System.out.println("Please enter your desired payment method [PayPal/VISA]: ");
         String paymentMethod = scan.nextLine();
+        paymentMethod = User.isPaymentMethodValid(paymentMethod);
         while(paymentMethod == null)
         {
             System.out.println("[ERROR]: Payment is invalid (please choose PayPal or VISA).");
@@ -506,9 +507,6 @@ public class YYYFlixSystem {
             paymentMethod = scan.nextLine();
             paymentMethod = User.isPaymentMethodValid(paymentMethod);
         }
-
-        // finished input from user, close input scanner
-        //scan.close();
 
         // create user object from the given parameters
         User user = new User(username, password, name, paymentMethod);
@@ -651,9 +649,6 @@ public class YYYFlixSystem {
                 return content;
         }
         //#endregion
-
-        // finished input from user, close input scanner
-        //scan.close();
 
         // inserts the user into the user database and inserts the username into the username hashset
         if(!insertObjectIntoDatabase(content, YYYFlixSystem.CONTENTS_DATABASE_FILE_PATH))
