@@ -355,6 +355,10 @@ public class YYYFlixSystem {
         }           
 
         Content content = readContent(); 
+        while(content == null) {
+            System.out.println("[ERROR] Content ID is not in the database, please try again.");
+            content = readContent(); 
+        }
         String message;   
         if(!this.userLibrary.addContent(content))
             message = "Content " + content.getName() + " (ID: " + content.getID() + ") is already in the library.";
