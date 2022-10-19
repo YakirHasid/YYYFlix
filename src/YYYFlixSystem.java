@@ -1815,7 +1815,9 @@ public class YYYFlixSystem {
         if(!this.insertObjectIntoDatabase(notifyUser, NOTIFY_USER_DATABASE_FILE_PATH))
         {
             System.out.println("Failed to insert the updated user into database.");
-            // TODO: Probably exception throw because user is now not in the database
+
+            // user is now not in the database
+            System.out.println("[ERROR] Fatal Error occured in database.");
             return false;
         }
 
@@ -1842,7 +1844,9 @@ public class YYYFlixSystem {
         if(!this.insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH))
         {
             System.out.println("Failed to insert the updated user into database.");
-            // TODO: Probably exception throw because user is now not in the database
+
+            // user is now not in the database
+            System.out.println("[ERROR] Fatal Error occured in database.");
             return false;
         }
 
@@ -1868,7 +1872,9 @@ public class YYYFlixSystem {
         if(!this.insertObjectIntoDatabase(this.userSubDetails, USERS_SUBS_DETAILS_DATABASE_FILE_PATH))
         {
             System.out.println("Failed to insert the updated sub into database.");
-            // TODO: Probably exception throw because library is now not in the database
+            
+            // user is now not in the database
+            System.out.println("[ERROR] Fatal Error occured in database.");            
             return false;
         }
 
@@ -1894,7 +1900,9 @@ public class YYYFlixSystem {
         if(!this.insertObjectIntoDatabase(this.userLibrary, LIBRARIES_DATABASE_FILE_PATH))
         {
             System.out.println("Failed to insert the updated library into database.");
-            // TODO: Probably exception throw because library is now not in the database
+            
+            // user is now not in the database
+            System.out.println("[ERROR] Fatal Error occured in database.");            
             return false;
         }
 
