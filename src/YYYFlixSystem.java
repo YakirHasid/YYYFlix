@@ -102,7 +102,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * inities the change payment method procedure, allows the user to update their payment method in the database
+     * initiates the change payment method procedure, allows the user to update their payment method in the database
      * @return true if the change has been sucessfull, false otherwise
      */     
     private boolean changePaymentMethod() {
@@ -118,7 +118,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * inities the change password procedure with security check, allows the user to update their password in the database
+     * initiates the change password procedure with security check, allows the user to update their password in the database
      * @return true if the change has been sucessfull, false otherwise
      */    
     private boolean changePassword() {
@@ -137,7 +137,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * inities the change name procedure, allows the user to update their name in the database
+     * initiates the change name procedure, allows the user to update their name in the database
      * @return true if the change has been sucessfull, false otherwise
      */
     private boolean changeName() {
@@ -162,7 +162,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * inities the notify user procedure, sending a notification to a user
+     * initiates the notify user procedure, sending a notification to a user
      */
     private void notifyUser() {
         if(!isLoggedIn()) {
@@ -541,7 +541,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * inities the procedure to create a content
+     * initiates the procedure to create a content
      * @return the newly created content, null otherwise
      */
     public Content createContent() {
@@ -1008,7 +1008,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * inities the login procedure, to set a user as the connected user
+     * initiates the login procedure, to set a user as the connected user
      * @param username represents the given username of the user
      * @param password represents the given password of the user
      * @return true if the login has been sucessfull (a matching user with the given details has been found in the database), false otherwise
@@ -1046,7 +1046,7 @@ public class YYYFlixSystem {
     }
     
     /**
-     * inities the logout procedure, logs out the currently conencted user     
+     * initiates the logout procedure, logs out the currently conencted user     
      * @return true if the logout has been sucessfull, false otherwise
      */
     public boolean logout(){
