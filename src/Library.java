@@ -32,6 +32,9 @@ public class Library implements Serializable {
      * @return false if the content is already in the library, true if the content has been added successfully (no validation)
      */
     public boolean addContent(Content content){
+        if(content == null)
+            return false;
+            
         // checks if the content is already inside the library
         if (contentIDList.contains(content.getID()))
             return false;
