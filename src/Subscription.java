@@ -58,6 +58,6 @@ public class Subscription implements Serializable {
      */
     @Override
     public String toString() {
-        return "YYYFlix Subscription for " + this.duration + " months for " + this.price + " NIS (" + this.pricePerMonth() + " NIS per month)";
+        return "YYYFlix Subscription (ID=" + ID + ") for " + this.duration + " months for " + this.price + " NIS (" + this.pricePerMonth() + " NIS per month)";
     }
 }

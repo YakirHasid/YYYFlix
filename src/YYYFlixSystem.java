@@ -77,9 +77,13 @@ public class YYYFlixSystem {
         v.getM_Menu_Print_MyLibrary().addActionListener(e -> printLibrary());
         v.getM_Menu_Print_SubscriptionDetails().addActionListener(e -> printUserSubDetails());
         v.getM_Menu_Print_Notifications().addActionListener(e -> printNotifyUser());
+        v.getM_Menu_Print_AllUsers().addActionListener(e -> printUsers());
+        v.getM_Menu_Print_AllUsernames().addActionListener(e -> printUsernamesHashset());
+        v.getM_Menu_Print_AllContents().addActionListener(e -> printContents());
+        v.getM_Menu_Print_AllSubscriptions().addActionListener(e -> printSubscriptions());
         v.getM_Menu_Change_Name().addActionListener(e -> changeName());
         v.getM_Menu_Change_Password().addActionListener(e -> changePassword());
-        v.getM_Menu_Change_PaymentMethod().addActionListener(e -> changePaymentMethod());        
+        v.getM_Menu_Change_PaymentMethod().addActionListener(e -> changePaymentMethod());                
 
         c.initController();   
     }
@@ -1256,7 +1260,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * prints all the users in the database
+     * prints all the contents in the database
      */
     public void printContents() {
         System.out.println("==============================================");
@@ -1272,6 +1276,16 @@ public class YYYFlixSystem {
         System.out.println("==============================================");
         System.out.println("Usernames HashSet Database:");
         System.out.println(readUsernamesHashSet());
+        System.out.println("==============================================");
+    }
+
+        /**
+     * prints all the subscriptions in the database
+     */
+    public void printSubscriptions() {
+        System.out.println("==============================================");
+        System.out.println("Subscriptions Database:");
+        printObjects(SUBS_DATABASE_FILE_PATH);
         System.out.println("==============================================");
     }
 
@@ -1326,6 +1340,13 @@ public class YYYFlixSystem {
                     if(tvShow != null)
                         System.out.println(tvShow);
                 }
+                else if (obj instanceof Subscription) {
+
+                    Subscription subscription = (Subscription) obj;
+
+                    if(subscription != null)
+                        System.out.println(subscription);
+                }                
                 else {
                     System.out.println("[ERROR] Invalid object file found!");
                 }
