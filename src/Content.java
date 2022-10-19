@@ -16,8 +16,7 @@ abstract public class Content implements Serializable {
         Commercial,
         Movie,
         TVShow
-      }
-    //public static final String[] VALID_CONTENT_TYPES = {"Commercial", "Movie", "TVShow"};
+      }    
 
 
     /**
