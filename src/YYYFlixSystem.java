@@ -19,6 +19,8 @@ public class YYYFlixSystem {
     // a single scanner to be used globaly by the program
     private static Scanner scan = new Scanner(System.in);
 
+    private static ArrayList<Content> contentInLibraryHolder;
+
     // defines
     private static final String USERS_DATABASE_FILE_PATH = "UsersDatabase";
     private static final String LIBRARIES_DATABASE_FILE_PATH = "LibrariesDatabase";
@@ -41,14 +43,6 @@ public class YYYFlixSystem {
         connectedUser = null;
 
         this.initDatabases();
-
-        //ModelLogin m1 = new ModelLogin("", "");
-        //ViewLogin v1 = new ViewLogin("YYYFlix");
-        //ControllerLogin c1 = new ControllerLogin(m1, v1);
-
-        // action for pressing login
-        //v1.getLogin().addActionListener(e -> login(m1.getUsername(), m1.getPassword()));
-        //c1.initController();
 
         Integer counter;
 
@@ -92,6 +86,10 @@ public class YYYFlixSystem {
         c.initController();   
     }
 
+    /**
+     * helper funcition that checks if there is a connected user, notifies the gui accordingly
+     * @return true if there is a user connected, false otherwise
+     */     
     private boolean isLoggedIn() {
         if(this.connectedUser == null) {
             this.c.sayNotLoggedIn();
@@ -101,6 +99,10 @@ public class YYYFlixSystem {
         return true;
     }
 
+    /**
+     * inities the change payment method procedure, allows the user to update their payment method in the database
+     * @return true if the change has been sucessfull, false otherwise
+     */     
     private boolean changePaymentMethod() {
         if(!isLoggedIn()) {
             return false;
@@ -113,6 +115,10 @@ public class YYYFlixSystem {
         return changePaymentMethod(connectedUser, paymentMethod);
     }
 
+    /**
+     * inities the change password procedure with security check, allows the user to update their password in the database
+     * @return true if the change has been sucessfull, false otherwise
+     */    
     private boolean changePassword() {
         if(!isLoggedIn()) {
             return false;
@@ -128,6 +134,10 @@ public class YYYFlixSystem {
         return changePassword(this.connectedUser, oldPassword, newPassword);
     }
 
+    /**
+     * inities the change name procedure, allows the user to update their name in the database
+     * @return true if the change has been sucessfull, false otherwise
+     */
     private boolean changeName() {
         if(!isLoggedIn()) {
             return false;
@@ -140,12 +150,18 @@ public class YYYFlixSystem {
         return changeName(this.connectedUser, newName);
     }
 
+    /**
+     * start method that welcomes the user to the program
+     */
     public void start() {
         String message = "Welcome to YYYFlix inc.";
         System.out.println(message);
         this.c.returnToGUIMessage(message);
     }
 
+    /**
+     * inities the notify user procedure, sending a notification to a user
+     */
     private void notifyUser() {
         if(!isLoggedIn()) {
             return;
@@ -177,6 +193,9 @@ public class YYYFlixSystem {
 
     }
 
+    /**
+     * prints all the details of the connected user
+     */
     private void printConnectedUser() {
         if(this.connectedUser == null) {
             this.c.sayNotLoggedIn();
@@ -187,27 +206,51 @@ public class YYYFlixSystem {
         return;
     }    
 
+    /**
+     * prints the library of the connected user, using Threads as shown in the flow diagram
+     */
     private void printLibrary() {
         if(!isLoggedIn()) {
             return;
         }
 
         ArrayList<Integer> contentIDList = this.userLibrary.getContentIDList();
-        String message = this.userLibrary.libraryHeader(this.connectedUser.getName());
-        Content content = null;
-        for (Integer contentID : contentIDList) {
-            content = readContent(contentID);
+        String message = this.userLibrary.libraryHeader(this.connectedUser.getName());        
+
+        ExecutorService executor = Executors.newCachedThreadPool();
+
+        contentInLibraryHolder = new ArrayList<>();
+                        
+        for (Integer contentID : contentIDList) {            
+            executor.execute(readContentTask(contentID));
+        }
+
+        executor.shutdown();
+
+        try {
+            while(!executor.awaitTermination(10, TimeUnit.SECONDS)) {
+                System.out.println("Not yet. Still waiting for termination");
+            }
+        } catch (InterruptedException e) {            
+            e.printStackTrace();
+        }        
+                
+        for(Content content : YYYFlixSystem.contentInLibraryHolder) {
             if(content != null)
-                message += content  + "\n";
-            else
-                message += "[this content has been deleted, id = " + contentID + "]" + "\n";
+            message += content  + "\n";
+        else
+            message += "[this content has been deleted]" + "\n";            
         }
 
         message += "Total Library Size = " + contentIDList.size() + "\n";
-        
-        this.c.returnToGUIMessage(message);        
+
+        System.out.println(message);
+        this.c.returnToGUIMessage(message);                
     }
 
+    /**
+     * prints the user subscription details of the connected user
+     */
     private void printUserSubDetails() {
         if(!isLoggedIn()) {
             return;
@@ -215,7 +258,10 @@ public class YYYFlixSystem {
 
         this.c.returnToGUIMessage(this.userSubDetails.printReciept(this.connectedUser.getName()));
     }    
-    
+
+    /**
+     * prints the notify user of the connected user
+     */
     private void printNotifyUser() {
         if(!isLoggedIn()) {
             return;
@@ -246,6 +292,10 @@ public class YYYFlixSystem {
         return;
     }        
 
+    /**
+     * initiates the subscription procedure for the connected user
+     * @return true if the subscription procedure has been sucessfull and the user is now subscribed to their desired subscription, false otherwise
+     */
     private boolean subscribe() {
         if(!isLoggedIn()) {
             return false;
@@ -289,6 +339,10 @@ public class YYYFlixSystem {
         return updateSubDetailsInDatabase();
     }
 
+    /**
+     * initiates the adding a content to the library procedure for the connected user
+     * @return true if the addition of content to the library has been sucessfull or if the content already exists, false otherwise
+     */
     private boolean addContentToLibrary() {
         if(!isLoggedIn()) {
             return false;
@@ -462,17 +516,28 @@ public class YYYFlixSystem {
         return user;
     }
 
+    /**
+     * returns to the gui with a message and notifies the user to take further actions in the gui
+     * @param message represents the message to be displayed in the gui
+     */
     public void returnToGUIMessage(String message) {
         System.out.println(message);
         this.c.returnToGUIMessage(message); 
         returnToGUIMessage();       
     }
 
+    /**
+     * notifies the user to take further actions in the gui
+     */
     public void returnToGUIMessage() {
         System.out.println("Please return to the GUI for further actions.");
         this.c.returnToGUIMessage();
     }
 
+    /**
+     * inities the procedure to create a content
+     * @return the newly created content, null otherwise
+     */
     public Content createContent() {
 
         // get content type from user
@@ -596,7 +661,7 @@ public class YYYFlixSystem {
         return content;
 
     }
-    // TODO: Different name?
+    
     /**
      * inserts the user into the user database and inserts the username into the username hashset
      * @param user represents the given user to be inserted into both databases
@@ -668,6 +733,11 @@ public class YYYFlixSystem {
         return this.writeUsernameHashSet(set);
     }
 
+    /**
+     * writes the username hashset into the database
+     * @param set represents the set to be written into the database
+     * @return true if the insertion has been sucessfull, false otherwise
+     */
     public boolean writeUsernameHashSet(Set<String> set)
     {
         // delete the previous hashset database
@@ -678,6 +748,10 @@ public class YYYFlixSystem {
         return insertObjectIntoDatabase(set, USERNAMES_HASHSET_DATABASE_FILE_PATH);
     }
 
+    /**
+     * reads the username hashset from the database
+     * @return the read username hashset, null if the read has failed
+     */
     public HashSet<String> readUsernamesHashSet()
     {
         FileInputStream fi = null;
@@ -715,6 +789,10 @@ public class YYYFlixSystem {
         return null;
     }
 
+    /**
+     * reads the sub counter from the database
+     * @return the read sub counter, null if the read has failed
+     */
     public Integer readSubCounter()
     {
         FileInputStream fi = null;
@@ -752,6 +830,10 @@ public class YYYFlixSystem {
         return null;
     }
 
+    /**
+     * reads the content counter from the database
+     * @return the read content counter, null if the read has failed
+     */
     public Integer readContentCounter()
     {
         FileInputStream fi = null;
@@ -789,6 +871,10 @@ public class YYYFlixSystem {
         return null;
     }
 
+    /**
+     * reads the transaction counter from the database
+     * @return the read transaction counter, null if the read has failed
+     */
     public Integer readTransactionCounter()
     {
         FileInputStream fi = null;
@@ -826,6 +912,10 @@ public class YYYFlixSystem {
         return null;
     }
 
+    /**
+     * writes the content counter to the database
+     * @return true if the insertion has been sucessfull, false otherwise
+     */
     public boolean writeIntegerToContentCounter(Integer count)
     {
         // read usernames hash set from database
@@ -841,6 +931,10 @@ public class YYYFlixSystem {
         return insertObjectIntoDatabase(count, LAST_CONTENT_ID_DATABASE_FILE_PATH);
     }
 
+    /**
+     * writes the sub counter to the database
+     * @return true if the insertion has been sucessfull, false otherwise
+     */    
     public boolean writeIntegerToSubCounter(Integer count)
     {
         // read usernames hash set from database
@@ -856,6 +950,10 @@ public class YYYFlixSystem {
         return insertObjectIntoDatabase(count, LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH);
     }    
 
+    /**
+     * writes the transaction counter to the database
+     * @return true if the insertion has been sucessfull, false otherwise
+     */    
     public boolean writeIntegerToTransCounter(Integer count)
     {
         // read usernames hash set from database
@@ -1001,7 +1099,12 @@ public class YYYFlixSystem {
         return true;
     }
 
-    // login function
+    /**
+     * inities the login procedure, to set a user as the connected user
+     * @param username represents the given username of the user
+     * @param password represents the given password of the user
+     * @return true if the login has been sucessfull (a matching user with the given details has been found in the database), false otherwise
+     */
     public boolean login(String username, String password)
     {
         // quick check if the username is even in the database, using the username hashset
@@ -1035,6 +1138,12 @@ public class YYYFlixSystem {
 
     }
 
+    // TODO: remove @param connectedUserList because it is not used
+    /**
+     * inities the login procedure, logs out the currently conencted user
+     * @param user represents the user to logout
+     * @return true if the logout has been sucessfull, false otherwise
+     */
     public boolean logout(User user){
         this.c.sayBye();
 
@@ -1107,7 +1216,11 @@ public class YYYFlixSystem {
         
         return null;
     }
-    
+ 
+    /**
+     * reads the free subscription in the database, which is the first subscription
+     * @return the free subscription
+     */
     public Subscription readFreeSub() {
         return readSub(1);
     }
@@ -1379,6 +1492,28 @@ public class YYYFlixSystem {
     }
 
     /**
+     * synchornized addition of content to the content list holder
+     * @param content represents the given content to be added into the holder
+     * @return true if the addition has been sucessfull, false otherwise
+     */
+    private synchronized boolean addContentToHolder(Content content) {
+        return YYYFlixSystem.contentInLibraryHolder.add(content);
+    }
+
+    /**
+     * read content from the database that matches the content id
+     * @param contentID the content id of the searched for content in the database
+     * @return if a matching content is found, returns the content,if not, returns null
+     */
+    public Runnable readContentTask(int contentID)
+    {
+        return () -> {
+            Content content = readContent(contentID);
+            addContentToHolder(content);
+        };
+    }    
+
+    /**
      * prints all the users in the database
      */
     public void printObjects(String path) {
@@ -1607,7 +1742,6 @@ public class YYYFlixSystem {
         //return USERS_DATABASE_FILE_PATH + "/" + username + ".dat";
     }
     
-    //       OR add security check for each function change of details (payment method, name, password)
     /**
      * changes the password of the given user both locally and in the database
      * @param user represents the the given user to be updated

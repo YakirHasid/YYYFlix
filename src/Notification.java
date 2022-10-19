@@ -44,7 +44,7 @@ public class Notification implements Serializable {
             return "Notification:\n" + 
                     "\t" + "From: " + this.sender + "\n" + 
                     "\t" + "Title: " + this.messageTitle + "\n" + 
-                    "\t" + this.messageText + "\n";
+                    "\t" + "Text: " + this.messageText + "\n";
         else
             return "[INVALID MESSAGE LENGTH FOR DISPLAY]";
     }
