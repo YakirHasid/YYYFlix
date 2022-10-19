@@ -1149,7 +1149,6 @@ public class YYYFlixSystem {
             return true;
         }
         else {
-            this.c.sayNotLoggedIn();
             return false;
         }                    
 
