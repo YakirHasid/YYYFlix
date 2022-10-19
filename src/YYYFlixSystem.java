@@ -195,12 +195,13 @@ public class YYYFlixSystem {
      * prints all the details of the connected user
      */
     private void printConnectedUser() {
-        if(this.connectedUser == null) {
-            this.c.sayNotLoggedIn();
+        if(!isLoggedIn()) {
             return;
         }
 
-        this.c.returnToGUIMessage(this.connectedUser.toString());
+        String message = this.connectedUser.toString();
+        System.out.println(message);
+        this.c.returnToGUIMessage(message);
         return;
     }    
 
@@ -254,7 +255,9 @@ public class YYYFlixSystem {
             return;
         }
 
-        this.c.returnToGUIMessage(this.userSubDetails.printReciept(this.connectedUser.getName()));
+        String message = this.userSubDetails.printReciept(this.connectedUser.getName());
+        System.out.println(message);
+        this.c.returnToGUIMessage(message);
     }    
 
     /**
@@ -286,6 +289,7 @@ public class YYYFlixSystem {
         updateNotifyUserInDatabase(notifyUser);
         
         // alert the user
+        System.out.println(message);
         this.c.returnToGUIMessage(message);
         return;
     }        
@@ -752,39 +756,7 @@ public class YYYFlixSystem {
      */
     public HashSet<String> readUsernamesHashSet()
     {
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            fi = new FileInputStream(new File(USERNAMES_HASHSET_DATABASE_FILE_PATH));
-            oi = new ObjectInputStream(fi);
-
-
-            // the set that contains all the usernames inside the database
-            return (HashSet<String>) oi.readObject();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return null;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                if(oi != null)
-                    oi.close();
-
-                if(fi != null)
-                    fi.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return null;
+        return (HashSet<String>) readObject(USERNAMES_HASHSET_DATABASE_FILE_PATH, "");
     }
 
     /**
@@ -793,39 +765,7 @@ public class YYYFlixSystem {
      */
     public Integer readSubCounter()
     {
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            fi = new FileInputStream(new File(LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH));
-            oi = new ObjectInputStream(fi);
-
-
-            // the set that contains all the usernames inside the database
-            return (Integer) oi.readObject();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return null;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                if(oi != null)
-                    oi.close();
-
-                if(fi != null)
-                    fi.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return null;
+        return readIntegerFromCounterDatabase(LAST_SUBSCRIPTION_ID_DATABASE_FILE_PATH);
     }
 
     /**
@@ -834,39 +774,7 @@ public class YYYFlixSystem {
      */
     public Integer readContentCounter()
     {
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            fi = new FileInputStream(new File(LAST_CONTENT_ID_DATABASE_FILE_PATH));
-            oi = new ObjectInputStream(fi);
-
-
-            // the set that contains all the usernames inside the database
-            return (Integer) oi.readObject();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return null;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                if(oi != null)
-                    oi.close();
-
-                if(fi != null)
-                    fi.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return null;
+        return readIntegerFromCounterDatabase(LAST_CONTENT_ID_DATABASE_FILE_PATH);
     }
 
     /**
@@ -875,40 +783,38 @@ public class YYYFlixSystem {
      */
     public Integer readTransactionCounter()
     {
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            fi = new FileInputStream(new File(LAST_TRANSACTION_ID_DATABASE_FILE_PATH));
-            oi = new ObjectInputStream(fi);
-
-
-            // the set that contains all the usernames inside the database
-            return (Integer) oi.readObject();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return null;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                if(oi != null)
-                    oi.close();
-
-                if(fi != null)
-                    fi.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return null;
+        return readIntegerFromCounterDatabase(LAST_TRANSACTION_ID_DATABASE_FILE_PATH);
     }
+
+    /**
+     * reads the transaction counter from the database
+     * @return the read transaction counter, null if the read has failed
+     */
+    public Integer readIntegerFromCounterDatabase(String path)
+    {
+        return (Integer) readObject(path, "");
+    }    
+
+    /**
+     * writes the Integer counter to the database
+     * @param the given path of the database file to be updated
+     * @param count the counter
+     * @return true if the insertion has been sucessfull, false otherwise
+     */
+    public boolean writeIntegerToCounterDatabase(String path, Integer counter)
+    {
+        // read usernames hash set from database
+        Integer cnt = this.readIntegerFromCounterDatabase(path);
+        if(cnt == null)
+            counter = (Integer) 1;
+
+        // delete the previous hashset database
+        File file = new File(LAST_CONTENT_ID_DATABASE_FILE_PATH);
+        file.delete();
+
+        // insert the hashset into the hashset database
+        return insertObjectIntoDatabase(counter, LAST_CONTENT_ID_DATABASE_FILE_PATH);
+    }    
 
     /**
      * writes the content counter to the database
@@ -1153,26 +1059,25 @@ public class YYYFlixSystem {
 
     }
 
-    // TODO: make readObject and check for instance of
     /**
-     * read notify user from the database that matches the username
-     * @param username the username of the searched for user's notify user in the database
-     * @return if a matching notify user is found, returns the notify user,if not, returns null
+     * read object from the database that matches the username
+     * @param path represents the given path of the object
+     * @param ending represents the ending of the object
+     * @return if a matching object is found, returns the object,if not, returns null
      */
-    public NotifyUser readNotifyUser(String username)
+    public Object readObject(String path, String ending) 
     {
         FileInputStream fi = null;
         ObjectInputStream oi = null;
         try {
             // open file stream of users database
-            fi = new FileInputStream(objectPath(NOTIFY_USER_DATABASE_FILE_PATH, username)) ;
+            fi = new FileInputStream(objectPath(path, ending)) ;
 
             // open object stream using the file stream
             oi = new ObjectInputStream(fi);
 
             // read User object from the object stream until a matching user is found
-            NotifyUser notifyUser = (NotifyUser) oi.readObject();
-            return notifyUser;
+            return oi.readObject();            
 
         // catch all the thrown exceptions, close all open streams in finally
         } catch (FileNotFoundException e) {
@@ -1200,6 +1105,16 @@ public class YYYFlixSystem {
         }
         
         return null;
+    }
+    
+    /**
+     * read notify user from the database that matches the username
+     * @param username the username of the searched for user's notify user in the database
+     * @return if a matching notify user is found, returns the notify user,if not, returns null
+     */
+    public NotifyUser readNotifyUser(String username)
+    {
+        return (NotifyUser) readObject(NOTIFY_USER_DATABASE_FILE_PATH, username);
     }
  
     /**
@@ -1209,8 +1124,7 @@ public class YYYFlixSystem {
     public Subscription readFreeSub() {
         return readSub(1);
     }
-
-    // TODO: make readObject and check for instance of
+    
     /**
      * read sub from the database that matches the sub id
      * @param subID the sub id of the searched for sub in the database
@@ -1218,48 +1132,9 @@ public class YYYFlixSystem {
      */
     public Subscription readSub(int subID)
     {
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            // open file stream of users database
-            fi = new FileInputStream(objectPath(SUBS_DATABASE_FILE_PATH, String.valueOf(subID))) ;
-
-            // open object stream using the file stream
-            oi = new ObjectInputStream(fi);
-
-            // read User object from the object stream until a matching user is found
-            Subscription sub = (Subscription) oi.readObject();
-            return sub;
-
-        // catch all the thrown exceptions, close all open streams in finally
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return null;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                // close object stream
-                if(oi != null)
-                    oi.close();
-
-                // close file stream
-                if(fi != null)
-                    fi.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        
-        return null;
+        return (Subscription) readObject(SUBS_DATABASE_FILE_PATH, String.valueOf(subID));
     }     
-
-    // TODO: make readObject and check for instance of
+    
     /**
      * read user from the database that matches the username
      * @param username the username of the searched for user in the database
@@ -1267,49 +1142,9 @@ public class YYYFlixSystem {
      */
     public UserSubscriptionDetails readUserSubDetails(String username)
     {
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            // open file stream of users database
-            fi = new FileInputStream(objectPath(USERS_SUBS_DETAILS_DATABASE_FILE_PATH, username)) ;
-
-            // open object stream using the file stream
-            oi = new ObjectInputStream(fi);
-
-            // read User object from the object stream until a matching user is found
-            UserSubscriptionDetails sub = (UserSubscriptionDetails) oi.readObject();
-            return sub;
-
-        // catch all the thrown exceptions, close all open streams in finally
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return null;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                // close object stream
-                if(oi != null)
-                    oi.close();
-
-                // close file stream
-                if(fi != null)
-                    fi.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        
-        return null;
+        return (UserSubscriptionDetails) readObject(USERS_SUBS_DETAILS_DATABASE_FILE_PATH, username);
     }     
-
-
-    // TODO: make readObject and check for instance of
+    
     /**
      * read user from the database that matches the username
      * @param username the username of the searched for user in the database
@@ -1317,95 +1152,17 @@ public class YYYFlixSystem {
      */
     public Library readLibrary(String username)
     {
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            // open file stream of users database
-            fi = new FileInputStream(objectPath(LIBRARIES_DATABASE_FILE_PATH, username)) ;
-
-            // open object stream using the file stream
-            oi = new ObjectInputStream(fi);
-
-            // read User object from the object stream until a matching user is found
-            Library library = (Library) oi.readObject();
-            return library;
-
-        // catch all the thrown exceptions, close all open streams in finally
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return null;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                // close object stream
-                if(oi != null)
-                    oi.close();
-
-                // close file stream
-                if(fi != null)
-                    fi.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        
-        return null;
+        return (Library) readObject(LIBRARIES_DATABASE_FILE_PATH, username);
     }    
-
-
-    // TODO: make readObject and check for instance of
+    
     /**
      * read user from the database that matches the username
      * @param username the username of the searched for user in the database
      * @return if a matching user is found, returns the user,if not, returns null
      */
     public User readUser(String username)
-    {
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            // open file stream of users database
-            fi = new FileInputStream(objectPath(USERS_DATABASE_FILE_PATH, username)) ;
-
-            // open object stream using the file stream
-            oi = new ObjectInputStream(fi);
-
-            // read User object from the object stream until a matching user is found
-            User user = (User) oi.readObject();
-            return user;
-
-            // catch all the thrown exceptions, close all open streams in finally
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return null;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                // close object stream
-                if(oi != null)
-                    oi.close();
-
-                // close file stream
-                if(fi != null)
-                    fi.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return null;
+    { 
+        return (User) readObject(USERS_DATABASE_FILE_PATH, username);
     }
 
 
@@ -1435,45 +1192,7 @@ public class YYYFlixSystem {
      */
     public Content readContent(int contentID)
     {
-        FileInputStream fi = null;
-        ObjectInputStream oi = null;
-        try {
-            // open file stream of users database
-            fi = new FileInputStream(objectPath(CONTENTS_DATABASE_FILE_PATH, String.valueOf(contentID))) ;
-
-            // open object stream using the file stream
-            oi = new ObjectInputStream(fi);
-
-            // read User object from the object stream until a matching user is found
-            Content content = (Content) oi.readObject();
-            return content;
-
-            // catch all the thrown exceptions, close all open streams in finally
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            return null;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } finally {
-            try {
-                // close object stream
-                if(oi != null)
-                    oi.close();
-
-                // close file stream
-                if(fi != null)
-                    fi.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return null;
+        return (Content) readObject(CONTENTS_DATABASE_FILE_PATH, String.valueOf(contentID));       
     }
 
     /**
@@ -1714,7 +1433,10 @@ public class YYYFlixSystem {
      */
     public String objectPath(String path, String ending)
     {
-        return path + "/" + ending + ".dat";
+        if(ending.isEmpty()) 
+            return path;
+        else        
+            return path + "/" + ending + ".dat";
     }
 
     /**
@@ -1815,7 +1537,9 @@ public class YYYFlixSystem {
         if(!this.insertObjectIntoDatabase(notifyUser, NOTIFY_USER_DATABASE_FILE_PATH))
         {
             System.out.println("Failed to insert the updated user into database.");
-            // TODO: Probably exception throw because user is now not in the database
+
+            // user is now not in the database
+            System.out.println("[ERROR] Fatal Error occured in database.");
             return false;
         }
 
@@ -1842,7 +1566,9 @@ public class YYYFlixSystem {
         if(!this.insertObjectIntoDatabase(user, USERS_DATABASE_FILE_PATH))
         {
             System.out.println("Failed to insert the updated user into database.");
-            // TODO: Probably exception throw because user is now not in the database
+
+            // user is now not in the database
+            System.out.println("[ERROR] Fatal Error occured in database.");
             return false;
         }
 
@@ -1868,7 +1594,9 @@ public class YYYFlixSystem {
         if(!this.insertObjectIntoDatabase(this.userSubDetails, USERS_SUBS_DETAILS_DATABASE_FILE_PATH))
         {
             System.out.println("Failed to insert the updated sub into database.");
-            // TODO: Probably exception throw because library is now not in the database
+            
+            // user is now not in the database
+            System.out.println("[ERROR] Fatal Error occured in database.");            
             return false;
         }
 
@@ -1894,7 +1622,9 @@ public class YYYFlixSystem {
         if(!this.insertObjectIntoDatabase(this.userLibrary, LIBRARIES_DATABASE_FILE_PATH))
         {
             System.out.println("Failed to insert the updated library into database.");
-            // TODO: Probably exception throw because library is now not in the database
+            
+            // user is now not in the database
+            System.out.println("[ERROR] Fatal Error occured in database.");            
             return false;
         }
 
