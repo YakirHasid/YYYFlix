@@ -22,8 +22,12 @@ public class ViewMenu {
     private JMenu m_Menu_Print;
     private JMenuItem m_Menu_Print_MyUserDetails;
     private JMenuItem m_Menu_Print_MyLibrary;
-    private JMenuItem m_Menu_Print_SubscriptionDetails;
-    private JMenuItem m_Menu_Print_Notifications;    
+    private JMenuItem m_Menu_Print_MySubscriptionDetails;
+    private JMenuItem m_Menu_Print_MyNotifications;
+    private JMenuItem m_Menu_Print_AllUsers;   
+    private JMenuItem m_Menu_Print_AllUsernames;
+    private JMenuItem m_Menu_Print_AllContents;
+    private JMenuItem m_Menu_Print_AllSubscriptions;      
     private JMenu m_Menu_Change;
     private JMenuItem m_Menu_Change_Name;
     private JMenuItem m_Menu_Change_Password;
@@ -71,12 +75,20 @@ public class ViewMenu {
         m_Menu_Print = new JMenu("Print");
         m_Menu_Print_MyUserDetails = new JMenuItem("My User Details");   
         m_Menu_Print_MyLibrary = new JMenuItem("My Library");          
-        m_Menu_Print_SubscriptionDetails = new JMenuItem("Subscription Details");          
-        m_Menu_Print_Notifications = new JMenuItem("Notifications");
+        m_Menu_Print_MySubscriptionDetails = new JMenuItem("My Subscription Details");          
+        m_Menu_Print_MyNotifications = new JMenuItem("My Notifications");        
+        m_Menu_Print_AllUsers = new JMenuItem("All Users");
+        m_Menu_Print_AllUsernames = new JMenuItem("All Usernames");
+        m_Menu_Print_AllContents = new JMenuItem("All Contents");
+        m_Menu_Print_AllSubscriptions = new JMenuItem("All Subscriptions");
         m_Menu_Print.add(m_Menu_Print_MyUserDetails);   
         m_Menu_Print.add(m_Menu_Print_MyLibrary);
-        m_Menu_Print.add(m_Menu_Print_SubscriptionDetails);
-        m_Menu_Print.add(m_Menu_Print_Notifications);
+        m_Menu_Print.add(m_Menu_Print_MySubscriptionDetails);
+        m_Menu_Print.add(m_Menu_Print_MyNotifications);
+        m_Menu_Print.add(m_Menu_Print_AllUsers);
+        m_Menu_Print.add(m_Menu_Print_AllUsernames);
+        m_Menu_Print.add(m_Menu_Print_AllContents);
+        m_Menu_Print.add(m_Menu_Print_AllSubscriptions);
 
         m_Menu_Change = new JMenu("Change");
         m_Menu_Change_Name = new JMenuItem("Name"); 
@@ -175,11 +187,27 @@ public class ViewMenu {
     }
 
     public JMenuItem getM_Menu_Print_SubscriptionDetails() {
-        return m_Menu_Print_SubscriptionDetails;
+        return m_Menu_Print_MySubscriptionDetails;
     }
 
     public JMenuItem getM_Menu_Print_Notifications() {
-        return m_Menu_Print_Notifications;
+        return m_Menu_Print_MyNotifications;
+    }
+
+    public JMenuItem getM_Menu_Print_AllUsers() {
+        return m_Menu_Print_AllUsers;
+    }
+
+    public JMenuItem getM_Menu_Print_AllUsernames() {
+        return m_Menu_Print_AllUsernames;
+    }
+
+    public JMenuItem getM_Menu_Print_AllContents() {
+        return m_Menu_Print_AllContents;
+    }
+
+    public JMenuItem getM_Menu_Print_AllSubscriptions() {
+        return m_Menu_Print_AllSubscriptions;
     }
 
     public JMenuItem getM_Menu_Change_Name() {
