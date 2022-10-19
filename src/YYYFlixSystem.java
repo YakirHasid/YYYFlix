@@ -1134,8 +1134,7 @@ public class YYYFlixSystem {
         return true;
 
     }
-
-    // TODO: remove @param connectedUserList because it is not used
+    
     /**
      * inities the login procedure, logs out the currently conencted user
      * @param user represents the user to logout
