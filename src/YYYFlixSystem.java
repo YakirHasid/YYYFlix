@@ -102,7 +102,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * inities the change payment method procedure, allows the user to update their payment method in the database
+     * initiates the change payment method procedure, allows the user to update their payment method in the database
      * @return true if the change has been sucessfull, false otherwise
      */     
     private boolean changePaymentMethod() {
@@ -118,7 +118,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * inities the change password procedure with security check, allows the user to update their password in the database
+     * initiates the change password procedure with security check, allows the user to update their password in the database
      * @return true if the change has been sucessfull, false otherwise
      */    
     private boolean changePassword() {
@@ -137,7 +137,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * inities the change name procedure, allows the user to update their name in the database
+     * initiates the change name procedure, allows the user to update their name in the database
      * @return true if the change has been sucessfull, false otherwise
      */
     private boolean changeName() {
@@ -162,7 +162,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * inities the notify user procedure, sending a notification to a user
+     * initiates the notify user procedure, sending a notification to a user
      */
     private void notifyUser() {
         if(!isLoggedIn()) {
@@ -496,18 +496,17 @@ public class YYYFlixSystem {
         System.out.println("Please enter your desired name: ");
         String name = scan.nextLine();
 
-        // get payment method from user
+        // get payment method from user, ignore case-sensitivity in insertion and pass case-corrected values
         System.out.println("Please enter your desired payment method [PayPal/VISA]: ");
         String paymentMethod = scan.nextLine();
-        while(User.isPaymentMethodValid(paymentMethod) == null)
+        paymentMethod = User.isPaymentMethodValid(paymentMethod);
+        while(paymentMethod == null)
         {
             System.out.println("[ERROR]: Payment is invalid (please choose PayPal or VISA).");
             System.out.println("Please enter your desired payment method [PayPal/VISA]: ");
             paymentMethod = scan.nextLine();
+            paymentMethod = User.isPaymentMethodValid(paymentMethod);
         }
-
-        // finished input from user, close input scanner
-        //scan.close();
 
         // create user object from the given parameters
         User user = new User(username, password, name, paymentMethod);
@@ -541,7 +540,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * inities the procedure to create a content
+     * initiates the procedure to create a content
      * @return the newly created content, null otherwise
      */
     public Content createContent() {
@@ -650,9 +649,6 @@ public class YYYFlixSystem {
                 return content;
         }
         //#endregion
-
-        // finished input from user, close input scanner
-        //scan.close();
 
         // inserts the user into the user database and inserts the username into the username hashset
         if(!insertObjectIntoDatabase(content, YYYFlixSystem.CONTENTS_DATABASE_FILE_PATH))
@@ -801,8 +797,8 @@ public class YYYFlixSystem {
 
     /**
      * writes the Integer counter to the database
-     * @param the given path of the database file to be updated
-     * @param count the counter
+     * @param path the given path of the database file to be updated
+     * @param counter the counter
      * @return true if the insertion has been sucessfull, false otherwise
      */
     public boolean writeIntegerToCounterDatabase(String path, Integer counter)
@@ -1008,7 +1004,7 @@ public class YYYFlixSystem {
     }
 
     /**
-     * inities the login procedure, to set a user as the connected user
+     * initiates the login procedure, to set a user as the connected user
      * @param username represents the given username of the user
      * @param password represents the given password of the user
      * @return true if the login has been sucessfull (a matching user with the given details has been found in the database), false otherwise
@@ -1046,8 +1042,7 @@ public class YYYFlixSystem {
     }
     
     /**
-     * inities the login procedure, logs out the currently conencted user
-     * @param user represents the user to logout
+     * initiates the logout procedure, logs out the currently conencted user     
      * @return true if the logout has been sucessfull, false otherwise
      */
     public boolean logout(){
