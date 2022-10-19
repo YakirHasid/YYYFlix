@@ -22,8 +22,6 @@ public class UserSubscriptionDetails implements Serializable {
         endDate = startDate.plusMonths((long) subscription.getDuration());
     }
 
-    // TODO: Add a logic function (MUST)
-
     public int getTransactionNumber() {
         return transactionNumber;
     }
