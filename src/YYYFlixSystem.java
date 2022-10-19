@@ -801,8 +801,8 @@ public class YYYFlixSystem {
 
     /**
      * writes the Integer counter to the database
-     * @param the given path of the database file to be updated
-     * @param count the counter
+     * @param path the given path of the database file to be updated
+     * @param counter the counter
      * @return true if the insertion has been sucessfull, false otherwise
      */
     public boolean writeIntegerToCounterDatabase(String path, Integer counter)
@@ -1046,8 +1046,7 @@ public class YYYFlixSystem {
     }
     
     /**
-     * inities the login procedure, logs out the currently conencted user
-     * @param user represents the user to logout
+     * inities the logout procedure, logs out the currently conencted user     
      * @return true if the logout has been sucessfull, false otherwise
      */
     public boolean logout(){
