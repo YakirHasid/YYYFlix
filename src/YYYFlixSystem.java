@@ -1170,9 +1170,9 @@ public class YYYFlixSystem {
 
     // TODO: make readObject and check for instance of
     /**
-     * read sub from the database that matches the sub id
-     * @param subID the sub id of the searched for sub in the database
-     * @return if a matching sub is found, returns the sub,if not, returns null
+     * read notify user from the database that matches the username
+     * @param username the username of the searched for user's notify user in the database
+     * @return if a matching notify user is found, returns the notify user,if not, returns null
      */
     public NotifyUser readNotifyUser(String username)
     {
@@ -1723,7 +1723,8 @@ public class YYYFlixSystem {
 
     /**
      * creates the relative path to the user's database file
-     * @param username represents the username of the user's
+     * @param path represents the path of the object (not including the object itself)
+     * @param ending represents last part of the path (the object itself)
      * @return the relative path of the user's database file
      */
     public String objectPath(String path, String ending)
