@@ -10,7 +10,7 @@ public class NotifyUser implements Serializable {
 
     /**
      * NotifyUser's public constructor
-     * @param user the given user, which owns this Notification Center
+     * @param username the given user, which owns this Notification Center
      */
     public NotifyUser(String username)
     {
