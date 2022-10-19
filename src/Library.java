@@ -58,12 +58,11 @@ public class Library implements Serializable {
 
         return true;
     }
-
-    // TODO: Fix JAVADOC
+    
     /**
      * searches a content in the user's library, via the received content's id
      * @param ID represents the ID of the content that is being requested to be searched for
-     * @return the Content object that matches the given ID, returns null if no match is found
+     * @return the contentID that matches the given ID, returns null if no match is found
      */
     public Integer searchContentID(int ID){
         // foreach loop the content list
