@@ -499,11 +499,12 @@ public class YYYFlixSystem {
         // get payment method from user
         System.out.println("Please enter your desired payment method [PayPal/VISA]: ");
         String paymentMethod = scan.nextLine();
-        while(User.isPaymentMethodValid(paymentMethod) == null)
+        while(paymentMethod == null)
         {
             System.out.println("[ERROR]: Payment is invalid (please choose PayPal or VISA).");
             System.out.println("Please enter your desired payment method [PayPal/VISA]: ");
             paymentMethod = scan.nextLine();
+            paymentMethod = User.isPaymentMethodValid(paymentMethod);
         }
 
         // finished input from user, close input scanner
