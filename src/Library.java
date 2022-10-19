@@ -25,8 +25,7 @@ public class Library implements Serializable {
     public ArrayList<Integer> getContentIDList() {
         return contentIDList;
     }
-
-    // TODO : Maybe implement Thread here? two YYYFlix accounts running at the same time from different threads
+    
     /**
      * adds a content to the user's library
      * @param content represents the content that is being requested to be added into the library

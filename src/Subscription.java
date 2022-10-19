@@ -15,9 +15,7 @@ public class Subscription implements Serializable {
         this.ID = ++COUNTER;
         this.price = price;
         this.duration = duration;
-    }
-
-    // TODO: Add a logic function (MUST)
+    }    
 
     /**
      * calculates the price per month by total price / months

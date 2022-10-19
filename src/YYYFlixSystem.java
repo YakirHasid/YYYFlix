@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 
 public class YYYFlixSystem {
     // fields
-    ArrayList<User> connectedUsersList;
 
     User connectedUser;
     Library userLibrary;
@@ -37,8 +36,7 @@ public class YYYFlixSystem {
      * public constructor
      * resets fields and initializes the databases if necessary
      */
-    public YYYFlixSystem() {
-        connectedUsersList = new ArrayList<>();
+    public YYYFlixSystem() {        
 
         connectedUser = null;
 
@@ -67,7 +65,7 @@ public class YYYFlixSystem {
         v.getLogin().addActionListener(e -> login(m.getUsername(), m.getPassword()));
 
         // action for pressing logout
-        v.getLogout().addActionListener(e -> logout(connectedUser));
+        v.getLogout().addActionListener(e -> logout());
 
         // menu buttons
         v.getM_Menu_Register().addActionListener(e -> register());
@@ -1127,8 +1125,7 @@ public class YYYFlixSystem {
             return false;
         }
 
-        System.out.println("Login successful, welcome back " + user.getName() + "!");
-        this.connectedUsersList.add(user);
+        System.out.println("Login successful, welcome back " + user.getName() + "!");        
         this.connectedUser = user;
         this.userLibrary = readLibrary(this.connectedUser.getUsername()); 
         this.userSubDetails = readUserSubDetails(this.connectedUser.getUsername());   
@@ -1144,27 +1141,17 @@ public class YYYFlixSystem {
      * @param user represents the user to logout
      * @return true if the logout has been sucessfull, false otherwise
      */
-    public boolean logout(User user){
-        this.c.sayBye();
-
-        if(user != null) {
-            // upon successful remove from the connected list, it means the user was connected, else, they were not.
-            if(this.connectedUsersList.remove(user)) {
-                System.out.println("Logout successful, hope to see you soon " + user.getName() + "!");
-                this.connectedUser = null;
-                this.userLibrary = null;
-                this.c.connectedUser("");            
-                return true;    
-            }
-
-            System.out.println("Failed to logout, user " + user.getUsername() + " is not logged in.");
-            return false;
+    public boolean logout(){
+        if(isLoggedIn()) {
+            this.c.sayBye();              
+            this.connectedUser = null;
+            this.c.connectedUser("");  
+            return true;
         }
         else {
-            System.out.println("Failed to logout, no user is logged in.");
+            this.c.sayNotLoggedIn();
             return false;
-        }
-
+        }                    
 
     }
 
