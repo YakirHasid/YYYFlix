@@ -53,7 +53,7 @@ public class Notification implements Serializable {
         return this.sender;
     }
     public boolean setSender(String sender) {
-        // TODO: Implement
+        this.sender = sender;
         return false;
     }
 
@@ -61,7 +61,7 @@ public class Notification implements Serializable {
         return messageID;
     }
     public boolean setMessageID(int messageID) {
-        // TODO: Implement
+        this.messageID = messageID;
         return false;
     }
 
@@ -69,8 +69,16 @@ public class Notification implements Serializable {
         return messageText;
     }
     public boolean setMessageText(String messageText) {
-        // TODO: Implement
+        this.messageText = messageText;
         return false;
+    }
+
+    public String getMessageTitle() {
+        return messageTitle;
+    }
+
+    public void setMessageTitle(String messageTitle) {
+        this.messageTitle = messageTitle;
     }
 
     @Override
